@@ -1,11 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-import App from './App';
+import Theme from './components/Theme';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Theme>
+      <Router>
+        <h1>NOTES KEEPER</h1>
+      </Router>
+    </Theme>
   </React.StrictMode>,
   document.getElementById('root')
 );

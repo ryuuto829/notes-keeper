@@ -1,14 +1,10 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
+import { lightTheme, darkTheme } from '../shared/styles/theme';
 import GlobalStyles from '../shared/styles/globals';
 
-/** Delete later */
-const tempTheme = {
-  mode: "light"
-};
-
 const Theme = ({ children }) => (
-  <ThemeProvider theme={tempTheme}>
+  <ThemeProvider theme={lightTheme}>
     <GlobalStyles />
     {children}
   </ThemeProvider>

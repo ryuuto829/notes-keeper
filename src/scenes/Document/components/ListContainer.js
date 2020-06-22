@@ -15,7 +15,7 @@ const StyledListContainer = styled.ul`
     position: absolute;
     height: 100%;
     top: 0;
-    left: -32px;
+    left: 0;
     border-left: 2px solid #ccc;
   }
 `;

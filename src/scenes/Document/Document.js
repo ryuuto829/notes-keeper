@@ -1,7 +1,9 @@
 import React from 'react';
+import styled from 'styled-components';
+
 import ListItem from './components/ListItem';
 import ListContainer from './components/ListContainer';
-import styled from 'styled-components';
+import Input from './components/Input';
 
 const StyledWrapper = styled.div`
   background-color: #36393f;
@@ -12,6 +14,7 @@ const StyledWrapper = styled.div`
 const Document = () => {
   return (
     <StyledWrapper>
+      <Input />
       <ListContainer >
         <ListItem content="Managing your time and motivation">
           <ListContainer>

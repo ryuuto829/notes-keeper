@@ -1,27 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Popout from './Popout';
+import BulletMarker from './List/BulletMarker';
 
 const StyledItem = styled.li`
  position: relative;
 `;
 
-const StyledBullet = styled.div`
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background-color: white;
-  border-radius: 50%;
-  top: 15px;
-  left: 0;
-
-  &:hover {
-    cursor: pointer;
-    background-color: red;
-  }
-`;
-
 const StyledContainer = styled.div`
+  display: flex;
+  align-items: top;
 
   &:hover {
     background-color: rgba(4, 4, 5, 0.07);
@@ -30,18 +18,23 @@ const StyledContainer = styled.div`
 
 const StyledContent = styled.div`
   padding: 10px;
-  padding-left: 20px;
+  padding-left: 30px;
 `;
 
 const ListItem = ({ children, content }) => {
+  const [showMarker, setShowMarker] = useState(false);
+
   return (
     <StyledItem>
       <StyledContainer>
-        <StyledBullet />
+        <BulletMarker
+          hasChildren={children !== undefined}
+          showed={showMarker}
+          onShowedChange={setShowMarker} />
         <StyledContent>{content}</StyledContent>
         <Popout />
       </StyledContainer>
-      {children}
+      {!showMarker ? children : null}
     </StyledItem>
   );
 };

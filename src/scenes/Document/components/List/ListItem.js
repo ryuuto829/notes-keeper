@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Popout from './Popout';
-import BulletMarker from './List/BulletMarker';
+
+import Popout from '../Popout';
+import BulletMarker from './BulletMarker';
 
 const StyledItem = styled.li`
  position: relative;
@@ -21,14 +22,14 @@ const StyledContent = styled.div`
   padding-left: 30px;
 `;
 
-const ListItem = ({ children, content }) => {
+const ListItem = ({ children, content, hasChildren }) => {
   const [showMarker, setShowMarker] = useState(false);
 
   return (
     <StyledItem>
       <StyledContainer>
         <BulletMarker
-          hasChildren={children !== undefined}
+          hasChildren={hasChildren}
           showed={showMarker}
           onShowedChange={setShowMarker} />
         <StyledContent>{content}</StyledContent>

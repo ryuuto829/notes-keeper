@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const StyledListContainer = styled.ul`
@@ -20,12 +19,4 @@ const StyledListContainer = styled.ul`
   }
 `;
 
-const ListContainer = ({ children }) => {
-  return (
-    <StyledListContainer>
-      {children}
-    </StyledListContainer>
-  );
-};
-
-export default ListContainer;
+export default StyledListContainer;

@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
-import ListItem from './components/ListItem';
-import ListContainer from './components/ListContainer';
+import ListItem from './components/List/ListItem';
+import ListContainer from './components/List/ListContainer';
 import Input from './components/Input';
 
 const StyledWrapper = styled.div`
@@ -11,34 +12,43 @@ const StyledWrapper = styled.div`
   margin: 20px auto;
 `;
 
-const Document = () => {
+const Document = ({ headList, listByID }) => {
+
+  const createList = (list, allList) => {
+
+    return list.map(itemID => {
+      const currentItem = allList[itemID];
+      let child = null;
+
+      if (currentItem.hasChildren) {
+        child = createList(currentItem.children, allList);
+      }
+
+      return (
+        <ListContainer key={itemID}>
+          <ListItem
+            hasChildren={currentItem.hasChildren}
+            content={currentItem.text}>
+            {child}
+          </ListItem>
+        </ListContainer>
+      );
+    });
+  };
+
+  const documentList = createList(headList, listByID);
+
   return (
     <StyledWrapper>
       <Input />
-      <ListContainer >
-        <ListItem content="Managing your time and motivation">
-          <ListContainer>
-            <ListItem content="Nested text overflow overflow overflow overflow overflow overflow .." />
-            <ListItem content="Nested text .." />
-            <ListItem content="Managing your time and motivation">
-              <ListContainer>
-                <ListItem content="Nested text .." />
-                <ListItem content="Nested text .." />
-                <ListItem content="Nested text .." />
-              </ListContainer>
-            </ListItem>
-          </ListContainer>
-        </ListItem>
-        <ListItem content="Managing your time and motivation">
-          <ListContainer>
-            <ListItem content="Nested text .." />
-            <ListItem content="Nested text .." />
-            <ListItem content="Nested text .." />
-          </ListContainer>
-        </ListItem>
-      </ListContainer>
+      {documentList}
     </StyledWrapper >
   );
 };
 
-export default Document;
+const mapStateToProps = state => ({
+  headList: state.document.headIDList,
+  listByID: state.document.listByID
+});
+
+export default connect(mapStateToProps)(Document);

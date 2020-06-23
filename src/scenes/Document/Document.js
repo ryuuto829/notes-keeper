@@ -4,7 +4,47 @@ import { connect } from 'react-redux';
 
 import ListItem from './components/List/ListItem';
 import ListContainer from './components/List/ListContainer';
-import Input from './components/Input';
+
+const createListItem = (partList, fullList) => {
+  const items = partList.map(itemID => {
+    const currentItem = fullList[itemID];
+    const itemHasChildren = (currentItem.children && currentItem.children.length > 0) || false;
+    let childrenItems = null;
+
+    if (itemHasChildren) {
+      childrenItems = createList(currentItem.children, fullList);
+    }
+
+    return (
+      <ListItem
+        key={itemID}
+        id={itemID}
+        hasChildren={itemHasChildren}
+        content={currentItem.text}>
+        {childrenItems}
+      </ListItem>
+    );
+  });
+  return items;
+};
+
+const createList = (partList, fullList) => {
+  return (
+    <ListContainer>
+      {createListItem(partList, fullList)}
+    </ListContainer>
+  );
+};
+
+const Document = ({ initialIDList, listByID }) => {
+  const documentList = createList(initialIDList, listByID);
+
+  return (
+    <StyledWrapper>
+      {documentList}
+    </StyledWrapper >
+  );
+};
 
 const StyledWrapper = styled.div`
   background-color: #36393f;
@@ -12,42 +52,8 @@ const StyledWrapper = styled.div`
   margin: 20px auto;
 `;
 
-const Document = ({ headList, listByID }) => {
-
-  const createList = (list, allList) => {
-
-    return list.map(itemID => {
-      const currentItem = allList[itemID];
-      let child = null;
-
-      if (currentItem.hasChildren) {
-        child = createList(currentItem.children, allList);
-      }
-
-      return (
-        <ListContainer key={itemID}>
-          <ListItem
-            hasChildren={currentItem.hasChildren}
-            content={currentItem.text}>
-            {child}
-          </ListItem>
-        </ListContainer>
-      );
-    });
-  };
-
-  const documentList = createList(headList, listByID);
-
-  return (
-    <StyledWrapper>
-      <Input />
-      {documentList}
-    </StyledWrapper >
-  );
-};
-
 const mapStateToProps = state => ({
-  headList: state.document.headIDList,
+  initialIDList: state.document.initialIDList,
   listByID: state.document.listByID
 });
 

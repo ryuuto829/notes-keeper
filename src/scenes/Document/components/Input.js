@@ -8,6 +8,7 @@ const StyledInput = styled.div`
   border: none;
   outline: none;
   white-space: pre-wrap;
+  width: 100%;
 `;
 
 const StyledContainer = styled.div`

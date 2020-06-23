@@ -8,7 +8,10 @@ import ListContainer from './components/List/ListContainer';
 const createListItem = (partList, fullList) => {
   const items = partList.map(itemID => {
     const currentItem = fullList[itemID];
-    const itemHasChildren = (currentItem.children && currentItem.children.length > 0) || false;
+   
+    const itemHasChildren = currentItem.children !== null ? true : false;
+    console.log(itemHasChildren)
+
     let childrenItems = null;
 
     if (itemHasChildren) {

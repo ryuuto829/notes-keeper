@@ -15,20 +15,30 @@ const ListItem = ({ id, children, content, hasChildren }) => {
   if (showInput) {
     inputField = (
       <ListContainer>
-        <Input />
+        <Input
+          isChild={true}
+          parentID={id}
+          closeInput={setShowInput} />
       </ListContainer>
     );
   }
+
+  const clickHandler = () => {
+    if (hasChildren) {
+      setShowMarker(!showMarker)
+    } else {
+      setShowInput(!showInput);
+      console.log('create a new list');
+    }
+  };
 
   return (
     <StyledItem>
       <StyledContainer>
         <BulletMarker
+          clicked={clickHandler}
           hasChildren={hasChildren}
-          showedMarker={showMarker}
-          showedInput={showInput}
-          toggleMarker={setShowMarker}
-          toggleInput={setShowInput} />
+          showedMarker={showMarker} />
         <StyledContent>{content}</StyledContent>
         <Popout />
       </StyledContainer>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addNewListItem } from '../../store/actions/index';
 
@@ -7,7 +8,6 @@ const Input = ({ addNewItem, parentID, isChild }) => {
 
   const onInputSubmitHandler = e => {
     e.preventDefault();
-    console.log('submit')
     addNewItem(inputText, parentID, isChild);
   };
 
@@ -24,5 +24,11 @@ const Input = ({ addNewItem, parentID, isChild }) => {
 const mapDispatchToProps = dispatch => ({
   addNewItem: (text, parentID, isChild) => dispatch(addNewListItem(text, parentID, isChild))
 });
+
+Input.propTypes = {
+  addNewItem: PropTypes.func.isRequired,
+  parentID: PropTypes.string,
+  isChild: PropTypes.bool.isRequired,
+};
 
 export default connect(null, mapDispatchToProps)(Input);

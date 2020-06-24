@@ -74,6 +74,7 @@ const document = (state = initialState, action) => {
           [currId, ...state.listByID[action.parentID].children] :
           [currId];
 
+        /** Add as a child of parent in the first position */
         return {
           ...state,
           listByID: {
@@ -97,6 +98,7 @@ const document = (state = initialState, action) => {
           const updatedList = [...state.listByID[state.listByID[action.parentID].parent].children];
           updatedList.splice(parentIndex + 1, 0, currId);
 
+          /** Add in specific postion after parent as a sibling */
           return {
             ...state,
             listByID: {
@@ -118,8 +120,8 @@ const document = (state = initialState, action) => {
           const parentIndex = state.initialIDList.indexOf(action.parentID);
           const updatedInitialList = [...state.initialIDList];
           updatedInitialList.splice(parentIndex + 1, 0, currId);
-          console.log(updatedInitialList)
 
+          /** Add in specific postion after parent as a sibling */
           return {
             ...state,
             listByID: {
@@ -134,8 +136,6 @@ const document = (state = initialState, action) => {
           }
         }
       }
-
-      return state;
     default:
       return state;
   }

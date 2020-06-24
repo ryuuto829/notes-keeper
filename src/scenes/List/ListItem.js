@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+
 import ListContainer from './ListContainer';
 import Input from './Input';
 
@@ -45,10 +47,8 @@ const ListItem = ({ content, children, id }) => {
 
   const onMarkerClickHandler = () => {
     if (children) {
-      console.log('Collapse children')
       setCollapsed(!collapsed);
     } else {
-      console.log('Show input')
       setShowInput(!showInput);
     }
   };
@@ -56,14 +56,11 @@ const ListItem = ({ content, children, id }) => {
   const onAddBtnClickHandler = () => {
     if (children) {
       if (collapsed) {
-        console.log("add below as a sibling")
         setShowSiblingInput(!showSiblingInput);
       } else {
-        console.log("add below as a child")
         setShowInput(!showInput);
       }
     } else {
-      console.log("add below as a sibling")
       setShowSiblingInput(!showSiblingInput);
     }
   };
@@ -82,6 +79,15 @@ const ListItem = ({ content, children, id }) => {
       {siblingInput}
     </React.Fragment>
   );
+};
+
+ListItem.propTypes = {
+  content: PropTypes.string.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.element),
+    PropTypes.element
+  ]),
+  id: PropTypes.string.isRequired
 };
 
 export default ListItem;

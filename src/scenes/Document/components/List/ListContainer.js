@@ -3,8 +3,8 @@ import styled from 'styled-components';
 const StyledListContainer = styled.ul`
   padding: 0;
   margin: 0;
-  margin-left: 10px;
-  padding-left: 10px;
+  margin-left: 9px;
+  padding-left:  11px;
   position: relative;
   list-style: none;
   font-size: 14px;
@@ -15,7 +15,7 @@ const StyledListContainer = styled.ul`
     height: 100%;
     top: 0;
     left: 0;
-    border-left: 2px solid #ccc;
+    border-left: 1px solid #858585;
   }
 `;
 

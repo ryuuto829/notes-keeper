@@ -28,7 +28,6 @@ const ListItem = ({ id, children, content, hasChildren }) => {
       setShowMarker(!showMarker)
     } else {
       setShowInput(!showInput);
-      console.log('create a new list');
     }
   };
 
@@ -59,11 +58,15 @@ const StyledContainer = styled.div`
   &:hover {
     background-color: rgba(4, 4, 5, 0.07);
   }
+
+  &:hover div:last-of-type {
+    display: flex;
+  }
 `;
 
 const StyledContent = styled.div`
   padding: 10px;
-  padding-left: 30px;
+  padding-left: 25px;
   width: 100%;
 `;
 

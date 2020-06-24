@@ -8,9 +8,7 @@ import ListContainer from './components/List/ListContainer';
 const createListItem = (partList, fullList) => {
   const items = partList.map(itemID => {
     const currentItem = fullList[itemID];
-   
     const itemHasChildren = currentItem.children !== null ? true : false;
-    console.log(itemHasChildren)
 
     let childrenItems = null;
 
@@ -31,13 +29,11 @@ const createListItem = (partList, fullList) => {
   return items;
 };
 
-const createList = (partList, fullList) => {
-  return (
-    <ListContainer>
-      {createListItem(partList, fullList)}
-    </ListContainer>
-  );
-};
+const createList = (partList, fullList) => (
+  <ListContainer>
+    {createListItem(partList, fullList)}
+  </ListContainer>
+);
 
 const Document = ({ initialIDList, listByID }) => {
   const documentList = createList(initialIDList, listByID);

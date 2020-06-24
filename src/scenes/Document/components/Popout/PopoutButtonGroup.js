@@ -15,7 +15,7 @@ const PopoutButtonGroup = () => (
 
 const StyledContainer = styled.div`
   position: absolute;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: flex-start;
   background-color: #36393f;

@@ -56,9 +56,7 @@ let generateID = 20;
 const document = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ADD_NEW_LIST_ITEM:
-
       const currId = generateID++;
-
       const childrenitems = state.listByID[action.parentID].children || [];
       childrenitems.push(`id${currId}`);
 
@@ -78,6 +76,7 @@ const document = (state = initialState, action) => {
           }
         };
       }
+      break;
     default:
       return state;
   }

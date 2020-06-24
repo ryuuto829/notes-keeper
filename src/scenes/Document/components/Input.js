@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { addNewListItem } from '../../../store/actions/index';
@@ -9,7 +9,7 @@ const StyledInput = styled.div`
   padding: 10px;
   border: none;
   outline: none;
-  white-space: pre-wrap;
+  white-space: pre;
   width: 100%;
 `;
 
@@ -20,20 +20,32 @@ const StyledContainer = styled.div`
 `;
 
 const Input = ({ parentID, isChild, addNewListItem, closeInput }) => {
+  /** Set autofocus */
+  const inputField = useRef(null);
+  useEffect(() => {
+    inputField.current.focus();
+  });
+
   const submitHandler = e => {
     if (e.key === 'Enter' && !e.shiftKey) {
       const text = e.target.textContent;
       closeInput(false);
       addNewListItem(text, parentID, isChild);
     }
+    if (e.key === 'Escape') {
+      closeInput(false);
+    }
   };
 
   return (
-    <StyledContainer onKeyDown={submitHandler}>
+    <StyledContainer
+      onKeyDown={submitHandler}>
       <StyledInput
+        onBlur={() => closeInput(false)}
+        ref={inputField}
         contentEditable>
       </StyledInput>
-    </StyledContainer>
+    </StyledContainer >
   );
 };
 

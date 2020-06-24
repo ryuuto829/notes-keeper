@@ -3,46 +3,57 @@ import * as actionTypes from '../actions/actionTypes';
 const initialState = {
   listByID: {
     id1: {
+      parent: null,
       text: 'Managing your time and motivation 1',
       children: ['id3', 'id4', 'id5']
     },
     id2: {
+      parent: null,
       text: 'Managing your time and motivation 2',
       children: ['id9', 'id10', 'id11']
     },
     id3: {
+      parent: "id1",
       text: 'Nested text',
       children: null
     },
     id4: {
+      parent: "id1",
       text: 'Nested text',
       children: null
     },
     id5: {
+      parent: "id1",
       text: 'Managing your time and motivation Nested',
       children: ['id6', 'id7', 'id8']
     },
     id6: {
+      parent: "id5",
       text: 'Nested text',
       children: null
     },
     id7: {
+      parent: "id5",
       text: 'Nested text',
       children: null
     },
     id8: {
+      parent: "id5",
       text: 'Nested text',
       children: null
     },
     id9: {
+      parent: "id2",
       text: 'Nested text',
       children: null
     },
     id10: {
+      parent: "id2",
       text: 'Nested text',
       children: null
     },
     id11: {
+      parent: "id2",
       text: 'Nested text',
       children: null
     },
@@ -56,27 +67,75 @@ let generateID = 20;
 const document = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ADD_NEW_LIST_ITEM:
-      const currId = generateID++;
-      const childrenitems = state.listByID[action.parentID].children || [];
-      childrenitems.push(`id${currId}`);
+      const currId = String(generateID++);
 
       if (action.isChild) {
+        const parentChildren = state.listByID[action.parentID].children ?
+          [currId, ...state.listByID[action.parentID].children] :
+          [currId];
+
         return {
           ...state,
           listByID: {
             ...state.listByID,
-            [`id${currId}`]: {
+            [currId]: {
               text: action.text,
+              parent: action.parentID,
               children: null
             },
             [action.parentID]: {
               ...state.listByID[action.parentID],
-              children: [...childrenitems]
+              children: parentChildren
             }
           }
-        };
+        }
+      } else {
+
+        if (state.listByID[action.parentID].parent) {
+          // not in initial list
+          const parentIndex = state.listByID[state.listByID[action.parentID].parent].children.indexOf(action.parentID);
+          const updatedList = [...state.listByID[state.listByID[action.parentID].parent].children];
+          updatedList.splice(parentIndex + 1, 0, currId);
+
+          return {
+            ...state,
+            listByID: {
+              ...state.listByID,
+              [currId]: {
+                text: action.text,
+                parent: state.listByID[action.parentID].parent,
+                children: null
+              },
+              [state.listByID[action.parentID].parent]: {
+                ...state.listByID[state.listByID[action.parentID].parent],
+                children: updatedList
+              }
+            }
+          }
+
+        } else {
+          // initial list
+          const parentIndex = state.initialIDList.indexOf(action.parentID);
+          const updatedInitialList = [...state.initialIDList];
+          updatedInitialList.splice(parentIndex + 1, 0, currId);
+          console.log(updatedInitialList)
+
+          return {
+            ...state,
+            listByID: {
+              ...state.listByID,
+              [currId]: {
+                text: action.text,
+                parent: null,
+                children: null
+              },
+            },
+            initialIDList: updatedInitialList
+          }
+        }
       }
-      break;
+
+      return state;
     default:
       return state;
   }

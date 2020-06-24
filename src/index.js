@@ -6,6 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import Theme from './components/Theme';
 import Document from './scenes/Document/Document';
+import List from './scenes/List/List';
 
 const store = configureStore();
 
@@ -14,7 +15,7 @@ ReactDOM.render(
     <Provider store={store}>
       <Theme>
         <Router>
-          <Document />
+          <List />
         </Router>
       </Theme>
     </Provider>

@@ -59,7 +59,7 @@ const initialState = {
     },
   },
   initialIDList: ['id1', 'id2'],
-  isEditable: false
+  isEditable: null
 };
 
 /** Delete later */
@@ -80,7 +80,7 @@ const document = (state = initialState, action) => {
               text: action.text
             }
           },
-          isEditable: false
+          isEditable: null
         };
       }
 
@@ -106,7 +106,7 @@ const document = (state = initialState, action) => {
               children: parentChildren
             }
           },
-          isEditable: false
+          isEditable: null
         }
       } else {
 
@@ -131,7 +131,7 @@ const document = (state = initialState, action) => {
                 children: updatedList
               }
             },
-            isEditable: false
+            isEditable: null
           }
 
         } else {
@@ -152,7 +152,7 @@ const document = (state = initialState, action) => {
               },
             },
             initialIDList: updatedInitialList,
-            isEditable: false
+            isEditable: null
           }
         }
       }

@@ -58,7 +58,8 @@ const initialState = {
       children: null
     },
   },
-  initialIDList: ['id1', 'id2']
+  initialIDList: ['id1', 'id2'],
+  isEditable: false
 };
 
 /** Delete later */
@@ -67,6 +68,22 @@ let generateID = 20;
 const document = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ADD_NEW_LIST_ITEM:
+
+      /** Edit text */
+      if (action.isEdit) {
+        return {
+          ...state,
+          listByID: {
+            ...state.listByID,
+            [action.parentID]: {
+              ...state.listByID[action.parentID],
+              text: action.text
+            }
+          },
+          isEditable: false
+        };
+      }
+
       const currId = String(generateID++);
 
       if (action.isChild) {
@@ -88,7 +105,8 @@ const document = (state = initialState, action) => {
               ...state.listByID[action.parentID],
               children: parentChildren
             }
-          }
+          },
+          isEditable: false
         }
       } else {
 
@@ -112,7 +130,8 @@ const document = (state = initialState, action) => {
                 ...state.listByID[state.listByID[action.parentID].parent],
                 children: updatedList
               }
-            }
+            },
+            isEditable: false
           }
 
         } else {
@@ -132,9 +151,15 @@ const document = (state = initialState, action) => {
                 children: null
               },
             },
-            initialIDList: updatedInitialList
+            initialIDList: updatedInitialList,
+            isEditable: false
           }
         }
+      }
+    case actionTypes.SET_DOCUMENT_EDITABLE:
+      return {
+        ...state,
+        isEditable: action.isEditable
       }
     default:
       return state;

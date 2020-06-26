@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import ListItem from './ListItem';
 
-/** Render all item from the redux store List */
+/** Render all items from the redux store List */
 const createList = (partList, fullList, editableID) => {
   return partList.map(itemID => {
     const currentItem = fullList[itemID];
@@ -16,9 +16,8 @@ const createList = (partList, fullList, editableID) => {
     return (
       <ListItem
         key={itemID}
-        isEditable={editableID === itemID}
-        key={itemID}
         id={itemID}
+        isEditable={editableID === itemID}
         content={currentItem.text} >
         {currentChildrens}
       </ListItem >
@@ -44,7 +43,8 @@ List.propTypes = {
     parent: PropTypes.string,
     children: PropTypes.arrayOf(PropTypes.string)
   })).isRequired,
-  initialList: PropTypes.array.isRequired
+  initialList: PropTypes.array.isRequired,
+  editableID: PropTypes.string
 };
 
 export default connect(mapStateToProps)(List);

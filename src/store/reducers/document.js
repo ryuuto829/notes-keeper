@@ -79,8 +79,7 @@ const document = (state = initialState, action) => {
               ...state.listByID[action.parentID],
               text: action.text
             }
-          },
-          isEditable: null
+          }
         };
       }
 
@@ -105,8 +104,7 @@ const document = (state = initialState, action) => {
               ...state.listByID[action.parentID],
               children: parentChildren
             }
-          },
-          isEditable: null
+          }
         }
       } else {
 
@@ -130,8 +128,7 @@ const document = (state = initialState, action) => {
                 ...state.listByID[state.listByID[action.parentID].parent],
                 children: updatedList
               }
-            },
-            isEditable: null
+            }
           }
 
         } else {
@@ -151,8 +148,7 @@ const document = (state = initialState, action) => {
                 children: null
               },
             },
-            initialIDList: updatedInitialList,
-            isEditable: null
+            initialIDList: updatedInitialList
           }
         }
       }
@@ -160,6 +156,11 @@ const document = (state = initialState, action) => {
       return {
         ...state,
         isEditable: action.isEditable
+      }
+    case actionTypes.RESET_DOCUMENT_EDITABLE:
+      return {
+        ...state,
+        isEditable: null
       }
     default:
       return state;

@@ -12,3 +12,7 @@ export const toggleListEditable = isEditable => ({
   type: actionTypes.SET_DOCUMENT_EDITABLE,
   isEditable
 });
+
+export const removeListEditable = () => ({
+  type: actionTypes.RESET_DOCUMENT_EDITABLE,
+});

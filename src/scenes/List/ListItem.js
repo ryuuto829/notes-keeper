@@ -54,7 +54,8 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable }) => {
   let childrenItems = null;
   if (children) {
     childrenItems = (
-      <ListContainer hidden={collapsed}>
+      <ListContainer 
+      hidden={collapsed}>
         {children}
       </ListContainer>
     );

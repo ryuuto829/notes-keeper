@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addNewListItem } from '../../store/actions/index';
+import { addNewListItem, removeListEditable } from '../../store/actions/index';
 
-const Input = ({ addNewItem, parentID, isChild, closeInput, text, isEdit = false }) => {
+const Input = ({ addNewItem, parentID, isChild, closeInput, text, isEdit, removeEditable }) => {
   const [inputText, setInputText] = useState(text || '');
 
   const onInputSubmitHandler = e => {
     e.preventDefault();
     addNewItem(inputText, parentID, isChild, isEdit);
+    removeEditable();
     closeInput(false);
   };
 
@@ -23,7 +24,8 @@ const Input = ({ addNewItem, parentID, isChild, closeInput, text, isEdit = false
 };
 
 const mapDispatchToProps = dispatch => ({
-  addNewItem: (text, parentID, isChild, isEdit) => dispatch(addNewListItem(text, parentID, isChild, isEdit))
+  addNewItem: (text, parentID, isChild, isEdit) => dispatch(addNewListItem(text, parentID, isChild, isEdit)),
+  removeEditable: () => dispatch(removeListEditable())
 });
 
 Input.propTypes = {

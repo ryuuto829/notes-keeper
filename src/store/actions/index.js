@@ -8,6 +8,11 @@ export const addNewListItem = (text, parentID, isChild, isEdit) => ({
   isEdit
 });
 
+export const deleteListItem = id => ({
+  type: actionTypes.DELETE_LIST_ITEM,
+  id
+});
+
 export const toggleListEditable = isEditable => ({
   type: actionTypes.SET_DOCUMENT_EDITABLE,
   isEditable

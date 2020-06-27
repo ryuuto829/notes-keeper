@@ -105,7 +105,7 @@ const document = (state = initialState, action) => {
               children: parentChildren
             }
           }
-        }
+        };
       } else {
 
         if (state.listByID[action.parentID].parent) {
@@ -129,8 +129,7 @@ const document = (state = initialState, action) => {
                 children: updatedList
               }
             }
-          }
-
+          };
         } else {
           // initial list
           const parentIndex = state.initialIDList.indexOf(action.parentID);
@@ -151,16 +150,73 @@ const document = (state = initialState, action) => {
             initialIDList: updatedInitialList
           }
         }
-      }
+      };
     case actionTypes.SET_DOCUMENT_EDITABLE:
       return {
         ...state,
         isEditable: action.isEditable
-      }
+      };
     case actionTypes.RESET_DOCUMENT_EDITABLE:
       return {
         ...state,
         isEditable: null
+      };
+    case actionTypes.DELETE_LIST_ITEM:
+      const findChildrenIdexToDelete = (listOfChildrens = null, fullList, resultArray = []) => {
+        if (listOfChildrens) {
+          listOfChildrens.map(item => {
+            resultArray.push(item);
+            if (fullList[item].children) {
+              findChildrenIdexToDelete(fullList[item].children, fullList, resultArray);
+            }
+          });
+        }
+        return resultArray;
+      };
+
+      /** Find list of IDs to delete from store */
+      const itemChildren = state.listByID[action.id].children;
+      const indexToDelete = findChildrenIdexToDelete(itemChildren, state.listByID, [action.id]);
+
+      const updatedListID = Object.keys(state.listByID).filter(itemID => {
+        return !indexToDelete.includes(itemID)
+      });
+
+      /** List with ID that need to remain */
+      const updatedList = {};
+      updatedListID.forEach(itemID => {
+        updatedList[itemID] = state.listByID[itemID];
+      });
+
+      /** Update state if has or no parents */
+      if (state.listByID[action.id].parent !== null) {
+        const parentIndex = state.listByID[state.listByID[action.id].parent].children.indexOf(action.id);
+        const updatedListChildren = [...state.listByID[state.listByID[action.id].parent].children];
+        updatedListChildren.splice(parentIndex, 1);
+
+        return {
+          ...state,
+          listByID: {
+            ...updatedList,
+            [state.listByID[action.id].parent]: {
+              ...state.listByID[state.listByID[action.id].parent],
+              children: updatedListChildren || null
+            }
+          }
+        };
+
+      } else {
+        const parentIndexInitial = state.initialIDList.indexOf(action.id);
+        const updatedListChildrenInitial = [...state.initialIDList];
+        updatedListChildrenInitial.splice(parentIndexInitial, 1);
+
+        return {
+          ...state,
+          listByID: {
+            ...updatedList
+          },
+          initialIDList: updatedListChildrenInitial || null
+        };
       }
     default:
       return state;

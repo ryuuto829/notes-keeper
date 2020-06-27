@@ -19,6 +19,7 @@ const Input = ({ addNewItem, parentID, isChild, closeInput, text, isEdit, remove
         type="text"
         value={inputText}
         onChange={e => setInputText(e.target.value)} />
+      <div>escape to cancel • enter to save</div>
     </form>
   );
 };

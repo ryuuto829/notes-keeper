@@ -1,16 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { toggleListEditable } from '../../store/actions/index';
+import {
+  toggleListEditable,
+  removeListEditable,
+  deleteListItem
+} from '../../store/actions/index';
 
 import ListContainer from './ListContainer';
 import Input from './Input';
 
-const ListItem = ({ content, children, id, isEditable, toggleEditable }) => {
+const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEditable, deleteItem }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [showSiblingInput, setShowSiblingInput] = useState(false);
-  const [editItem, setEditItem] = useState(null);
+  const [editItem, setEditItem] = useState(false);
+
+  /** Setup listeners for global escape keydown */
+  useEffect(() => {
+    const escFunction = e => {
+      if (e.code === 'Escape') {
+        setShowInput(false);
+        setShowSiblingInput(false);
+        setEditItem(false);
+        removeEditable();
+      }
+      if (e.code === 'Enter') {
+        console.log('submit text to store')
+      }
+    };
+
+    if (isEditable) {
+      document.addEventListener("keydown", escFunction, false);
+    }
+    return () => {
+      document.removeEventListener("keydown", escFunction, false);
+    };
+  }, [isEditable]);
 
   const onMarkerClickHandler = () => {
     if (children) {
@@ -48,14 +74,18 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable }) => {
     setEditItem(true);
     setShowInput(false);
     setShowSiblingInput(false);
-  }
+  };
+
+  const onDeleteBtnClickHandler = () => {
+    deleteItem(id);
+  };
 
   /** Add children Items */
   let childrenItems = null;
   if (children) {
     childrenItems = (
-      <ListContainer 
-      hidden={collapsed}>
+      <ListContainer
+        hidden={collapsed}>
         {children}
       </ListContainer>
     );
@@ -96,6 +126,7 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable }) => {
       <span> {content} </span>
       <button onClick={onAddBtnClickHandler}>Add</button>
       <button onClick={onEditBtnClickHandler}>Edit</button>
+      <button onClick={onDeleteBtnClickHandler}>Delete</button>
     </div>
   );
 
@@ -123,7 +154,9 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable }) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  toggleEditable: isEditable => dispatch(toggleListEditable(isEditable))
+  toggleEditable: isEditable => dispatch(toggleListEditable(isEditable)),
+  removeEditable: () => dispatch(removeListEditable()),
+  deleteItem: id => dispatch(deleteListItem(id))
 });
 
 ListItem.propTypes = {

@@ -5,8 +5,7 @@ import configureStore from './store/configureStore';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import Theme from './components/Theme';
-import Document from './scenes/Document/Document';
-import List from './scenes/List/List';
+import List from './scenes/List';
 
 const store = configureStore();
 
@@ -15,7 +14,9 @@ ReactDOM.render(
     <Provider store={store}>
       <Theme>
         <Router>
-          <List />
+          <div style={{ padding: "50px", backgroundColor: 'green' }}>
+            <List />
+          </div>
         </Router>
       </Theme>
     </Provider>

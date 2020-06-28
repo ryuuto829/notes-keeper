@@ -11,11 +11,11 @@ const base = {
 };
 
 export const lightTheme  = {
-  text: 'red'
+  text: 'black'
 };
 
 export const darkTheme  = {
-  text: 'blue'
+  text: 'black'
 };
 
 export default darkTheme;

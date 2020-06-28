@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const PopoutButton = ({ children }) => (
-  <StyledButton>
+const PopoutButton = ({ children, name, clicked }) => (
+  <StyledButton
+   onClick={clicked}>
     <StyledIcon height="24" viewBox="0 0 24 24" width="24">
       {children}
     </StyledIcon>

@@ -3,16 +3,19 @@ import styled from 'styled-components';
 
 const StyledMarkerContainer = styled.div`
   cursor: pointer;
+  width: 24px;
+  height: 24px;
+  position: relative;
 `;
 
 const StyledIcon = styled.svg`
   display: ${({ showed }) => showed ? "block" : "none"};
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   object-fit: contain;
   position: absolute;
-  top: 10px;
-  left: 0;
+  top: 2px;
+  left: 5px;
 `;
 
 const BulletMarker = ({ showedMarker, hasChildren, clicked }) => (

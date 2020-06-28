@@ -5,10 +5,17 @@ import {
   toggleListEditable,
   removeListEditable,
   deleteListItem
-} from '../../store/actions/index';
+} from '../../store/actions';
 
-import ListContainer from './ListContainer';
+import ListItemContainer from './components/ListItemContainer';
 import Input from './Input';
+import BulletMarker from './components/BulletMarker';
+import Popout from './components/Popout';
+
+import {
+  StyledContentContainer,
+  StyledListContent
+} from './components/ListItems';
 
 const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEditable, deleteItem }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -29,7 +36,7 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
         console.log('submit text to store')
       }
     };
-    
+
     if (isEditable) {
       document.addEventListener("keydown", escFunction, false);
     }
@@ -84,10 +91,10 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
   let childrenItems = null;
   if (children) {
     childrenItems = (
-      <ListContainer
+      <ListItemContainer
         hidden={collapsed}>
         {children}
-      </ListContainer>
+      </ListItemContainer>
     );
   }
 
@@ -95,14 +102,14 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
   let nestedInput = null;
   if (showInput && !collapsed && isEditable) {
     nestedInput = (
-      <ListContainer>
+      <ListItemContainer>
         <li>
           <Input
             closeInput={setShowInput}
             parentID={id}
             isChild={true} />
         </li>
-      </ListContainer>
+      </ListItemContainer>
     );
   }
 
@@ -121,13 +128,23 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
 
   /** Show input when edit or content */
   let itemContent = (
-    <div>
-      <button onClick={onMarkerClickHandler}>Marker</button>
-      <span> {content} </span>
-      <button onClick={onAddBtnClickHandler}>Add</button>
+    <StyledContentContainer>
+      <BulletMarker
+        hasChildren={children !== null}
+        showedMarker={collapsed}
+        clicked={onMarkerClickHandler} />
+      {/* <button onClick={onMarkerClickHandler}>Marker</button> */}
+      <StyledListContent>
+        {content}
+      </StyledListContent>
+      <Popout
+        added={onAddBtnClickHandler}
+        edited={onEditBtnClickHandler}
+        deleted={onDeleteBtnClickHandler} />
+      {/* <button onClick={onAddBtnClickHandler}>Add</button>
       <button onClick={onEditBtnClickHandler}>Edit</button>
-      <button onClick={onDeleteBtnClickHandler}>Delete</button>
-    </div>
+      <button onClick={onDeleteBtnClickHandler}>Delete</button> */}
+    </StyledContentContainer>
   );
 
   if (editItem && isEditable) {

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { StyledListContainer } from './components/ListItems';
 import ListItem from './ListItem';
 
 /** Render all items from the redux store List */
@@ -25,11 +26,14 @@ const createList = (partList, fullList, editableID) => {
   });
 };
 
-const List = ({ list, initialList, editableID }) => (
-  <ul>
-    {createList(initialList, list, editableID)}
-  </ul>
-);
+const List = ({ list, initialList, editableID }) => {
+  const listItems = createList(initialList, list, editableID);
+  return (
+    <StyledListContainer>
+      {listItems}
+    </StyledListContainer>
+  );
+};
 
 const mapStateToProps = (state) => ({
   initialList: state.list.initialIDList,

@@ -11,6 +11,8 @@ export default createGlobalStyle`
 
   body {
     margin: 0;
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+    font-weight: 400;
     color: ${({ theme }) => theme.text};
   }
 `;

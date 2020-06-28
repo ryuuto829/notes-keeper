@@ -5,11 +5,11 @@ import AddButton from './AddButton';
 import EditButton from './EditButton';
 import MoreButton from './MoreButton';
 
-const PopoutButtonGroup = () => (
+const PopoutButtonGroup = ({ added, edited, deleted }) => (
   <StyledContainer>
-    <AddButton />
-    <EditButton />
-    <MoreButton />
+    <AddButton clicked={added} />
+    <EditButton clicked={edited} />
+    <MoreButton clicked={deleted} />
   </StyledContainer>
 );
 

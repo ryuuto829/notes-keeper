@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useStatem } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addNewListItem, removeListEditable } from '../../store/actions/index';
+import {
+  addListItem,
+  editListItem,
+  removeListEditable
+} from '../../store/actions/index';
 
-const Input = ({ addNewItem, parentID, isChild, closeInput, text, isEdit, removeEditable }) => {
+const Input = ({ addItem, editItem, parentID, isChild, closeInput, text, isEdit, removeEditable }) => {
   const [inputText, setInputText] = useState(text || '');
 
   const onInputSubmitHandler = e => {
     e.preventDefault();
-    addNewItem(inputText, parentID, isChild, isEdit);
+    if (isEdit) {
+      editItem(inputText, parentID);
+    } else {
+      addItem(inputText, parentID, isChild);
+    }
     removeEditable();
     closeInput(false);
   };
@@ -25,12 +33,12 @@ const Input = ({ addNewItem, parentID, isChild, closeInput, text, isEdit, remove
 };
 
 const mapDispatchToProps = dispatch => ({
-  addNewItem: (text, parentID, isChild, isEdit) => dispatch(addNewListItem(text, parentID, isChild, isEdit)),
+  addItem: (text, parentID, isChild) => dispatch(addListItem(text, parentID, isChild)),
+  editItem: (text, parentID) => dispatch(editListItem(text, parentID)),
   removeEditable: () => dispatch(removeListEditable())
 });
 
 Input.propTypes = {
-  addNewItem: PropTypes.func.isRequired,
   parentID: PropTypes.string,
   isChild: PropTypes.bool.isRequired,
   closeInput: PropTypes.func.isRequired,

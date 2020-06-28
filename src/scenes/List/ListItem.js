@@ -29,7 +29,7 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
         console.log('submit text to store')
       }
     };
-
+    
     if (isEditable) {
       document.addEventListener("keydown", escFunction, false);
     }
@@ -154,7 +154,7 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
 };
 
 const mapDispatchToProps = dispatch => ({
-  toggleEditable: isEditable => dispatch(toggleListEditable(isEditable)),
+  toggleEditable: id => dispatch(toggleListEditable(id)),
   removeEditable: () => dispatch(removeListEditable()),
   deleteItem: id => dispatch(deleteListItem(id))
 });

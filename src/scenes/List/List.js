@@ -32,9 +32,9 @@ const List = ({ list, initialList, editableID }) => (
 );
 
 const mapStateToProps = (state) => ({
-  initialList: state.document.initialIDList,
-  list: state.document.listByID,
-  editableID: state.document.isEditable
+  initialList: state.list.initialIDList,
+  list: state.list.listByID,
+  editableID: state.list.isEditable
 });
 
 List.propTypes = {

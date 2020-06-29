@@ -17,19 +17,22 @@ import {
   StyledListContent
 } from './components/ListItems';
 
+const INPUT_TYPES = {
+  childInput: 'childInput',
+  siblingInput: 'siblingInput',
+  editInput: 'editInput'
+};
+
 const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEditable, deleteItem }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [showInput, setShowInput] = useState(false);
-  const [showSiblingInput, setShowSiblingInput] = useState(false);
-  const [editItem, setEditItem] = useState(false);
+  const [showedInput, setShowedInput] = useState(null);
 
   /** Setup listeners for global escape keydown */
   useEffect(() => {
+    console.log('effect')
     const escFunction = e => {
       if (e.code === 'Escape') {
-        setShowInput(false);
-        setShowSiblingInput(false);
-        setEditItem(false);
+        setShowedInput(null);
         removeEditable();
       }
       if (e.code === 'Enter') {
@@ -43,44 +46,34 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
     return () => {
       document.removeEventListener("keydown", escFunction, false);
     };
-  }, [isEditable]);
+  }, [removeEditable, isEditable]);
 
   const onMarkerClickHandler = () => {
     if (children) {
       setCollapsed(!collapsed);
+      removeEditable();
     } else {
       if (!isEditable) {
         toggleEditable(id);
-        setShowInput(true);
+        setShowedInput(INPUT_TYPES.childInput);
       } else {
-        setShowInput(!showInput);
+        setShowedInput(INPUT_TYPES.childInput === showedInput ? null : INPUT_TYPES.childInput);
       }
-      setEditItem(false);
-      setShowSiblingInput(false);
     }
   };
 
   const onAddBtnClickHandler = () => {
-    if (!isEditable) {
-      toggleEditable(id);
-    }
+    if (!isEditable) toggleEditable(id);
     if (children && !collapsed) {
-      setShowInput(!showInput);
-      setShowSiblingInput(false);
+      setShowedInput(INPUT_TYPES.childInput === showedInput ? null : INPUT_TYPES.childInput);
     } else {
-      setShowSiblingInput(!showSiblingInput);
-      setShowInput(false);
+      setShowedInput(INPUT_TYPES.siblingInput === showedInput ? null : INPUT_TYPES.siblingInput);
     }
-    setEditItem(false);
   };
 
   const onEditBtnClickHandler = () => {
-    if (!isEditable) {
-      toggleEditable(id);
-    }
-    setEditItem(true);
-    setShowInput(false);
-    setShowSiblingInput(false);
+    if (!isEditable) toggleEditable(id);
+    setShowedInput(INPUT_TYPES.editInput);
   };
 
   const onDeleteBtnClickHandler = () => {
@@ -100,12 +93,12 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
 
   /** Add nested input as a child */
   let nestedInput = null;
-  if (showInput && !collapsed && isEditable) {
+  if (showedInput === INPUT_TYPES.childInput && !collapsed && isEditable) {
     nestedInput = (
       <ListItemContainer>
         <li>
           <Input
-            closeInput={setShowInput}
+            closeInput={setShowedInput}
             parentID={id}
             isChild={true} />
         </li>
@@ -115,11 +108,11 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
 
   /** Add sibling input as a sibling */
   let siblingInput = null;
-  if (showSiblingInput && isEditable) {
+  if (showedInput === INPUT_TYPES.siblingInput && isEditable) {
     siblingInput = (
       <li>
         <Input
-          closeInput={setShowSiblingInput}
+          closeInput={setShowedInput}
           parentID={id}
           isChild={false} />
       </li>
@@ -133,7 +126,6 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
         hasChildren={children !== null}
         showedMarker={collapsed}
         clicked={onMarkerClickHandler} />
-      {/* <button onClick={onMarkerClickHandler}>Marker</button> */}
       <StyledListContent>
         {content}
       </StyledListContent>
@@ -141,17 +133,14 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
         added={onAddBtnClickHandler}
         edited={onEditBtnClickHandler}
         deleted={onDeleteBtnClickHandler} />
-      {/* <button onClick={onAddBtnClickHandler}>Add</button>
-      <button onClick={onEditBtnClickHandler}>Edit</button>
-      <button onClick={onDeleteBtnClickHandler}>Delete</button> */}
     </StyledContentContainer>
   );
 
-  if (editItem && isEditable) {
+  if (showedInput === INPUT_TYPES.editInput && isEditable) {
     itemContent = (
       <Input
         text={content}
-        closeInput={setEditItem}
+        closeInput={setShowedInput}
         parentID={id}
         isChild={false}
         isEdit={isEditable} />
@@ -184,7 +173,9 @@ ListItem.propTypes = {
   ]),
   id: PropTypes.string.isRequired,
   isEditable: PropTypes.bool.isRequired,
-  toggleEditable: PropTypes.func.isRequired
+  toggleEditable: PropTypes.func.isRequired,
+  removeEditable: PropTypes.func.isRequired,
+  deleteItem: PropTypes.func.isRequired
 };
 
 export default connect(null, mapDispatchToProps)(ListItem);

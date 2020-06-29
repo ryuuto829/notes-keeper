@@ -18,7 +18,7 @@ const Input = ({ addItem, editItem, parentID, isChild, closeInput, text, isEdit,
       addItem(inputText, parentID, isChild);
     }
     removeEditable();
-    closeInput(false);
+    closeInput(null);
   };
 
   return (

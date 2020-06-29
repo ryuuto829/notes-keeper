@@ -7,6 +7,7 @@ import ListItem from './ListItem';
 
 /** Render all items from the redux store List */
 const createList = (partList, fullList, editableID) => {
+  if (!partList) return null;
   return partList.map(itemID => {
     const currentItem = fullList[itemID];
     let currentChildrens = null;
@@ -35,7 +36,7 @@ const List = ({ list, initialList, editableID }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   initialList: state.list.initialIDList,
   list: state.list.listByID,
   editableID: state.list.isEditable
@@ -47,7 +48,7 @@ List.propTypes = {
     parent: PropTypes.string,
     children: PropTypes.arrayOf(PropTypes.string)
   })).isRequired,
-  initialList: PropTypes.array.isRequired,
+  initialList: PropTypes.array,
   editableID: PropTypes.string
 };
 

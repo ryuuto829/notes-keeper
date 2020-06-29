@@ -206,7 +206,7 @@ const deleteListItem = (state, { id }) => {
         ...updatedList,
         [state.listByID[id].parent]: {
           ...state.listByID[state.listByID[id].parent],
-          children: updatedListChildren || null
+          children: updatedListChildren.length === 0 ? null : updatedListChildren
         }
       }
     };
@@ -221,7 +221,7 @@ const deleteListItem = (state, { id }) => {
       listByID: {
         ...updatedList
       },
-      initialIDList: updatedListChildrenInitial
+      initialIDList: updatedListChildrenInitial.length === 0 ? null : updatedListChildrenInitial
     };
   }
 };

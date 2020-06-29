@@ -1,49 +1,36 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import {
-  addListItem,
-  editListItem,
-  removeListEditable
-} from '../../store/actions/index';
 
-const Input = ({ addItem, editItem, parentID, isChild, closeInput, text, isEdit, removeEditable }) => {
-  const [inputText, setInputText] = useState(text || '');
+import StyledInput from './components/Input';
 
+const Input = ({ text, isEdit, submitedTextInput }) => {
   const onInputSubmitHandler = e => {
-    e.preventDefault();
-    if (isEdit) {
-      editItem(inputText, parentID);
-    } else {
-      addItem(inputText, parentID, isChild);
+    if (e.key !== 'Enter') {
+      if (isEdit) {
+        submitedTextInput(e.target.textContent);
+      } else {
+        submitedTextInput(e.target.textContent);
+      }
     }
-    removeEditable();
-    closeInput(null);
   };
 
   return (
-    <form onSubmit={e => onInputSubmitHandler(e)} >
-      <input
-        type="text"
-        value={inputText}
-        onChange={e => setInputText(e.target.value)} />
+    <div>
+      <StyledInput
+        contentEditable
+        suppressContentEditableWarning={true}
+        onKeyDown={e => onInputSubmitHandler(e)} >
+        {text}
+      </StyledInput>
       <div>escape to cancel • enter to save</div>
-    </form>
+    </div>
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  addItem: (text, parentID, isChild) => dispatch(addListItem(text, parentID, isChild)),
-  editItem: (text, parentID) => dispatch(editListItem(text, parentID)),
-  removeEditable: () => dispatch(removeListEditable())
-});
-
 Input.propTypes = {
-  parentID: PropTypes.string,
-  isChild: PropTypes.bool.isRequired,
-  closeInput: PropTypes.func.isRequired,
+  submitedTextInput: PropTypes.func.isRequired,
   text: PropTypes.string,
   isEdit: PropTypes.bool
 };
 
-export default connect(null, mapDispatchToProps)(Input);
+export default Input;

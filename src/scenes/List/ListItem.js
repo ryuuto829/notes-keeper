@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
+  addListItem,
+  editListItem,
   toggleListEditable,
   removeListEditable,
   deleteListItem
@@ -23,19 +25,28 @@ const INPUT_TYPES = {
   editInput: 'editInput'
 };
 
-const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEditable, deleteItem }) => {
+const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEditable, deleteItem, addItem, editItem }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [showedInput, setShowedInput] = useState(null);
+  const [inputText, setInputText] = useState('2');
 
   /** Setup listeners for global escape keydown */
   useEffect(() => {
-    console.log('effect')
     const escFunction = e => {
-      if (e.code === 'Escape') {
+      if (e.key === 'Escape') {
         setShowedInput(null);
         removeEditable();
       }
-      if (e.code === 'Enter') {
+      if (e.key === 'Enter') {
+        if (showedInput === INPUT_TYPES.editInput) {
+          console.log(inputText)
+          editItem(inputText, id);
+        } else {
+          console.log(inputText)
+          addItem(inputText, id, showedInput === INPUT_TYPES.childInput);
+        }
+        setShowedInput(null);
+        removeEditable();
         console.log('submit text to store')
       }
     };
@@ -46,7 +57,7 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
     return () => {
       document.removeEventListener("keydown", escFunction, false);
     };
-  }, [removeEditable, isEditable]);
+  }, [removeEditable, isEditable, inputText]);
 
   const onMarkerClickHandler = () => {
     if (children) {
@@ -98,6 +109,7 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
       <ListItemContainer>
         <li>
           <Input
+            submitedTextInput={setInputText}
             closeInput={setShowedInput}
             parentID={id}
             isChild={true} />
@@ -112,6 +124,7 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
     siblingInput = (
       <li>
         <Input
+          submitedTextInput={setInputText}
           closeInput={setShowedInput}
           parentID={id}
           isChild={false} />
@@ -139,6 +152,7 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
   if (showedInput === INPUT_TYPES.editInput && isEditable) {
     itemContent = (
       <Input
+        submitedTextInput={setInputText}
         text={content}
         closeInput={setShowedInput}
         parentID={id}
@@ -160,6 +174,8 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
 };
 
 const mapDispatchToProps = dispatch => ({
+  addItem: (text, parentID, isChild) => dispatch(addListItem(text, parentID, isChild)),
+  editItem: (text, parentID) => dispatch(editListItem(text, parentID)),
   toggleEditable: id => dispatch(toggleListEditable(id)),
   removeEditable: () => dispatch(removeListEditable()),
   deleteItem: id => dispatch(deleteListItem(id))

@@ -18,7 +18,7 @@ const StyledMarkerContainer = styled.div`
   cursor: pointer;
   width: 24px;
   height: 24px;
-  position: relative;
+  position: absolute;
 `;
 
 const StyledIcon = styled.svg`

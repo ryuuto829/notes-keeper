@@ -10,8 +10,6 @@ export const StyledListContainer = styled.ul`
 `;
 
 export const StyledContentContainer = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
   position: relative;
 
   &:hover {
@@ -24,6 +22,6 @@ export const StyledContentContainer = styled.div`
 `;
 
 export const StyledListContent = styled.div`
-  padding-left: 5px;
+  padding-left: 26px;
   line-height: 1.4;
 `;

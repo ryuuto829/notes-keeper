@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
@@ -28,7 +28,7 @@ const INPUT_TYPES = {
 const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEditable, deleteItem, addItem, editItem }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [showedInput, setShowedInput] = useState(null);
-  const [inputText, setInputText] = useState('2');
+  const inputField = useRef(null);
 
   /** Setup listeners for global escape keydown */
   useEffect(() => {
@@ -38,11 +38,10 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
         removeEditable();
       }
       if (e.key === 'Enter') {
+        const inputText = inputField.current.textContent;
         if (showedInput === INPUT_TYPES.editInput) {
-          console.log(inputText)
           editItem(inputText, id);
         } else {
-          console.log(inputText)
           addItem(inputText, id, showedInput === INPUT_TYPES.childInput);
         }
         setShowedInput(null);
@@ -50,14 +49,13 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
         console.log('submit text to store')
       }
     };
-
     if (isEditable) {
       document.addEventListener("keydown", escFunction, false);
     }
     return () => {
       document.removeEventListener("keydown", escFunction, false);
     };
-  }, [removeEditable, isEditable, inputText]);
+  }, [removeEditable, isEditable]);
 
   const onMarkerClickHandler = () => {
     if (children) {
@@ -108,11 +106,7 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
     nestedInput = (
       <ListItemContainer>
         <li>
-          <Input
-            submitedTextInput={setInputText}
-            closeInput={setShowedInput}
-            parentID={id}
-            isChild={true} />
+          <Input ref={inputField} />
         </li>
       </ListItemContainer>
     );
@@ -123,11 +117,7 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
   if (showedInput === INPUT_TYPES.siblingInput && isEditable) {
     siblingInput = (
       <li>
-        <Input
-          submitedTextInput={setInputText}
-          closeInput={setShowedInput}
-          parentID={id}
-          isChild={false} />
+        <Input ref={inputField} />
       </li>
     );
   }
@@ -152,12 +142,8 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
   if (showedInput === INPUT_TYPES.editInput && isEditable) {
     itemContent = (
       <Input
-        submitedTextInput={setInputText}
-        text={content}
-        closeInput={setShowedInput}
-        parentID={id}
-        isChild={false}
-        isEdit={isEditable} />
+        ref={inputField}
+        text={content} />
     );
   }
 

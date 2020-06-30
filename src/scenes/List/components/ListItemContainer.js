@@ -39,6 +39,10 @@ export const StyledListContainer = styled.ul`
   color: #dcddde;
 `;
 
+export const StyledListItemContainer = styled.li`
+  padding: 3px 0;
+`;
+
 ListItemContainer.porpTypes = {
   hidden: PropTypes.bool,
   children: PropTypes.oneOfType([

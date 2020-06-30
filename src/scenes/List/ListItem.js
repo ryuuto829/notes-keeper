@@ -12,6 +12,7 @@ import {
 import ListContent from './components/ListContent';
 import ListItemContainer from './components/ListItemContainer';
 import Input from './components/Input';
+import { StyledListItemContainer } from './components/ListItemContainer'
 
 const INPUT_TYPES = {
   childInput: 'childInput',
@@ -42,12 +43,14 @@ const ListItem = ({
       }
 
       if (e.key === 'Enter') {
-        const inputText = inputField.current.textContent;
+        const inputText = inputField.current.textContent.trim();
 
-        if (showedInput === INPUT_TYPES.editInput) {
-          editItem(inputText, id);
-        } else {
-          addItem(inputText, id, showedInput === INPUT_TYPES.childInput);
+        if (inputText.length > 0) {
+          if (showedInput === INPUT_TYPES.editInput) {
+            editItem(inputText, id);
+          } else {
+            addItem(inputText, id, showedInput === INPUT_TYPES.childInput);
+          }
         }
 
         setShowedInput(null);
@@ -112,9 +115,9 @@ const ListItem = ({
   if (showedInput === INPUT_TYPES.childInput && !collapsed && isEditable) {
     nestedInput = (
       <ListItemContainer>
-        <li>
+        <StyledListItemContainer>
           <Input ref={inputField} />
-        </li>
+        </StyledListItemContainer>
       </ListItemContainer>
     );
   }
@@ -123,9 +126,9 @@ const ListItem = ({
   let siblingInput = null;
   if (showedInput === INPUT_TYPES.siblingInput && isEditable) {
     siblingInput = (
-      <li>
+      <StyledListItemContainer>
         <Input ref={inputField} />
-      </li>
+      </StyledListItemContainer>
     );
   }
 
@@ -151,11 +154,11 @@ const ListItem = ({
 
   return (
     <React.Fragment>
-      <li>
+      <StyledListItemContainer>
         {itemContent}
         {nestedInput}
         {childrenItems}
-      </li>
+      </StyledListItemContainer>
       {siblingInput}
     </React.Fragment>
   );

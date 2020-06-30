@@ -14,9 +14,7 @@ ReactDOM.render(
     <Provider store={store}>
       <Theme>
         <Router>
-          <div style={{ padding: "50px", backgroundColor: 'green' }}>
-            <List />
-          </div>
+          <List />
         </Router>
       </Theme>
     </Provider>

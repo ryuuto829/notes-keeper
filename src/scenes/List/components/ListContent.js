@@ -24,7 +24,7 @@ const StyledContentContainer = styled.div`
   position: relative;
 
   &:hover {
-    background-color: rgba(4, 4, 5, 0.07);
+    background-color: rgba(4, 4, 5, 0.15);
   }
 
   &:hover div:last-of-type {

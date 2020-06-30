@@ -10,59 +10,49 @@ const initialState = {
   listByID: {
     id1: {
       parent: null,
-      text: 'Managing your time and motivation 1',
+      text: 'Elements of Logotherapy/Existential Analysis',
       children: ['id3', 'id4', 'id5']
     },
     id2: {
       parent: null,
-      text: 'Managing your time and motivation 2',
-      children: ['id9', 'id10', 'id11']
+      text: `In logotherapy the search for a meaning in life is identified as the primary motivational force in human beings. Frankl's approach is based on three philosophical and psychological concepts, Freedom of Will - Will to Meaning - Meaning in Life:`,
+      children: ['id9']
     },
     id3: {
       parent: "id1",
-      text: 'Nested text',
+      text: 'Humans are basically free to take their stance towards internal (psychological) and external (biological and social) conditions.',
       children: null
     },
     id4: {
       parent: "id1",
-      text: 'Nested text',
+      text: 'The search for meaning is seen as the primary motivation of humans. Logotherapy assists clients in finding and pursuing meaningful goals in their lives. However, they are not offered specific meanings; rather, they are encouraged to realize of those meaning possibilities they have detected themselves.',
       children: null
     },
     id5: {
       parent: "id1",
-      text: 'Managing your time and motivation Nested',
+      text: 'Logotherapy is based on the idea that meaning is an objective reality, as opposed to a mere illusion arising within the perceptional apparatus of the observer.',
       children: ['id6', 'id7', 'id8']
     },
     id6: {
       parent: "id5",
-      text: 'Nested text',
+      text: 'The primary techniques offered by logotherapy and existential analysis are:',
       children: null
     },
     id7: {
       parent: "id5",
-      text: 'Nested text',
+      text: 'Paradoxical Intention: Clients learn to overcome their obsessions or anxieties by self-distancing and humorous exaggeration, thus breaking the vicious circle of symptom and symptom amplification.',
       children: null
     },
     id8: {
       parent: "id5",
-      text: 'Nested text',
+      text: `Dereflection: To remove the obstruction of instinctive, automatic processes caused by exaggerated self-observation, dereflection breaks the circle of hyper-reflection and the ensuing inhibition by drawing the client's attention away from the symptom.`,
       children: null
     },
     id9: {
       parent: "id2",
-      text: 'Nested text',
+      text: `Socratic dialogue / attitude modification:  Specific questions are aimed to raise into consciousness the possibility to find, and the freedom to fulfill, meaning in one's life. The logotherapist refrains from imposing their own values or meaning perceptions. Rather, clients are guided to perceive their unrealistic and counterproductive attitudes and to develop a new outlook that may be a better basis for a fulfilled life.`,
       children: null
-    },
-    id10: {
-      parent: "id2",
-      text: 'Nested text',
-      children: null
-    },
-    id11: {
-      parent: "id2",
-      text: 'Nested text',
-      children: null
-    },
+    }
   },
   initialIDList: ['id1', 'id2'],
   isEditable: null
@@ -170,7 +160,7 @@ const resetEditable = state => {
 const deleteListItem = (state, { id }) => {
   const findChildrenIdexToDelete = (listOfChildrens = null, fullList, resultArray = []) => {
     if (listOfChildrens) {
-      listOfChildrens.map(item => {
+      listOfChildrens.forEach(item => {
         resultArray.push(item);
         if (fullList[item].children) {
           findChildrenIdexToDelete(fullList[item].children, fullList, resultArray);

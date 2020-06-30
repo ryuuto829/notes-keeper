@@ -8,7 +8,7 @@ const Input = React.forwardRef(({ text }, ref) => {
   /** Set autofocus on input */
   useEffect(() => {
     ref.current.focus();
-  }, []);
+  }, [ref]);
 
   return (
     <div>

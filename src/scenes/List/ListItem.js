@@ -9,15 +9,9 @@ import {
   deleteListItem
 } from '../../store/actions';
 
+import ListContent from './components/ListContent';
 import ListItemContainer from './components/ListItemContainer';
-import Input from './Input';
-import BulletMarker from './components/BulletMarker';
-import Popout from './components/Popout';
-
-import {
-  StyledContentContainer,
-  StyledListContent
-} from './components/ListItems';
+import Input from './components/Input';
 
 const INPUT_TYPES = {
   childInput: 'childInput',
@@ -25,7 +19,16 @@ const INPUT_TYPES = {
   editInput: 'editInput'
 };
 
-const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEditable, deleteItem, addItem, editItem }) => {
+const ListItem = ({
+  content,
+  children,
+  id,
+  isEditable,
+  toggleEditable,
+  removeEditable,
+  deleteItem, addItem,
+  editItem
+}) => {
   const [collapsed, setCollapsed] = useState(false);
   const [showedInput, setShowedInput] = useState(null);
   const inputField = useRef(null);
@@ -37,25 +40,29 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
         setShowedInput(null);
         removeEditable();
       }
+
       if (e.key === 'Enter') {
         const inputText = inputField.current.textContent;
+
         if (showedInput === INPUT_TYPES.editInput) {
           editItem(inputText, id);
         } else {
           addItem(inputText, id, showedInput === INPUT_TYPES.childInput);
         }
+
         setShowedInput(null);
         removeEditable();
-        console.log('submit text to store')
       }
     };
+
     if (isEditable) {
       document.addEventListener("keydown", escFunction, false);
     }
+
     return () => {
       document.removeEventListener("keydown", escFunction, false);
     };
-  }, [removeEditable, isEditable]);
+  }, [removeEditable, isEditable, addItem, editItem, id, showedInput]);
 
   const onMarkerClickHandler = () => {
     if (children) {
@@ -124,19 +131,14 @@ const ListItem = ({ content, children, id, isEditable, toggleEditable, removeEdi
 
   /** Show input when edit or content */
   let itemContent = (
-    <StyledContentContainer>
-      <BulletMarker
-        hasChildren={children !== null}
-        showedMarker={collapsed}
-        clicked={onMarkerClickHandler} />
-      <StyledListContent>
-        {content}
-      </StyledListContent>
-      <Popout
-        added={onAddBtnClickHandler}
-        edited={onEditBtnClickHandler}
-        deleted={onDeleteBtnClickHandler} />
-    </StyledContentContainer>
+    <ListContent
+      hasChildren={children !== null}
+      showedMarker={collapsed}
+      clicked={onMarkerClickHandler}
+      added={onAddBtnClickHandler}
+      edited={onEditBtnClickHandler}
+      deleted={onDeleteBtnClickHandler}
+      content={content} />
   );
 
   if (showedInput === INPUT_TYPES.editInput && isEditable) {

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { StyledListContainer } from './components/ListItems';
 import ListItem from './ListItem';
+import { StyledListContainer } from './components/ListItemContainer';
 
 /** Render all items from the redux store List */
 const createList = (partList, fullList, editableID) => {

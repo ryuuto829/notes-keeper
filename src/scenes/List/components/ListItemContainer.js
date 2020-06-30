@@ -30,6 +30,15 @@ const StyledContainer = styled.ul`
   }
 `;
 
+export const StyledListContainer = styled.ul`
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-size: 0.9rem;
+  background-color: #36393f;
+  color: #dcddde;
+`;
+
 ListItemContainer.porpTypes = {
   hidden: PropTypes.bool,
   children: PropTypes.oneOfType([

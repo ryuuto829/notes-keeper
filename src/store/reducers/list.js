@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import {
   ADD_LIST_ITEM,
   EDIT_LIST_ITEM,
@@ -58,11 +59,8 @@ const initialState = {
   isEditable: null
 };
 
-/** Delete later */
-let generateID = 20;
-
 const addListItem = (state, { text, parentID, isChild }) => {
-  const currId = 'id-' + String(generateID++);
+  const currId = uuidv4();
 
   if (isChild) {
     const parentChildren = state.listByID[parentID].children ?

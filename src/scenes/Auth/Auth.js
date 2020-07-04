@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import HeaderPrimary from './components/HeaderPrimary';
 import HeaderSecondary from './components/HeaderSecondary';
+import Input from './components/Input';
 
 const Auth = () => {
   return (
@@ -11,10 +12,10 @@ const Auth = () => {
         <StyledCenteringWrapper>
           <HeaderPrimary>Welcome Back!</HeaderPrimary>
           <HeaderSecondary>We're so excited to see you again!</HeaderSecondary>
-          <div>Email</div>
-          <input type='text' />
-          <div>Password</div>
-          <input type='text' />
+          <form>
+            <Input />
+            <Input />
+          </form>
         </StyledCenteringWrapper>
       </StyledAuthBox>
     </StyledWrapper>
@@ -46,12 +47,25 @@ const StyledAuthBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: moveFromTop .3s;
 
   @media (max-width: 440px) {
     height: 100%;
     padding: 30px 16px;
     min-height: 580px;
   }
+
+
+  @keyframes moveFromTop {
+  0% {
+    transform: translateY(-100px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
 `;
 
 const StyledCenteringWrapper = styled.div`

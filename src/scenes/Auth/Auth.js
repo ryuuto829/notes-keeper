@@ -1,11 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import HeaderPrimary from './components/HeaderPrimary';
 import HeaderSecondary from './components/HeaderSecondary';
 import Input from './components/Input';
 
+/** Input fields state configuration */
+const INPUT_FIELDS_FORMAT = [
+  {
+    label: 'EMAIL',
+    type: 'email',
+    name: 'email-login'
+  },
+  {
+    label: 'PASSWORD',
+    type: 'password',
+    name: 'password-login'
+  }
+];
+
+const [email, password] = INPUT_FIELDS_FORMAT.map(input => {
+  return {
+    [input.name]: {
+      inputText: '',
+      isValid: true,
+      invalidMessage: null
+    }
+  };
+});
+
 const Auth = () => {
+  const [inputs, setInputs] = useState({ ...email, ...password });
+
+  const inputFields = INPUT_FIELDS_FORMAT.map(input => (
+    <Input
+      key={input.name}
+      name={input.name}
+      label={input.label}
+      inputType={input.type}
+      invalidMessage={inputs[input.name].invalidMessage}
+      isValid={inputs[input.name].isValid}
+      inputValue={inputs[input.name].inputText}
+      changedInputValue={setInputs} />
+  ));
+
   return (
     <StyledWrapper>
       <StyledAuthBox>
@@ -13,8 +51,7 @@ const Auth = () => {
           <HeaderPrimary>Welcome Back!</HeaderPrimary>
           <HeaderSecondary>We're so excited to see you again!</HeaderSecondary>
           <form>
-            <Input />
-            <Input />
+            {inputFields}
           </form>
         </StyledCenteringWrapper>
       </StyledAuthBox>

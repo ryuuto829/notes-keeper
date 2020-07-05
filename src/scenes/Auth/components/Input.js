@@ -1,11 +1,24 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const Input = () => {
+const Input = props => {
+  const {
+    name,
+    label,
+    inputType,
+    invalidMessage,
+    isValid,
+    inputValue,
+    changedInputValue
+  } = props;
+
   return (
     <StyledInputWrapper>
-      <StyledLabel htmlFor='email-input'>EMAIL</StyledLabel>
-      <StyledInput id='email-input' type='text' />
+      <StyledLabel htmlFor={label}>{label}</StyledLabel>
+      <StyledInput
+        id={name}
+        type={inputType} />
     </StyledInputWrapper>
   );
 };
@@ -34,5 +47,15 @@ const StyledInput = styled.input`
 const StyledInputWrapper = styled.div`
   margin-bottom: 20px;
 `;
+
+Input.propTypes = {
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  inputType: PropTypes.string.isRequired,
+  invalidMessage: PropTypes.string,
+  isValid: PropTypes.bool.isRequired,
+  inputValue: PropTypes.string.isRequired,
+  changedInputValue: PropTypes.func.isRequired,
+};
 
 export default Input;

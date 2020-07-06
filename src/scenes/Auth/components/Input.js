@@ -14,25 +14,50 @@ const Input = props => {
   } = props;
 
   return (
-    <StyledInputWrapper>
-      <StyledLabel htmlFor={label}>{label}</StyledLabel>
-      <StyledInput
+    <InputWrapper>
+      <Label
+        isValid={isValid}
+        htmlFor={label}>
+        {label}
+        <InvalidMessage
+          isValid={isValid}>
+          {invalidMessage}
+        </InvalidMessage>
+      </Label>
+      <InputField
         id={name}
-        type={inputType} />
-    </StyledInputWrapper>
+        type={inputType}
+        isValid={isValid}
+        value={inputValue}
+        onChange={e => changedInputValue(name, e.target.value)} />
+    </InputWrapper>
   );
 };
 
-const StyledLabel = styled.label`
+const Label = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 8px;
-  color: #8e9297;
+  color: ${({ isValid }) => isValid ? '#8e9297' : '#f04747'};
   font-size: 12px;
   line-height: 16px;
 `;
 
-const StyledInput = styled.input`
+const InvalidMessage = styled.span`
+  display: ${({ isValid }) => isValid ? 'none' : 'inline'};
+  font-size: 12px;
+  font-weight: 500;
+  font-style: italic;
+  color: #f04747;
+
+  &:before {
+    content: '-';
+    display: inline;
+    padding: 0 4px;
+  }
+`;
+
+const InputField = styled.input`
   width: 100%;
   height: 40px;
   padding: 10px;
@@ -42,9 +67,10 @@ const StyledInput = styled.input`
   outline: 0;
   background-color: rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(0, 0, 0, 0.3);
+  border-color: ${({ isValid }) => isValid ? 'rgba(0, 0, 0, 0.3)' : '#f04747'};
 `;
 
-const StyledInputWrapper = styled.div`
+const InputWrapper = styled.div`
   margin-bottom: 20px;
 `;
 

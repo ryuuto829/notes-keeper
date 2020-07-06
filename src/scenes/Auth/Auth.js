@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import HeaderPrimary from './components/HeaderPrimary';
 import HeaderSecondary from './components/HeaderSecondary';
 import Input from './components/Input';
+import Button from './components/Button';
 
 /** Input fields state configuration */
 const INPUT_FIELDS_FORMAT = [
@@ -32,6 +33,21 @@ const [email, password] = INPUT_FIELDS_FORMAT.map(input => {
 const Auth = () => {
   const [inputs, setInputs] = useState({ ...email, ...password });
 
+  const inputTextChangeHandler = (name, text) => {
+    setInputs({
+      ...inputs,
+      [name]: {
+        ...inputs[name],
+        inputText: text
+      }
+    });
+  };
+
+  const submitHandler = e => {
+    e.preventDefault();
+    console.log('Form submit');
+  }
+
   const inputFields = INPUT_FIELDS_FORMAT.map(input => (
     <Input
       key={input.name}
@@ -41,25 +57,27 @@ const Auth = () => {
       invalidMessage={inputs[input.name].invalidMessage}
       isValid={inputs[input.name].isValid}
       inputValue={inputs[input.name].inputText}
-      changedInputValue={setInputs} />
+      changedInputValue={inputTextChangeHandler} />
   ));
 
   return (
-    <StyledWrapper>
-      <StyledAuthBox>
-        <StyledCenteringWrapper>
+    <Wrapper>
+      <AuthBox>
+        <CenteringWrapper>
           <HeaderPrimary>Welcome Back!</HeaderPrimary>
           <HeaderSecondary>We're so excited to see you again!</HeaderSecondary>
-          <form>
+          <FormContainer
+            onSubmit={submitHandler}>
             {inputFields}
-          </form>
-        </StyledCenteringWrapper>
-      </StyledAuthBox>
-    </StyledWrapper>
+            <Button>Login</Button>
+          </FormContainer>
+        </CenteringWrapper>
+      </AuthBox>
+    </Wrapper>
   );
 };
 
-const StyledWrapper = styled.div`
+const Wrapper = styled.div`
   position: absolute;
   left: 0;
   right: 0;
@@ -74,7 +92,7 @@ const StyledWrapper = styled.div`
   justify-content: center;
 `;
 
-const StyledAuthBox = styled.div`
+const AuthBox = styled.div`
   background-color: #36393f;
   padding: 32px;
   width: 100%;
@@ -86,12 +104,11 @@ const StyledAuthBox = styled.div`
   align-items: center;
   animation: moveFromTop .3s;
 
-  @media (max-width: 440px) {
+  @media (max-width: 480px) {
     height: 100%;
     padding: 30px 16px;
     min-height: 580px;
   }
-
 
   @keyframes moveFromTop {
   0% {
@@ -105,9 +122,13 @@ const StyledAuthBox = styled.div`
 }
 `;
 
-const StyledCenteringWrapper = styled.div`
+const CenteringWrapper = styled.div`
   width: 100%;
   text-align: center;
+`;
+
+const FormContainer = styled.form`
+  margin-top: 20px;
 `;
 
 export default Auth;

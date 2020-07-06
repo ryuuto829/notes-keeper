@@ -11,27 +11,80 @@ const INPUT_FIELDS_FORMAT = [
   {
     label: 'EMAIL',
     type: 'email',
-    name: 'email-login'
+    name: 'email'
   },
   {
     label: 'PASSWORD',
     type: 'password',
-    name: 'password-login'
+    name: 'password'
   }
 ];
 
-const [email, password] = INPUT_FIELDS_FORMAT.map(input => {
-  return {
-    [input.name]: {
-      inputText: '',
-      isValid: true,
-      invalidMessage: null
-    }
-  };
+const initialState = {};
+
+INPUT_FIELDS_FORMAT.forEach(input => {
+  initialState[input.name] = {
+    inputText: '',
+    isValid: true,
+    invalidMessage: null
+  }
 });
 
+const formValidation = (text, type) => {
+  const formedText = text.trim();
+
+  if (formedText === '') {
+    return 'This field is required';
+  }
+
+  switch (type) {
+    case 'email':
+      if (!/\S+@\S+\.\S+/.test(formedText)) {
+        return 'Not a well formed email address';
+      }
+      return null;
+    case 'password':
+      if (formedText.length < 6) {
+        return 'Password must be 6 or more';
+      }
+      return null;
+    default:
+      return null;
+  }
+};
+
 const Auth = () => {
-  const [inputs, setInputs] = useState({ ...email, ...password });
+  const [inputs, setInputs] = useState(initialState);
+
+  const submitHandler = e => {
+    e.preventDefault();
+    const errors = {};
+
+    INPUT_FIELDS_FORMAT.forEach(input => {
+      const error = formValidation(inputs[input.name].inputText, input.type);
+      if (error) {
+        errors[input.name] = error;
+      }
+    });
+
+    const updatedState = {};
+
+    INPUT_FIELDS_FORMAT.forEach(input => {
+      updatedState[input.name] = {
+        ...inputs[input.name],
+        isValid: errors[input.name] === undefined,
+        invalidMessage: errors[input.name]
+      }
+    });
+
+    setInputs(updatedState);
+
+    if (Object.keys(errors).length === 0 && errors.constructor === Object) {
+      console.log('Form submit');
+      // send request to the backend
+      // show loading icon
+    }
+  };
 
   const inputTextChangeHandler = (name, text) => {
     setInputs({
@@ -42,11 +95,6 @@ const Auth = () => {
       }
     });
   };
-
-  const submitHandler = e => {
-    e.preventDefault();
-    console.log('Form submit');
-  }
 
   const inputFields = INPUT_FIELDS_FORMAT.map(input => (
     <Input
@@ -64,7 +112,9 @@ const Auth = () => {
     <Wrapper>
       <AuthBox>
         <CenteringWrapper>
-          <HeaderPrimary>Welcome Back!</HeaderPrimary>
+          <HeaderPrimary>
+            <span role="img" aria-label="rocket">🚀</span> Welcome Back!
+            </HeaderPrimary>
           <HeaderSecondary>We're so excited to see you again!</HeaderSecondary>
           <FormContainer
             onSubmit={submitHandler}>
@@ -111,15 +161,15 @@ const AuthBox = styled.div`
   }
 
   @keyframes moveFromTop {
-  0% {
-    transform: translateY(-100px);
-    opacity: 0.5;
+    0% {
+      transform: translateY(-100px);
+      opacity: 0.5;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
 `;
 
 const CenteringWrapper = styled.div`

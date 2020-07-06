@@ -41,14 +41,16 @@ const Label = styled.label`
   color: ${({ isValid }) => isValid ? '#8e9297' : '#f04747'};
   font-size: 12px;
   line-height: 16px;
+  transition: color .2s ease-in-out;
 `;
 
 const InvalidMessage = styled.span`
-  display: ${({ isValid }) => isValid ? 'none' : 'inline'};
+  opacity: ${({ isValid }) => isValid ? '0' : '1'};
   font-size: 12px;
   font-weight: 500;
   font-style: italic;
   color: #f04747;
+  transition: opacity .2s ease-in-out;
 
   &:before {
     content: '-';
@@ -68,6 +70,7 @@ const InputField = styled.input`
   background-color: rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-color: ${({ isValid }) => isValid ? 'rgba(0, 0, 0, 0.3)' : '#f04747'};
+  transition: border-color .2s ease-in-out;
 `;
 
 const InputWrapper = styled.div`

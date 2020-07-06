@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Link, Route, Switch, useLocation } from 'react-router-dom';
+import { CSSTransition } from "react-transition-group";
 
 import HeaderPrimary from './components/HeaderPrimary';
 import HeaderSecondary from './components/HeaderSecondary';
 import Input from './components/Input';
 import Button from './components/Button';
+import { formValidation } from './Validation';
 
 /** Input fields state configuration */
-const INPUT_FIELDS_FORMAT = [
+const LOGIN_INPUTS_FORMAT = [
   {
     label: 'EMAIL',
     type: 'email',
@@ -20,47 +23,38 @@ const INPUT_FIELDS_FORMAT = [
   }
 ];
 
-const initialState = {};
-
-INPUT_FIELDS_FORMAT.forEach(input => {
-  initialState[input.name] = {
-    inputText: '',
-    isValid: true,
-    invalidMessage: null
+const REGISTER_INPUTS_FORMAT = [
+  ...LOGIN_INPUTS_FORMAT,
+  {
+    label: 'USERNAME',
+    type: 'text',
+    name: 'username'
   }
-});
-
-const formValidation = (text, type) => {
-  const formedText = text.trim();
-
-  if (formedText === '') {
-    return 'This field is required';
-  }
-
-  switch (type) {
-    case 'email':
-      if (!/\S+@\S+\.\S+/.test(formedText)) {
-        return 'Not a well formed email address';
-      }
-      return null;
-    case 'password':
-      if (formedText.length < 6) {
-        return 'Password must be 6 or more';
-      }
-      return null;
-    default:
-      return null;
-  }
-};
+];
 
 const Auth = () => {
+  const location = useLocation();
+  const inputList = location.pathname === "/login" ?
+    LOGIN_INPUTS_FORMAT :
+    REGISTER_INPUTS_FORMAT;
+
+  const initialState = {};
+
+  inputList.forEach(input => {
+    initialState[input.name] = {
+      inputText: '',
+      isValid: true,
+      invalidMessage: null
+    }
+  });
+
   const [inputs, setInputs] = useState(initialState);
 
   const submitHandler = e => {
     e.preventDefault();
     const errors = {};
 
-    INPUT_FIELDS_FORMAT.forEach(input => {
+    inputList.forEach(input => {
       const error = formValidation(inputs[input.name].inputText, input.type);
       if (error) {
         errors[input.name] = error;
@@ -69,7 +63,7 @@ const Auth = () => {
 
     const updatedState = {};
 
-    INPUT_FIELDS_FORMAT.forEach(input => {
+    inputList.forEach(input => {
       updatedState[input.name] = {
         ...inputs[input.name],
         isValid: errors[input.name] === undefined,
@@ -96,7 +90,7 @@ const Auth = () => {
     });
   };
 
-  const inputFields = INPUT_FIELDS_FORMAT.map(input => (
+  const inputFields = inputList.map(input => (
     <Input
       key={input.name}
       name={input.name}
@@ -110,19 +104,48 @@ const Auth = () => {
 
   return (
     <Wrapper>
-      <AuthBox>
-        <CenteringWrapper>
-          <HeaderPrimary>
-            <span role="img" aria-label="rocket">🚀</span> Welcome Back!
-            </HeaderPrimary>
-          <HeaderSecondary>We're so excited to see you again!</HeaderSecondary>
-          <FormContainer
-            onSubmit={submitHandler}>
-            {inputFields}
-            <Button>Login</Button>
-          </FormContainer>
-        </CenteringWrapper>
-      </AuthBox>
+      <Switch>
+        <Route exact path="/login">
+          <CSSTransition timeout={200}>
+            <AuthBox>
+              <CenteringWrapper>
+                <HeaderPrimary>
+                  <span role="img" aria-label="rocket">🚀</span> Welcome Back!
+              </HeaderPrimary>
+                <HeaderSecondary>We're so excited to see you again!</HeaderSecondary>
+                <FormContainer
+                  onSubmit={submitHandler}>
+                  {inputFields}
+                  <Button>Login</Button>
+                </FormContainer>
+                <RedirectButtonWrapper>
+                  <NeedAccountText>Need an account ?</NeedAccountText>
+                  <Link to="/register">
+                    <TextButton>Register</TextButton>
+                  </Link>
+                </RedirectButtonWrapper>
+              </CenteringWrapper>
+            </AuthBox>
+          </CSSTransition>
+        </Route>
+        <Route exact path="/register">
+          <AuthBox>
+            <CenteringWrapper>
+              <HeaderPrimary>Create an account</HeaderPrimary>
+              <FormContainer
+                onSubmit={submitHandler}>
+                {inputFields}
+                <Button>Continue</Button>
+              </FormContainer>
+              <RedirectButtonWrapper>
+                <Link to="/login">
+                  <TextButton>Already have an account ?</TextButton>
+                </Link>
+              </RedirectButtonWrapper>
+            </CenteringWrapper>
+          </AuthBox>
+        </Route>
+      </Switch>
     </Wrapper>
   );
 };
@@ -179,6 +202,36 @@ const CenteringWrapper = styled.div`
 
 const FormContainer = styled.form`
   margin-top: 20px;
+`;
+
+const RedirectButtonWrapper = styled.div`
+  margin-top: 4px;
+  text-align: left;
+  font-size: 13px;
+`;
+
+const NeedAccountText = styled.span`
+  line-height: 16px;
+  text-align: left;
+  color: rgb(114, 118, 125);
+`;
+
+const TextButton = styled.button`
+  display: inline-block;
+  margin-left: 4px;
+  color: #7289da;
+  font-size: inherit;
+  padding: 0;
+  width: auto;
+  height: auto;
+  outline: 0;
+  border: none;
+  background-color: transparent;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
 `;
 
 export default Auth;

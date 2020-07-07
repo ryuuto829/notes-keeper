@@ -29,7 +29,7 @@ const Input = props => {
         type={inputType}
         isValid={isValid}
         value={inputValue}
-        onChange={e => changedInputValue(name, e.target.value)} />
+        onChange={e => changedInputValue(e.target.value)} />
     </InputWrapper>
   );
 };

@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import Theme from './components/Theme';
 // import List from './scenes/List';
-import Auth from './scenes/Auth/Auth';
+import Auth from './scenes/Auth';
 
 const store = configureStore();
 

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import {
+  AuthBox,
+  CenteringWrapper,
   HeaderPrimary,
   FormContainer,
   RedirectButtonWrapper,
@@ -76,42 +79,48 @@ const RegisterForm = ({ history }) => {
   };
 
   return (
-    <React.Fragment>
-      <HeaderPrimary>Create an account</HeaderPrimary>
-      <FormContainer
-        onSubmit={submitHandler}>
-        <Input
-          name='login-email'
-          label='EMAIL'
-          inputType='email'
-          invalidMessage={emailInput.invalidMessage}
-          isValid={emailInput.isValid}
-          inputValue={emailInput.inputText}
-          changedInputValue={emailInputChangeHandler} />
-        <Input
-          name='username-password'
-          label='USERNAME'
-          inputType='text'
-          invalidMessage={userNameInput.invalidMessage}
-          isValid={userNameInput.isValid}
-          inputValue={userNameInput.inputText}
-          changedInputValue={userNameInputChangeHandler} />
-        <Input
-          name='login-password'
-          label='PASSWORD'
-          inputType='password'
-          invalidMessage={passwordInput.invalidMessage}
-          isValid={passwordInput.isValid}
-          inputValue={passwordInput.inputText}
-          changedInputValue={passwordInputChangeHandler} />
-        <Button>Continue</Button>
-      </FormContainer>
-      <RedirectButtonWrapper>
-        <TextButton
-          onClick={() => history.push('/login')}>Already have an account ?</TextButton>
-      </RedirectButtonWrapper>
-    </React.Fragment>
+    <AuthBox>
+      <CenteringWrapper>
+        <HeaderPrimary>Create an account</HeaderPrimary>
+        <FormContainer
+          onSubmit={submitHandler}>
+          <Input
+            name='login-email'
+            label='EMAIL'
+            inputType='email'
+            invalidMessage={emailInput.invalidMessage}
+            isValid={emailInput.isValid}
+            inputValue={emailInput.inputText}
+            changedInputValue={emailInputChangeHandler} />
+          <Input
+            name='username-password'
+            label='USERNAME'
+            inputType='text'
+            invalidMessage={userNameInput.invalidMessage}
+            isValid={userNameInput.isValid}
+            inputValue={userNameInput.inputText}
+            changedInputValue={userNameInputChangeHandler} />
+          <Input
+            name='login-password'
+            label='PASSWORD'
+            inputType='password'
+            invalidMessage={passwordInput.invalidMessage}
+            isValid={passwordInput.isValid}
+            inputValue={passwordInput.inputText}
+            changedInputValue={passwordInputChangeHandler} />
+          <Button>Continue</Button>
+        </FormContainer>
+        <RedirectButtonWrapper>
+          <TextButton
+            onClick={() => history.push('/login')}>Already have an account ?</TextButton>
+        </RedirectButtonWrapper>
+      </CenteringWrapper>
+    </AuthBox>
   );
+};
+
+RegisterForm.propTypes = {
+  history: PropTypes.object.isRequired
 };
 
 export default withRouter(RegisterForm);

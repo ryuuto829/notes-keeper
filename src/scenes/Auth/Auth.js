@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Route, Switch } from 'react-router-dom';
 
-import LoginForm from './LoginForm';
-import RegisterForm from './RegisterForm';
+import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
 
 const Auth = () => (
   <AuthPageWrapper>

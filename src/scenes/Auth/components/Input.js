@@ -29,7 +29,9 @@ const Input = props => {
         type={inputType}
         isValid={isValid}
         value={inputValue}
-        onChange={e => changedInputValue(e.target.value)} />
+        autoComplete='off'
+        spellCheck={inputType === 'text'}
+        onChange={e => changedInputValue(name, e.target.value)} />
     </InputWrapper>
   );
 };

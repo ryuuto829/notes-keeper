@@ -1,10 +1,29 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import {
+  submitSignInForm,
+  submitSignUpForm
+} from '../../store/actions'
 
 import { FormContainer } from './components/AuthForm';
 import Button from './components/Button';
 import Input from './components/Input';
-import { formValidation } from './Validation';
+
+const INPUTS_TYPES = {
+  email: {
+    label: 'EMAIL',
+    inputType: 'email'
+  },
+  username: {
+    label: 'USERNAME',
+    inputType: 'text'
+  },
+  password: {
+    label: 'PASSWORD',
+    inputType: 'password'
+  },
+};
 
 const INITIAL_INPUT_STATE = {
   inputText: '',
@@ -12,10 +31,10 @@ const INITIAL_INPUT_STATE = {
   invalidMessage: null
 };
 
-const InputGroup = ({ inputsConfig, inputsType }) => {
+const InputGroup = ({ inputsConfig, inputsType, submitLoginForm, submitRegisterForm }) => {
   const initialState = {};
 
-  inputsConfig.forEach(({ name }) => (
+  inputsConfig.forEach(name => (
     initialState[name] = INITIAL_INPUT_STATE
   ));
 
@@ -24,30 +43,16 @@ const InputGroup = ({ inputsConfig, inputsType }) => {
   const submitHandler = e => {
     e.preventDefault();
 
-    const errors = {};
-    const updatedState = {};
+    
 
-    /** Check validity of certain input */
-    inputsConfig.forEach(({ name }) => {
-      const inputError = formValidation(inputs[name].inputText, name) || null;
-      if (inputError) errors[name] = inputError;
-    });
+    /** Submit inputs text to the store validation and submition */
+    // const submitText = inputsConfig.map(name => (inputs[name].inputText));
 
-    /** update validation state of certain input */
-    inputsConfig.forEach(({ name }) => (
-      updatedState[name] = {
-        ...inputs[name],
-        isValid: errors[name] === undefined,
-        invalidMessage: errors[name]
-      }
-    ));
-
-    setInputs({ ...inputs, ...updatedState });
-
-    /** If form is valid -> submit to store */
-    if (Object.keys(errors).length === 0) {
-      console.log(`there is no errors. Submit action '${inputsType}'`)
-    }
+    // if (inputsType === 'login') {
+    //   submitLoginForm(...submitText);
+    // } else {
+    //   submitRegisterForm(...submitText);
+    // }
   };
 
   const inputChangeHandler = (inputName, text) => {
@@ -60,15 +65,13 @@ const InputGroup = ({ inputsConfig, inputsType }) => {
     });
   };
 
-  const inputFields = inputsConfig.map(input => (
+  const inputFields = inputsConfig.map(name => (
     <Input
-      key={input.name}
-      name={input.name}
-      label={input.label}
-      inputType={input.inputType}
-      invalidMessage={inputs[input.name].invalidMessage}
-      isValid={inputs[input.name].isValid}
-      inputValue={inputs[input.name].inputText}
+      key={name}
+      name={name}
+      label={INPUTS_TYPES[name].label}
+      inputType={INPUTS_TYPES[name].inputType}
+      inputValue={inputs[name].inputText}
       changedInputValue={inputChangeHandler} />
   ));
 
@@ -76,18 +79,21 @@ const InputGroup = ({ inputsConfig, inputsType }) => {
     <FormContainer
       onSubmit={submitHandler}>
       {inputFields}
-      <Button>Login</Button>
+      <Button>{inputsType === 'login' ? 'Login' : 'Continue'}</Button>
     </FormContainer>
   );
 };
 
+const mapDispatchToProps = dispatch => ({
+  submitLoginForm: (email, password) => dispatch(submitSignInForm(email, password)),
+  submitRegisterForm: (email, username, password) => dispatch(submitSignUpForm(email, username, password))
+});
+
 InputGroup.propTypes = {
-  inputsConfig: PropTypes.arrayOf(PropTypes.exact({
-    name: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    inputType: PropTypes.string.isRequired,
-  })),
+  inputsConfig: PropTypes.arrayOf(
+    PropTypes.oneOf(Object.keys(INPUTS_TYPES)
+    )),
   inputsType: PropTypes.oneOf(['login', 'register'])
 };
 
-export default InputGroup;
+export default connect(null, mapDispatchToProps)(InputGroup);

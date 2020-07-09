@@ -11,31 +11,13 @@ import {
 } from './AuthForm';
 import InputGroup from '../InputGroup';
 
-const REGISTER_INPUTS = [
-  {
-    name: 'email',
-    label: 'EMAIL',
-    inputType: 'email'
-  },
-  {
-    name: 'username',
-    label: 'USERNAME',
-    inputType: 'text'
-  },
-  {
-    name: 'password',
-    label: 'PASSWORD',
-    inputType: 'password'
-  },
-];
-
 const RegisterForm = ({ history }) => (
   <AuthBox>
     <CenteringWrapper>
       <HeaderPrimary>Create an account</HeaderPrimary>
       <InputGroup
         inputsType='register'
-        inputsConfig={REGISTER_INPUTS} />
+        inputsConfig={['email', 'username', 'password']} />
       <RedirectButtonWrapper>
         <TextButton
           onClick={() => history.push('/login')}>Already have an account ?</TextButton>

@@ -5,3 +5,8 @@ export {
   toggleListEditable,
   removeListEditable
 } from './list';
+
+export {
+  submitSignInForm,
+  submitSignUpForm
+} from './authorization';

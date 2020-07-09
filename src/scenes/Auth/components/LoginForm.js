@@ -13,19 +13,6 @@ import {
 } from './AuthForm';
 import InputGroup from '../InputGroup';
 
-const LOGIN_INPUTS = [
-  {
-    name: 'email',
-    label: 'EMAIL',
-    inputType: 'email'
-  },
-  {
-    name: 'password',
-    label: 'PASSWORD',
-    inputType: 'password'
-  },
-];
-
 const LoginForm = ({ history }) => (
   <AuthBox>
     <CenteringWrapper>
@@ -33,7 +20,7 @@ const LoginForm = ({ history }) => (
       <HeaderSecondary>We're so excited to see you again!</HeaderSecondary>
       <InputGroup
         inputsType='login'
-        inputsConfig={LOGIN_INPUTS} />
+        inputsConfig={['email', 'password']} />
       <RedirectButtonWrapper>
         <NeedAccountText>Need an account ?</NeedAccountText>
         <TextButton

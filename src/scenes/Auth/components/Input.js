@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 const Input = props => {
@@ -7,11 +8,12 @@ const Input = props => {
     name,
     label,
     inputType,
-    invalidMessage,
-    isValid,
+    errorMessage,
     inputValue,
     changedInputValue
   } = props;
+
+  const isValid = errorMessage[name] === undefined;
 
   return (
     <InputWrapper>
@@ -21,7 +23,7 @@ const Input = props => {
         {label}
         <InvalidMessage
           isValid={isValid}>
-          {invalidMessage}
+          {errorMessage[name]}
         </InvalidMessage>
       </Label>
       <InputField
@@ -79,14 +81,17 @@ const InputWrapper = styled.div`
   margin-bottom: 20px;
 `;
 
+const mapStateToProps = state => ({
+  errorMessage: state.authorization.errorMessages
+});
+
 Input.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   inputType: PropTypes.string.isRequired,
-  invalidMessage: PropTypes.string,
-  isValid: PropTypes.bool.isRequired,
+  invalidMessage: PropTypes.object,
   inputValue: PropTypes.string.isRequired,
   changedInputValue: PropTypes.func.isRequired,
 };
 
-export default Input;
+export default connect(mapStateToProps)(Input);

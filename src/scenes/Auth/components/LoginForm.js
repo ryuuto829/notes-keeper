@@ -12,6 +12,7 @@ import {
   TextButton
 } from './AuthForm';
 import InputGroup from '../InputGroup';
+import GoogleSignInButton from './GoogleSignInButton';
 
 const LoginForm = ({ history }) => (
   <AuthBox>
@@ -21,6 +22,7 @@ const LoginForm = ({ history }) => (
       <InputGroup
         inputsType='login'
         inputsConfig={['email', 'password']} />
+      <GoogleSignInButton />
       <RedirectButtonWrapper>
         <NeedAccountText>Need an account ?</NeedAccountText>
         <TextButton

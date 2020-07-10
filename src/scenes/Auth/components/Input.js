@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -13,7 +13,19 @@ const Input = props => {
     changedInputValue
   } = props;
 
-  const isValid = errorMessage[name] === undefined;
+  const [message, setMessage] = useState({});
+  const isFirstRun = useRef(true);
+
+  useEffect(() => {
+    /** Skip validation on component first render */
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+    setMessage(errorMessage);
+  }, [errorMessage]);
+
+  const isValid = message[name] === undefined;
 
   return (
     <InputWrapper>
@@ -23,7 +35,7 @@ const Input = props => {
         {label}
         <InvalidMessage
           isValid={isValid}>
-          {errorMessage[name]}
+          {message[name]}
         </InvalidMessage>
       </Label>
       <InputField
@@ -89,7 +101,7 @@ Input.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   inputType: PropTypes.string.isRequired,
-  invalidMessage: PropTypes.object,
+  errorMessage: PropTypes.object,
   inputValue: PropTypes.string.isRequired,
   changedInputValue: PropTypes.func.isRequired,
 };

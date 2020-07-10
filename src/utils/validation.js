@@ -14,6 +14,11 @@ export const formValidation = (text, type) => {
         return 'Password must be 6 or more';
       }
       return null;
+    case 'username':
+      if (text.length < 2 || text.length > 32) {
+        return 'Username must be between 2 or 32 in length';
+      }
+      return null;
     default:
       return null;
   }

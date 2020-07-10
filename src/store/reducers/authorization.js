@@ -26,8 +26,12 @@ const submitSignInForm = (state, { email, password }) => {
   ]);
 
   if (Object.keys(errors).length === 0) {
-    console.log('submit to the server')
-    return;
+    /** send login form to the server */
+    console.log('submit to the server');
+    return {
+      ...state,
+      errorMessages: {}
+    };
   }
 
   return {
@@ -46,8 +50,12 @@ const submitSignUPForm = (state, { email, username, password }) => {
   ]);
 
   if (Object.keys(errors).length === 0) {
-    console.log('submit to the server')
-    return;
+    /** send register form to the server */
+    console.log('submit to the server');
+    return {
+      ...state,
+      errorMessages: {}
+    };
   }
 
   return {

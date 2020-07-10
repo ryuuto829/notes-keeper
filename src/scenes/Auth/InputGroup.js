@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
   submitSignInForm,
   submitSignUpForm
-} from '../../store/actions'
+} from '../../store/actions';
 
 import { FormContainer } from './components/AuthForm';
 import Button from './components/Button';
@@ -31,7 +31,14 @@ const INITIAL_INPUT_STATE = {
   invalidMessage: null
 };
 
-const InputGroup = ({ inputsConfig, inputsType, submitLoginForm, submitRegisterForm }) => {
+const InputGroup = props => {
+  const {
+    inputsConfig,
+    inputsType,
+    submitLoginForm,
+    submitRegisterForm
+  } = props;
+
   const initialState = {};
 
   inputsConfig.forEach(name => (
@@ -43,16 +50,14 @@ const InputGroup = ({ inputsConfig, inputsType, submitLoginForm, submitRegisterF
   const submitHandler = e => {
     e.preventDefault();
 
-    
-
     /** Submit inputs text to the store validation and submition */
-    // const submitText = inputsConfig.map(name => (inputs[name].inputText));
+    const submitText = inputsConfig.map(name => (inputs[name].inputText));
 
-    // if (inputsType === 'login') {
-    //   submitLoginForm(...submitText);
-    // } else {
-    //   submitRegisterForm(...submitText);
-    // }
+    if (inputsType === 'login') {
+      submitLoginForm(...submitText);
+    } else {
+      submitRegisterForm(...submitText);
+    }
   };
 
   const inputChangeHandler = (inputName, text) => {
@@ -93,7 +98,9 @@ InputGroup.propTypes = {
   inputsConfig: PropTypes.arrayOf(
     PropTypes.oneOf(Object.keys(INPUTS_TYPES)
     )),
-  inputsType: PropTypes.oneOf(['login', 'register'])
+  inputsType: PropTypes.oneOf(['login', 'register']),
+  submitLoginForm: PropTypes.func.isRequired,
+  submitRegisterForm: PropTypes.func.isRequired
 };
 
 export default connect(null, mapDispatchToProps)(InputGroup);

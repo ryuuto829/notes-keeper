@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { moveFromTop } from '../../../shared/styles/animations';
 
 export const AuthBox = styled.div`
-  background-color: #36393f;
+  background-color: ${props => props.theme.primary};
   padding: 32px;
   width: 100%;
   max-width: 480px;
@@ -10,23 +11,12 @@ export const AuthBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: moveFromTop .3s;
+  animation: ${moveFromTop} .3s;
 
   @media (max-width: 480px) {
     height: 100%;
     padding: 30px 16px;
     min-height: 580px;
-  }
-
-  @keyframes moveFromTop {
-    0% {
-      transform: translateY(-100px);
-      opacity: 0.5;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
   }
 `;
 

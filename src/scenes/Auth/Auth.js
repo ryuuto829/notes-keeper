@@ -2,11 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { Route, Switch } from 'react-router-dom';
 
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
+import Branding from '../../components/Branding';
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
 
 const Auth = () => (
   <AuthPageWrapper>
+    <Branding />
     <Switch>
       <Route exact path="/login" component={LoginForm} />
       <Route exact path="/register" component={RegisterForm} />
@@ -15,18 +17,18 @@ const Auth = () => (
 );
 
 const AuthPageWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
+  z-index: -1;
   width: 100%;
   height: 100%;
-  background-color: #202225;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: ${props => props.theme.mainBackground};
 `;
 
 export default Auth;

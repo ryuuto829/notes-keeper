@@ -66,7 +66,7 @@ const submitSignUPForm = (state, { email, username, password }) => {
   };
 };
 
-const authorization = (state = initialState, action) => {
+const authentication = (state = initialState, action) => {
   switch (action.type) {
     case SUBMIT_SIGN_IN_FORM: return submitSignInForm(state, action);
     case SUBMIT_SIGN_UP_FORM: return submitSignUPForm(state, action);
@@ -75,4 +75,4 @@ const authorization = (state = initialState, action) => {
   }
 };
 
-export default authorization;
+export default authentication;

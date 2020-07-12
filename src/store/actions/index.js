@@ -9,4 +9,4 @@ export {
 export {
   submitSignInForm,
   submitSignUpForm
-} from './authorization';
+} from './authentication';

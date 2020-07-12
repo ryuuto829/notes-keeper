@@ -1,32 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-const Input = props => {
-  const {
-    name,
-    label,
-    inputType,
-    errorMessage,
-    inputValue,
-    changedInputValue
-  } = props;
-
-  const [message, setMessage] = useState({});
-  const isFirstRun = useRef(true);
-
-  useEffect(() => {
-    /** Skip validation on component first render */
-    if (isFirstRun.current) {
-      isFirstRun.current = false;
-      return;
-    }
-    setMessage(errorMessage);
-  }, [errorMessage]);
-
-  const isValid = message[name] === undefined;
-
+const Input = ({ name, type, label, value, onChange, errorMessages = {} }) => {
+  const isValid = errorMessages[name] === undefined;
   return (
     <InputWrapper>
       <Label
@@ -35,17 +13,18 @@ const Input = props => {
         {label}
         <InvalidMessage
           isValid={isValid}>
-          {message[name]}
+          {errorMessages[name] || null}
         </InvalidMessage>
       </Label>
       <InputField
         id={name}
-        type={inputType}
-        isValid={isValid}
-        value={inputValue}
+        name={name}
         autoComplete='off'
-        spellCheck={inputType === 'text'}
-        onChange={e => changedInputValue(name, e.target.value)} />
+        spellCheck={false}
+        type={type}
+        isValid={isValid}
+        value={value}
+        onChange={e => onChange(e)} />
     </InputWrapper>
   );
 };
@@ -94,16 +73,13 @@ const InputWrapper = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  errorMessage: state.authorization.errorMessages
+  errorMessages: state.authentication.errorMessages
 });
 
 Input.propTypes = {
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  inputType: PropTypes.string.isRequired,
-  errorMessage: PropTypes.object,
-  inputValue: PropTypes.string.isRequired,
-  changedInputValue: PropTypes.func.isRequired,
+  name: PropTypes.string,
+  label: PropTypes.string,
+  inputType: PropTypes.string,
 };
 
 export default connect(mapStateToProps)(Input);

@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import list from './list';
-import authorization from './authorization';
+import authentication from './authentication';
 
 const rootReducer = combineReducers({
   list,
-  authorization
+  authentication
 });
 
 export default rootReducer;

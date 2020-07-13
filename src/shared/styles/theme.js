@@ -2,6 +2,10 @@ const COLORS = {
   white: '#fff',
   almostBlack: '#202225',
   darkSmoke: '#36393f',
+  lightGrey: '#dcddde',
+  darkGrey: '#b9bbbe',
+  smoke: '#8e9297',
+  red: '#f04747',
 };
 
 const SPACING = {
@@ -9,17 +13,22 @@ const SPACING = {
 };
 
 const base = {
-  // base styling
+  danger: COLORS.red,
 };
 
 export const lightTheme = {
-  // light theme styling
+  ...base,
 };
 
 export const darkTheme = {
-  headerPrimaryText: COLORS.white,
+  ...base,
+
+  headerPrimary: COLORS.white,
+  headerSecondary: COLORS.darkGrey,
   mainBackground: COLORS.almostBlack,
   primary: COLORS.darkSmoke,
+  textNormal: COLORS.lightGrey,
+  label: COLORS.smoke,
 };
 
 export default darkTheme;

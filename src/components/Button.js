@@ -2,13 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const Button = ({ children }) => {
+const Button = ({ children, clicked }) => {
   return (
-    <FluidButton>{children}</FluidButton>
+    <RealButton onClick={clicked}>
+      {children}
+    </RealButton>
   );
 };
 
-const FluidButton = styled.button`
+const RealButton = styled.button`
   width: 100%;
   color: #fff;
   background-color: #7289da;
@@ -35,7 +37,7 @@ const FluidButton = styled.button`
 `;
 
 Button.propTypes = {
-  children: PropTypes.elementType.isRequired
+  children: PropTypes.node
 };
 
 export default Button;

@@ -31,8 +31,12 @@ const BrandLink = styled.a`
     cursor: pointer;
   }
 
-  @media (min-width: 400px ) {
+  @media (min-width: 481px ) {
     top: 24px;
+  }
+
+  @media (min-width: 915px ) {
+    left: 20px
   }
 `;
 

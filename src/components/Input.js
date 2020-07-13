@@ -3,8 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-const Input = ({ name, type, label, value, onChange, errorMessages = {} }) => {
+const Input = ({
+  name,
+  type,
+  label,
+  value,
+  onChange,
+  errorMessages = {}
+}) => {
   const isValid = errorMessages[name] === undefined;
+
   return (
     <InputWrapper>
       <Label
@@ -33,9 +41,10 @@ const Label = styled.label`
   display: block;
   text-align: left;
   margin-bottom: 8px;
-  color: ${({ isValid }) => isValid ? '#8e9297' : '#f04747'};
+  color: ${props => props.isValid ? props.theme.label : props.theme.danger};
   font-size: 12px;
   line-height: 16px;
+  font-weight: 600;
   transition: color .2s ease-in-out;
 `;
 
@@ -60,11 +69,11 @@ const InputField = styled.input`
   padding: 10px;
   font-size: 16px;
   border-radius: 3px;
-  color: #dcddde;
+  color: ${props => props.theme.textNormal};
   outline: 0;
   background-color: rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(0, 0, 0, 0.3);
-  border-color: ${({ isValid }) => isValid ? 'rgba(0, 0, 0, 0.3)' : '#f04747'};
+  border-color: ${props => props.isValid ? 'rgba(0, 0, 0, 0.3)' : props.theme.danger};
   transition: border-color .2s ease-in-out;
 `;
 

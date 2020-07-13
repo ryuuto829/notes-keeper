@@ -4,9 +4,9 @@ import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+
 import Theme from './components/Theme';
-// import List from './scenes/List';
-import Auth from './scenes/Auth';
+import Routes from './routes';
 
 const store = configureStore();
 
@@ -15,7 +15,7 @@ ReactDOM.render(
     <Provider store={store}>
       <Theme>
         <Router>
-          <Auth />
+          <Routes />
         </Router>
       </Theme>
     </Provider>

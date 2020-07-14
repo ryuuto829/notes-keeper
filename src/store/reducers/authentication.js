@@ -1,6 +1,7 @@
 import {
   SUBMIT_SIGN_IN_FORM,
-  SUBMIT_SIGN_UP_FORM
+  SUBMIT_SIGN_UP_FORM,
+  REQUEST_USER_AUTH_DATA
 } from '../actions/actionTypes';
 import { formValidation } from '../../utils/validation';
 
@@ -66,10 +67,16 @@ const submitSignUPForm = (state, { email, username, password }) => {
   };
 };
 
+const requestUserAuthData = (state, { userData }) => ({
+  ...state,
+  ...userData
+});
+
 const authentication = (state = initialState, action) => {
   switch (action.type) {
     case SUBMIT_SIGN_IN_FORM: return submitSignInForm(state, action);
     case SUBMIT_SIGN_UP_FORM: return submitSignUPForm(state, action);
+    case REQUEST_USER_AUTH_DATA: return requestUserAuthData(state, action);
     default:
       return state;
   }

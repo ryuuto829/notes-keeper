@@ -8,5 +8,6 @@ export {
 
 export {
   submitSignInForm,
-  submitSignUpForm
+  submitSignUpForm,
+  requestUserAuthData
 } from './authentication';

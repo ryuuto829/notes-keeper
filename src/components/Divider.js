@@ -8,6 +8,7 @@ const Divider = styled.hr`
   border: 0;
   text-align: center;
   height: 1.5rem;
+  font-size: 14px;
 
   &:before {
     content: '';

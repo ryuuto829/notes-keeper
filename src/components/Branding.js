@@ -4,39 +4,29 @@ import styled from 'styled-components';
 
 import NotesKeeperLogo from './NotesKeeperLogo';
 
-const Branding = () => (
-  <Link to='/' component={CustomStyledLink}>
+const Branding = ({ className }) => (
+  <Link to='/' component={CustomStyledLink} className={className} >
     <NotesKeeperLogo size={36} />&nbsp;NotesKeeper
   </Link>
 );
 
 /** Provide custom style to react-router's `Link` component */
-const CustomStyledLink = React.forwardRef(({ children }, ref) => (
-  <BrandLink ref={ref}>{children}</BrandLink>
+const CustomStyledLink = React.forwardRef(({ children, className }, ref) => (
+  <BrandLink ref={ref} className={className}>{children}</BrandLink>
 ));
 
 const BrandLink = styled.a`
-  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   font-size: 24px;
   font-weight: 600;
-  color: #fff;
+  color: ${props => props.theme.headerPrimary};
   user-select: none;
-  top: 20px;
 
   &:hover {
     cursor: pointer;
-  }
-
-  @media (min-width: 481px ) {
-    top: 24px;
-  }
-
-  @media (min-width: 915px ) {
-    left: 20px
   }
 `;
 

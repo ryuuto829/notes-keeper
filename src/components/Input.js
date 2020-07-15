@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 const Input = ({
@@ -9,12 +8,13 @@ const Input = ({
   label,
   value,
   onChange,
-  errorMessages = {}
+  errorMessages = {},
+  className
 }) => {
   const isValid = errorMessages[name] === undefined;
 
   return (
-    <InputWrapper>
+    <React.Fragment>
       <Label
         isValid={isValid}
         htmlFor={label}>
@@ -25,6 +25,7 @@ const Input = ({
         </InvalidMessage>
       </Label>
       <InputField
+        className={className}
         id={name}
         name={name}
         autoComplete='off'
@@ -33,7 +34,7 @@ const Input = ({
         isValid={isValid}
         value={value}
         onChange={e => onChange(e)} />
-    </InputWrapper>
+    </React.Fragment>
   );
 };
 
@@ -75,20 +76,20 @@ const InputField = styled.input`
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-color: ${props => props.isValid ? 'rgba(0, 0, 0, 0.3)' : props.theme.danger};
   transition: border-color .2s ease-in-out;
-`;
 
-const InputWrapper = styled.div`
-  margin-bottom: 20px;
+  &:hover:not(:active) {
+    border-color: ${props => props.isValid ? '#040405' : props.theme.danger};
+  }
 `;
-
-const mapStateToProps = state => ({
-  errorMessages: state.authentication.errorMessages
-});
 
 Input.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
-  inputType: PropTypes.string,
+  type: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  errorMessages: PropTypes.object,
+  className: PropTypes.string
 };
 
-export default connect(mapStateToProps)(Input);
+export default Input;

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
 import { useHistory, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
@@ -12,20 +11,18 @@ import { signInWithGoogle } from '../server/firebase';
 
 import Input from '../components/Input';
 import Button from '../components/Button';
+import TextButton from '../components/TextButton';
 import Branding from '../components/Branding';
 import GoogleLogo from '../components/GoogleLogo';
 import Divider from '../components/Divider';
 import { moveFromTop } from '../shared/styles/animations';
 
-const Authentication = ({ submitRegisterForm, submitLoginForm }) => {
+const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages }) => {
   const history = useHistory();
   const isCreate = useLocation().pathname === '/register';
 
-  const [user, setUser] = useState({
-    email: '',
-    username: '',
-    password: ''
-  });
+  const [user, setUser] = useState({ email: '', username: '', password: '' });
+  const [submitted, setSubmitted] = useState(false);
 
   const onChangeInputHandler = e => {
     const { name, value } = e.target;
@@ -34,37 +31,53 @@ const Authentication = ({ submitRegisterForm, submitLoginForm }) => {
 
   const submitFormHandler = e => {
     e.preventDefault();
+    setSubmitted(true);
 
     if (isCreate) {
-      submitLoginForm(user.email, user.password);
-    } else {
       submitRegisterForm(user.email, user.username, user.password);
+    } else {
+      submitLoginForm(user.email, user.password);
+    }
+  };
+
+  const clickRedirectHandler = () => {
+    /** Clear all inputs and hide validation errors */
+    setSubmitted(false);
+    setUser({ email: '', username: '', password: '' });
+
+    if (isCreate) {
+      history.push('/login')
+    } else {
+      history.push('/register')
     }
   };
 
   const emailInputField = (
-    <Input
+    <InputField
       name='email'
       type='email'
       label='EMAIL'
+      errorMessages={submitted ? errorMessages : {}}
       value={user.email}
       onChange={onChangeInputHandler} />
   );
 
   const usernameInputField = (
-    <Input
+    <InputField
       name='username'
       type='text'
       label='USERNAME'
+      errorMessages={submitted ? errorMessages : {}}
       value={user.username}
       onChange={onChangeInputHandler} />
   );
 
   const passwordInputField = (
-    <Input
+    <InputField
       name='password'
       type='password'
       label='PASSWORD'
+      errorMessages={submitted ? errorMessages : {}}
       value={user.password}
       onChange={onChangeInputHandler} />
   );
@@ -72,12 +85,11 @@ const Authentication = ({ submitRegisterForm, submitLoginForm }) => {
   if (isCreate) {
     return (
       <Background>
-        <Branding />
+        <Logo />
         <AuthBox>
           <CenteringWrapper>
             <HeaderPrimary>Create an account</HeaderPrimary>
-            <FormContainer
-              onSubmit={submitFormHandler}>
+            <FormContainer onSubmit={submitFormHandler}>
               {emailInputField}
               {usernameInputField}
               {passwordInputField}
@@ -85,7 +97,7 @@ const Authentication = ({ submitRegisterForm, submitLoginForm }) => {
             </FormContainer>
             <RedirectButtonWrapper>
               <TextButton
-                onClick={() => history.push('/login')}>Already have an account ?</TextButton>
+                onClick={clickRedirectHandler}>Already have an account ?</TextButton>
             </RedirectButtonWrapper>
           </CenteringWrapper>
         </AuthBox>
@@ -95,18 +107,17 @@ const Authentication = ({ submitRegisterForm, submitLoginForm }) => {
 
   return (
     <Background>
-      <Branding />
+      <Logo />
       <AuthBox>
         <CenteringWrapper>
           <HeaderPrimary>Sign in</HeaderPrimary>
           <HeaderSecondary>with your Google account</HeaderSecondary>
-          <RedirectButtonWrapper>
+          <GoogleSignInWrapper>
             <Button clicked={signInWithGoogle}>
               <GoogleLogo size={16} />Google</Button>
-          </RedirectButtonWrapper>
+          </GoogleSignInWrapper>
           <Divider />
-          <FormContainer
-            onSubmit={submitFormHandler}>
+          <FormContainer onSubmit={submitFormHandler}>
             {emailInputField}
             {passwordInputField}
             <Button>Login</Button>
@@ -114,7 +125,7 @@ const Authentication = ({ submitRegisterForm, submitLoginForm }) => {
           <RedirectButtonWrapper>
             <NeedAccountText>Need an account ?</NeedAccountText>
             <TextButton
-              onClick={() => history.push('/register')}>Register</TextButton>
+              onClick={clickRedirectHandler}>Register</TextButton>
           </RedirectButtonWrapper>
         </CenteringWrapper>
       </AuthBox>
@@ -126,6 +137,7 @@ const Background = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: ${props => props.theme.mainBackground};
   position: absolute;
   left: 0;
   right: 0;
@@ -134,7 +146,19 @@ const Background = styled.div`
   z-index: -1;
   width: 100%;
   height: 100%;
-  background-color: ${props => props.theme.mainBackground};
+`;
+
+const Logo = styled(Branding)`
+  position: absolute;
+  top: 20px;
+
+  @media (min-width: 480px ) {
+    top: 24px;
+  }
+
+  @media (min-width: 915px ) {
+    left: 20px
+  }
 `;
 
 const AuthBox = styled.div`
@@ -148,7 +172,6 @@ const AuthBox = styled.div`
   justify-content: center;
   align-items: center;
   animation: ${moveFromTop} .3s;
-  margin-top: 46px;
 
   @media (max-width: 480px) {
     height: 100%;
@@ -158,13 +181,13 @@ const AuthBox = styled.div`
   }
 `;
 
-const FormContainer = styled.form`
-  margin-top: 8px;
-`;
-
 const CenteringWrapper = styled.div`
   width: 100%;
   text-align: center;
+`;
+
+const FormContainer = styled.form`
+  margin-top: 8px;
 `;
 
 const HeaderPrimary = styled.h1`
@@ -180,32 +203,21 @@ const HeaderSecondary = styled.h2`
   font-weight: 400;
   margin: 0;
   color: ${props => props.theme.headerSecondary};
-  font-size: 16px;
-  line-height: 20px;
+  font-size: 14px;
+  line-height: 16px;
+`;
+
+const InputField = styled(Input)`
+  margin-bottom: 20px;
 `;
 
 const RedirectButtonWrapper = styled.div`
-  margin-top: 20px;
   text-align: left;
   font-size: 13px;
 `;
 
-const TextButton = styled.button`
-  display: inline-block;
-  margin-left: 4px;
-  color: #7289da;
-  font-size: inherit;
-  padding: 0;
-  width: auto;
-  height: auto;
-  outline: 0;
-  border: none;
-  background-color: transparent;
-
-  &:hover {
-    cursor: pointer;
-    text-decoration: underline;
-  }
+const GoogleSignInWrapper = styled.div`
+  margin-top: 20px;
 `;
 
 const NeedAccountText = styled.span`
@@ -214,6 +226,10 @@ const NeedAccountText = styled.span`
   color: rgb(114, 118, 125);
 `;
 
+const mapStateToProps = state => ({
+  errorMessages: state.authentication.errorMessages
+});
+
 const mapDispatchToProps = dispatch => ({
   submitLoginForm: (email, password) => dispatch(submitSignInForm(email, password)),
   submitRegisterForm: (email, username, password) => dispatch(submitSignUpForm(email, username, password))
@@ -221,7 +237,8 @@ const mapDispatchToProps = dispatch => ({
 
 Authentication.propTypes = {
   submitLoginForm: PropTypes.func.isRequired,
-  submitRegisterForm: PropTypes.func.isRequired
+  submitRegisterForm: PropTypes.func.isRequired,
+  errorMessages: PropTypes.object
 };
 
-export default connect(null, mapDispatchToProps)(Authentication);
+export default connect(mapStateToProps, mapDispatchToProps)(Authentication);

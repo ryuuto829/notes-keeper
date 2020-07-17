@@ -113,8 +113,9 @@ const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages }) 
           <HeaderPrimary>Sign in</HeaderPrimary>
           <HeaderSecondary>with your Google account</HeaderSecondary>
           <GoogleSignInWrapper>
-            <Button clicked={signInWithGoogle}>
-              <GoogleLogo size={16} />Google</Button>
+            <Button
+              icon={<GoogleLogo size={16} />}
+              clicked={signInWithGoogle}>Google</Button>
           </GoogleSignInWrapper>
           <Divider />
           <FormContainer onSubmit={submitFormHandler}>

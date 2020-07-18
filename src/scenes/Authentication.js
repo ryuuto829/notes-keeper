@@ -21,7 +21,7 @@ const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages }) 
   const history = useHistory();
   const isCreate = useLocation().pathname === '/register';
 
-  const [user, setUser] = useState({ email: '', username: '', password: '' });
+  const [user, setUser] = useState({ email: 'test@example.com', username: '', password: '12345678' });
   const [submitted, setSubmitted] = useState(false);
 
   const onChangeInputHandler = e => {

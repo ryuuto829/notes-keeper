@@ -8,7 +8,14 @@ const Authenticated = ({ children, requestUserData }) => {
 
   useEffect(() => {
     unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      requestUserData(user);
+      requestUserData({
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        creationTime: user.metadata.a,
+        lastSignInTime: user.metadata.b,
+      });
       console.log(user);
     });
 

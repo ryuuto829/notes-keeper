@@ -4,6 +4,7 @@ import {
   REQUEST_USER_AUTH_DATA
 } from '../actions/actionTypes';
 import { formValidation } from '../../utils/validation';
+import { signInWithEmail } from '../../server/firebase';
 
 const initialState = {
   errorMessages: {}
@@ -27,8 +28,8 @@ const submitSignInForm = (state, { email, password }) => {
   ]);
 
   if (Object.keys(errors).length === 0) {
-    /** send login form to the server */
-    console.log('submit to the server');
+    signInWithEmail(email, password);
+
     return {
       ...state,
       errorMessages: {}

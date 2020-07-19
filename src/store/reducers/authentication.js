@@ -3,11 +3,15 @@ import {
   SUBMIT_SIGN_UP_FORM,
   REQUEST_USER_AUTH_DATA
 } from '../actions/actionTypes';
-import { formValidation } from '../../utils/validation';
+import {
+  formValidation,
+  loadFromLocalStorage
+} from '../../utils';
 import { signInWithEmail } from '../../server/firebase';
 
 const initialState = {
-  errorMessages: {}
+  errorMessages: {},
+  ...loadFromLocalStorage('user')
 };
 
 const checkInputsValidity = inputs => {

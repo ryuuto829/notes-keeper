@@ -1,4 +1,4 @@
-export const formValidation = (text, type) => {
+const formValidation = (text, type) => {
   if (text === '') {
     return 'This field is required';
   }
@@ -8,10 +8,16 @@ export const formValidation = (text, type) => {
       if (!/\S+@\S+\.\S+/.test(text)) {
         return 'Not a well formed email address';
       }
+      if (text.length > 320) {
+        return 'Must be 320 or fewer in length';
+      }
       return null;
     case 'password':
       if (text.length < 6) {
         return 'Password must be 6 or more';
+      }
+      if (text.length > 72) {
+        return 'Must be 72 or fewer in length';
       }
       return null;
     case 'username':
@@ -22,4 +28,15 @@ export const formValidation = (text, type) => {
     default:
       return null;
   }
+};
+
+export const checkFormValidity = inputs => {
+  const errors = {};
+
+  inputs.forEach(({ text, type }) => {
+    const inputError = formValidation(text, type) || null;
+    if (inputError) errors[type] = inputError;
+  })
+
+  return errors;
 };

@@ -4,5 +4,5 @@ export {
 } from './localStorage';
 
 export {
-  formValidation
+  checkFormValidity
 } from './validation';

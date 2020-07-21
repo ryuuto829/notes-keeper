@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   submitSignUpForm,
@@ -17,12 +17,16 @@ import GoogleLogo from '../components/GoogleLogo';
 import Divider from '../components/Divider';
 import { moveFromTop } from '../shared/styles/animations';
 
-const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages }) => {
+const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages, userData }) => {
   const history = useHistory();
   const isCreate = useLocation().pathname === '/register';
 
   const [user, setUser] = useState({ email: 'test@example.com', username: '', password: '12345678' });
   const [submitted, setSubmitted] = useState(false);
+
+  if (userData !== undefined) {
+    return <Redirect to="/home" />;
+  }
 
   const onChangeInputHandler = e => {
     const { name, value } = e.target;
@@ -57,7 +61,7 @@ const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages }) 
       name='email'
       type='email'
       label='EMAIL'
-      errorMessages={submitted ? errorMessages : {}}
+      errorMessages={submitted && errorMessages}
       value={user.email}
       onChange={onChangeInputHandler} />
   );
@@ -67,7 +71,7 @@ const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages }) 
       name='username'
       type='text'
       label='USERNAME'
-      errorMessages={submitted ? errorMessages : {}}
+      errorMessages={submitted && errorMessages}
       value={user.username}
       onChange={onChangeInputHandler} />
   );
@@ -77,7 +81,7 @@ const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages }) 
       name='password'
       type='password'
       label='PASSWORD'
-      errorMessages={submitted ? errorMessages : {}}
+      errorMessages={submitted && errorMessages}
       value={user.password}
       onChange={onChangeInputHandler} />
   );
@@ -228,7 +232,8 @@ const NeedAccountText = styled.span`
 `;
 
 const mapStateToProps = state => ({
-  errorMessages: state.authentication.errorMessages
+  errorMessages: state.authentication.errorMessages,
+  userData: state.authentication.user
 });
 
 const mapDispatchToProps = dispatch => ({

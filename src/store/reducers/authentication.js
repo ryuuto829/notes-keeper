@@ -1,7 +1,8 @@
 import {
   AUTH_SIGN_IN_REQUEST,
-  AUTH_SIGN_IN_SUCCESS,
-  AUTH_SIGN_IN_FAILURE,
+  AUTH_SIGN_UP_REQUEST,
+  AUTH_SUCCESS,
+  AUTH_FAILURE,
   AUTH_LOGOUT
 } from '../actions/actionTypes';
 import {
@@ -13,7 +14,7 @@ const initialState = {
   isFetching: false
 };
 
-const authSignInRequest = (state, action) => {
+const authSignInRequest = state => {
   console.log('Auth sign in request')
   return {
     ...state,
@@ -21,7 +22,15 @@ const authSignInRequest = (state, action) => {
   };
 };
 
-const authSignInSuccess = (state, { userData }) => {
+const authSignUpRequest = state => {
+  console.log('Auth sign un request')
+  return {
+    ...state,
+    isFetching: true
+  };
+};
+
+const authSuccess = (state, { userData }) => {
   console.log('Auth sign in success')
   return {
     ...state,
@@ -30,7 +39,7 @@ const authSignInSuccess = (state, { userData }) => {
   };
 };
 
-const authSignInFailure = (state, { errorMessages }) => {
+const authFailure = (state, { errorMessages }) => {
   console.log('Auth sign in failure')
   return {
     ...state,
@@ -46,9 +55,10 @@ const authLogout = (state, action) => {
 
 const authentication = (state = initialState, action) => {
   switch (action.type) {
-    case AUTH_SIGN_IN_REQUEST: return authSignInRequest(state, action);
-    case AUTH_SIGN_IN_SUCCESS: return authSignInSuccess(state, action);
-    case AUTH_SIGN_IN_FAILURE: return authSignInFailure(state, action);
+    case AUTH_SIGN_IN_REQUEST: return authSignInRequest(state);
+    case AUTH_SIGN_UP_REQUEST: return authSignUpRequest(state);
+    case AUTH_SUCCESS: return authSuccess(state, action);
+    case AUTH_FAILURE: return authFailure(state, action);
     case AUTH_LOGOUT: return authLogout(state, action);
     default:
       return state;

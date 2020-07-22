@@ -30,13 +30,38 @@ const formValidation = (text, type) => {
   }
 };
 
-export const checkFormValidity = inputs => {
-  const errors = {};
+export const checkEmailValidity = text => (
+  formValidation(text, 'email')
+);
 
-  inputs.forEach(({ text, type }) => {
-    const inputError = formValidation(text, type) || null;
-    if (inputError) errors[type] = inputError;
-  })
+export const checkPasswordValidity = text => (
+  formValidation(text, 'password')
+);
+
+export const checkUsernameValidity = text => (
+  formValidation(text, 'username')
+);
+
+export const validateLoginForm = (email, password) => {
+  const errors = {};
+  const emailError = checkEmailValidity(email);
+  const passwordError = checkPasswordValidity(password);
+
+  if (emailError) errors.email = emailError;
+  if (passwordError) errors.password = passwordError;
+
+  return errors;
+};
+
+export const validateRegisterForm = (email, username, password) => {
+  const errors = {};
+  const emailError = checkEmailValidity(email);
+  const usernameError = checkUsernameValidity(username);
+  const passwordError = checkPasswordValidity(password);
+
+  if (emailError) errors.email = emailError;
+  if (usernameError) errors.username = usernameError;
+  if (passwordError) errors.password = passwordError;
 
   return errors;
 };

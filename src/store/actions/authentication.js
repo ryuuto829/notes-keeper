@@ -4,8 +4,9 @@ import {
   REQUEST_USER_AUTH_DATA,
 
   AUTH_SIGN_IN_REQUEST,
-  AUTH_SIGN_IN_SUCCESS,
-  AUTH_SIGN_IN_FAILURE,
+  AUTH_SIGN_UP_REQUEST,
+  AUTH_SUCCESS,
+  AUTH_FAILURE,
   AUTH_LOGOUT
 } from '../actions/actionTypes';
 
@@ -15,13 +16,20 @@ export const authSignInRequest = (email, password) => ({
   password
 });
 
-export const authSignInSuccess = userData => ({
-  type: AUTH_SIGN_IN_SUCCESS,
+export const authSignUpRequest = (email, username, password) => ({
+  type: AUTH_SIGN_UP_REQUEST,
+  email,
+  username,
+  password
+});
+
+export const authSuccess = userData => ({
+  type: AUTH_SUCCESS,
   userData
 });
 
-export const authSignInFailure = errorMessages => ({
-  type: AUTH_SIGN_IN_FAILURE,
+export const authFailure = errorMessages => ({
+  type: AUTH_FAILURE,
   errorMessages
 });
 

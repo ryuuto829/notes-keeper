@@ -4,5 +4,6 @@ export {
 } from './localStorage';
 
 export {
-  checkFormValidity
+  validateLoginForm,
+  validateRegisterForm
 } from './validation';

@@ -11,7 +11,8 @@ export {
   submitSignUpForm,
   requestUserAuthData,
   authSignInRequest,
-  authSignInSuccess,
-  authSignInFailure,
+  authSignUpRequest,
+  authSuccess,
+  authFailure,
   authLogout
 } from './authentication';

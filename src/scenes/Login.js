@@ -4,9 +4,8 @@ import styled from 'styled-components';
 import { useHistory, useLocation, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  submitSignUpForm,
-  submitSignInForm,
-  authSignInRequest
+  authSignInRequest,
+  authSignUpRequest
 } from '../store/actions';
 import { signInWithGoogle } from '../server/firebase';
 
@@ -18,7 +17,7 @@ import GoogleLogo from '../components/GoogleLogo';
 import Divider from '../components/Divider';
 import { moveFromTop } from '../shared/styles/animations';
 
-const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages, userData, authSignInRequest }) => {
+const Authentication = ({ errorMessages, userData, authSignInRequest, authSignUpRequest }) => {
   const history = useHistory();
   const isCreate = useLocation().pathname === '/register';
 
@@ -39,10 +38,9 @@ const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages, us
     setSubmitted(true);
 
     if (isCreate) {
-      submitRegisterForm(user.email, user.username, user.password);
+      authSignUpRequest(user.email, user.username, user.password);
     } else {
       authSignInRequest(user.email, user.password);
-      // submitLoginForm(user.email, user.password);
     }
   };
 
@@ -239,14 +237,11 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  authSignInRequest:  (email, password) => dispatch(authSignInRequest(email, password)),
-  submitLoginForm: (email, password) => dispatch(submitSignInForm(email, password)),
-  submitRegisterForm: (email, username, password) => dispatch(submitSignUpForm(email, username, password))
+  authSignInRequest: (email, password) => dispatch(authSignInRequest(email, password)),
+  authSignUpRequest: (email, username, password) => dispatch(authSignUpRequest(email, username, password))
 });
 
 Authentication.propTypes = {
-  submitLoginForm: PropTypes.func.isRequired,
-  submitRegisterForm: PropTypes.func.isRequired,
   errorMessages: PropTypes.object
 };
 

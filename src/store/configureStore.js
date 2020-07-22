@@ -1,9 +1,20 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import createSagaMiddleware from 'redux-saga';
 import rootReducer from './reducers';
 
+import { watchAuth } from './sagas';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const sagaMiddleware = createSagaMiddleware();
+
+/** To enable sagas return store instead of function creator */
 export default function configureStore() {
-  return createStore(
+  const store = createStore(
     rootReducer,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    composeEnhancers(
+      applyMiddleware(sagaMiddleware)
+    )
   );
+  sagaMiddleware.run(watchAuth);
+  return store;
 };

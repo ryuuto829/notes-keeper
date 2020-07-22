@@ -1,87 +1,55 @@
 import {
-  SUBMIT_SIGN_IN_FORM,
-  SUBMIT_SIGN_UP_FORM,
-  REQUEST_USER_AUTH_DATA
+  AUTH_SIGN_IN_REQUEST,
+  AUTH_SIGN_IN_SUCCESS,
+  AUTH_SIGN_IN_FAILURE,
+  AUTH_LOGOUT
 } from '../actions/actionTypes';
 import {
-  formValidation,
   loadFromLocalStorage
 } from '../../utils';
-import { signInWithEmail } from '../../server/firebase';
 
 const initialState = {
-  errorMessages: {},
-  ...loadFromLocalStorage('user')
+  ...loadFromLocalStorage('user') || null,
+  isFetching: false
 };
 
-const checkInputsValidity = inputs => {
-  const errors = {};
-
-  inputs.forEach(({ name, text }) => {
-    const inputError = formValidation(text, name) || null;
-    if (inputError) errors[name] = inputError;
-  })
-
-  return errors;
-};
-
-const submitSignInForm = (state, { email, password }) => {
-  const errors = checkInputsValidity([
-    { name: 'email', text: email },
-    { name: 'password', text: password }
-  ]);
-
-  if (Object.keys(errors).length === 0) {
-    signInWithEmail(email, password);
-
-    return {
-      ...state,
-      errorMessages: {}
-    };
-  }
-
+const authSignInRequest = (state, action) => {
+  console.log('Auth sign in request')
   return {
     ...state,
-    errorMessages: {
-      ...errors
-    }
+    isFetching: true
   };
 };
 
-const submitSignUPForm = (state, { email, username, password }) => {
-  const errors = checkInputsValidity([
-    { name: 'email', text: email },
-    { name: 'username', text: username },
-    { name: 'password', text: password },
-  ]);
-
-  if (Object.keys(errors).length === 0) {
-    /** send register form to the server */
-    console.log('submit to the server');
-    return {
-      ...state,
-      errorMessages: {}
-    };
-  }
-
+const authSignInSuccess = (state, { userData }) => {
+  console.log('Auth sign in success')
   return {
     ...state,
-    errorMessages: {
-      ...errors
-    }
+    user: { ...userData },
+    isFetching: false
   };
 };
 
-const requestUserAuthData = (state, { userData }) => ({
-  ...state,
-  ...userData
-});
+const authSignInFailure = (state, { errorMessages }) => {
+  console.log('Auth sign in failure')
+  return {
+    ...state,
+    errorMessages: { ...errorMessages },
+    isFetching: false
+  };
+};
+
+const authLogout = (state, action) => {
+  console.log('Auth  logout')
+  return {};
+};
 
 const authentication = (state = initialState, action) => {
   switch (action.type) {
-    case SUBMIT_SIGN_IN_FORM: return submitSignInForm(state, action);
-    case SUBMIT_SIGN_UP_FORM: return submitSignUPForm(state, action);
-    case REQUEST_USER_AUTH_DATA: return requestUserAuthData(state, action);
+    case AUTH_SIGN_IN_REQUEST: return authSignInRequest(state, action);
+    case AUTH_SIGN_IN_SUCCESS: return authSignInSuccess(state, action);
+    case AUTH_SIGN_IN_FAILURE: return authSignInFailure(state, action);
+    case AUTH_LOGOUT: return authLogout(state, action);
     default:
       return state;
   }

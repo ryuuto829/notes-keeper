@@ -9,5 +9,9 @@ export {
 export {
   submitSignInForm,
   submitSignUpForm,
-  requestUserAuthData
+  requestUserAuthData,
+  authSignInRequest,
+  authSignInSuccess,
+  authSignInFailure,
+  authLogout
 } from './authentication';

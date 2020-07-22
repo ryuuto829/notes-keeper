@@ -1,8 +1,8 @@
 import { takeEvery } from 'redux-saga/effects';
 
-import { SUBMIT_SIGN_IN_FORM } from '../actions/actionTypes';
-import { helloSaga } from './auth';
+import { AUTH_SIGN_IN_REQUEST } from '../actions/actionTypes';
+import { signInSaga } from './auth';
 
-export function* watchAuth() {
-  yield takeEvery(SUBMIT_SIGN_IN_FORM, helloSaga);
-}
+export function* watchAuthSaga() {
+  yield takeEvery(AUTH_SIGN_IN_REQUEST, signInSaga);
+};

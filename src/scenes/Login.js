@@ -5,7 +5,8 @@ import { useHistory, useLocation, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   submitSignUpForm,
-  submitSignInForm
+  submitSignInForm,
+  authSignInRequest
 } from '../store/actions';
 import { signInWithGoogle } from '../server/firebase';
 
@@ -17,7 +18,7 @@ import GoogleLogo from '../components/GoogleLogo';
 import Divider from '../components/Divider';
 import { moveFromTop } from '../shared/styles/animations';
 
-const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages, userData }) => {
+const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages, userData, authSignInRequest }) => {
   const history = useHistory();
   const isCreate = useLocation().pathname === '/register';
 
@@ -40,7 +41,8 @@ const Authentication = ({ submitRegisterForm, submitLoginForm, errorMessages, us
     if (isCreate) {
       submitRegisterForm(user.email, user.username, user.password);
     } else {
-      submitLoginForm(user.email, user.password);
+      authSignInRequest(user.email, user.password);
+      // submitLoginForm(user.email, user.password);
     }
   };
 
@@ -237,6 +239,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  authSignInRequest:  (email, password) => dispatch(authSignInRequest(email, password)),
   submitLoginForm: (email, password) => dispatch(submitSignInForm(email, password)),
   submitRegisterForm: (email, username, password) => dispatch(submitSignUpForm(email, username, password))
 });

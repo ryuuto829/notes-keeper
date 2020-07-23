@@ -7,7 +7,7 @@ import {
   authSignInRequest,
   authSignUpRequest
 } from '../store/actions';
-import { signInWithGoogle, currentUser } from '../server/firebase';
+import { signInWithGoogle } from '../server/firebase';
 
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -249,7 +249,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 Authentication.propTypes = {
-  errorMessages: PropTypes.object
+  // errorMessages: PropTypes.object
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Authentication);

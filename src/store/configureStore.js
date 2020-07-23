@@ -4,16 +4,18 @@ import rootReducer from './reducers';
 import { watchAuthSaga } from './sagas';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const sagaMiddleware = createSagaMiddleware();
+export const sagaMiddleware = createSagaMiddleware();
 
 /** To enable sagas return store instead of function creator */
-export default function configureStore() {
+const configureStore = () => {
   const store = createStore(
     rootReducer,
     composeEnhancers(
       applyMiddleware(sagaMiddleware)
-    )
-  );
+    ));
+
   sagaMiddleware.run(watchAuthSaga);
   return store;
 };
+
+export default configureStore;

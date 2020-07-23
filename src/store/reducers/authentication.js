@@ -10,7 +10,7 @@ import {
 } from '../../utils';
 
 const initialState = {
-  ...loadFromLocalStorage('user') || null,
+  user: loadFromLocalStorage('user') || null,
   isFetching: false
 };
 
@@ -33,7 +33,6 @@ const authSignUpRequest = state => {
 const authSuccess = (state, { userData }) => {
   console.log('Auth sign in success')
   return {
-    ...state,
     user: { ...userData },
     isFetching: false
   };
@@ -50,7 +49,10 @@ const authFailure = (state, { errorMessages }) => {
 
 const authLogout = (state, action) => {
   console.log('Auth  logout')
-  return {};
+  return {
+    user: null,
+    isFetching: false
+  };
 };
 
 const authentication = (state = initialState, action) => {

@@ -18,16 +18,13 @@ export const signInWithEmail = (email, password) => auth.signInWithEmailAndPassw
 
 /** Create a new account */
 export const createUser = (email, password) => {
-  return auth.createUserWithEmailAndPassword(email, password);
+ return auth.createUserWithEmailAndPassword(email, password);
 };
 
 /** Add display name (username) for new user */
 export const updateUsername = username => {
-  auth.currentUser.updateProfile({ displayName: username });
-  return auth.currentUser;
+  return auth.currentUser.updateProfile({ displayName: username });
 };
-
-export const currentUser = auth.currentUser;
 
 export const logout = () => auth.signOut();
 

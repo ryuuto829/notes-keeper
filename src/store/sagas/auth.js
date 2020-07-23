@@ -5,9 +5,27 @@ import {
   signInWithEmail,
   createUser,
   updateUsername,
-  logout
+  logout,
+  auth
 } from '../../server/firebase';
 import { saveToLocalStorage, clearLocalStorage } from '../../utils/localStorage';
+
+const setUserData = user => ({
+  displayName: user.displayName,
+  email: user.email,
+  emailVerified: user.emailVerified,
+  uid: user.uid,
+  creationTime: user.metadata.creationTime,
+  lastSignInTime: user.metadata.lastSignInTime,
+});
+
+function* updateUserData() {
+  const user = yield auth.currentUser;
+  const userData = yield setUserData(user);
+
+  yield saveToLocalStorage('user', userData);
+  yield put(authSuccess(userData));
+};
 
 export function* signInSaga({ email, password }) {
   /** Form validation */
@@ -20,9 +38,8 @@ export function* signInSaga({ email, password }) {
 
   /** Fetch user data from firebase */
   try {
-    const user = yield signInWithEmail(email, password);
-    yield saveToLocalStorage('user', user);
-    yield put(authSuccess(user));
+    yield signInWithEmail(email, password);
+    yield updateUserData();
 
   } catch (error) {
     yield put(authFailure({
@@ -33,7 +50,6 @@ export function* signInSaga({ email, password }) {
 };
 
 export function* signUpSaga({ email, username, password }) {
-  yield logout();
   /** Form validation */
   const errors = validateRegisterForm(email, username, password);
 
@@ -45,9 +61,8 @@ export function* signUpSaga({ email, username, password }) {
   /** Fetch user data from firebase */
   try {
     yield createUser(email, password);
-    const user = yield updateUsername(username);
-    yield saveToLocalStorage('user', user);
-    yield put(authSuccess(user));
+    yield updateUsername(username);
+    yield updateUserData();
 
   } catch (error) {
     yield put(authFailure({

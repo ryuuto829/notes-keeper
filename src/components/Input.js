@@ -88,7 +88,7 @@ Input.propTypes = {
   type: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  errorMessages: PropTypes.object,
+  // errorMessages: PropTypes.object,
   className: PropTypes.string
 };
 

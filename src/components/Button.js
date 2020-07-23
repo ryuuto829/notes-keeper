@@ -59,7 +59,10 @@ const Inner = styled.span`
 `;
 
 Button.propTypes = {
-  children: PropTypes.node
+  /** Don't pass the icon, only plain text */
+  children: PropTypes.node,
+  clicked: PropTypes.func,
+  icon: PropTypes.element
 };
 
 export default Button;

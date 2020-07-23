@@ -16,4 +16,19 @@ export const signInWithGoogle = () => auth.signInWithRedirect(provider);
 /** Email Sign In configuration */
 export const signInWithEmail = (email, password) => auth.signInWithEmailAndPassword(email, password);
 
+/** Create a new account */
+export const createUser = (email, password) => {
+  return auth.createUserWithEmailAndPassword(email, password);
+};
+
+/** Add display name (username) for new user */
+export const updateUsername = username => {
+  auth.currentUser.updateProfile({ displayName: username });
+  return auth.currentUser;
+};
+
+export const currentUser = auth.currentUser;
+
+export const logout = () => auth.signOut();
+
 export default firebase;

@@ -1,13 +1,13 @@
 import { put } from 'redux-saga/effects';
+import { authSuccess, authFailure } from '../actions';
+import { validateLoginForm, validateRegisterForm, } from '../../utils';
 import {
-  authSuccess,
-  authFailure
-} from '../actions';
-import {
-  validateLoginForm,
-  validateRegisterForm,
-} from '../../utils';
-import { signInWithEmail } from '../../server/firebase';
+  signInWithEmail,
+  createUser,
+  updateUsername,
+  logout
+} from '../../server/firebase';
+import { saveToLocalStorage, clearLocalStorage } from '../../utils/localStorage';
 
 export function* signInSaga({ email, password }) {
   /** Form validation */
@@ -21,6 +21,7 @@ export function* signInSaga({ email, password }) {
   /** Fetch user data from firebase */
   try {
     const user = yield signInWithEmail(email, password);
+    yield saveToLocalStorage('user', user);
     yield put(authSuccess(user));
 
   } catch (error) {
@@ -32,6 +33,7 @@ export function* signInSaga({ email, password }) {
 };
 
 export function* signUpSaga({ email, username, password }) {
+  yield logout();
   /** Form validation */
   const errors = validateRegisterForm(email, username, password);
 
@@ -42,7 +44,9 @@ export function* signUpSaga({ email, username, password }) {
 
   /** Fetch user data from firebase */
   try {
-    const user = yield signInWithEmail(email, password);
+    yield createUser(email, password);
+    const user = yield updateUsername(username);
+    yield saveToLocalStorage('user', user);
     yield put(authSuccess(user));
 
   } catch (error) {
@@ -52,4 +56,9 @@ export function* signUpSaga({ email, username, password }) {
       password: error.message
     }));
   }
+};
+
+export function* logoutSaga() {
+  yield clearLocalStorage('user');
+  yield logout();
 };

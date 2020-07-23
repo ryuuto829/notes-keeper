@@ -18,3 +18,11 @@ export const loadFromLocalStorage = name => {
     return undefined;
   }
 };
+
+export const clearLocalStorage = name => {
+  try {
+    localStorage.removeItem(name);
+  } catch (error) {
+    return undefined;
+  }
+};

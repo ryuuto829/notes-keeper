@@ -7,8 +7,6 @@ export {
 } from './list';
 
 export {
-  submitSignInForm,
-  submitSignUpForm,
   requestUserAuthData,
   authSignInRequest,
   authSignUpRequest,

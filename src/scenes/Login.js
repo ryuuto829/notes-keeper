@@ -7,7 +7,7 @@ import {
   authSignInRequest,
   authSignUpRequest
 } from '../store/actions';
-import { signInWithGoogle } from '../server/firebase';
+import { signInWithGoogle, currentUser } from '../server/firebase';
 
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -15,18 +15,24 @@ import TextButton from '../components/TextButton';
 import Branding from '../components/Branding';
 import GoogleLogo from '../components/GoogleLogo';
 import Divider from '../components/Divider';
+import Spinner from '../components/Spinner';
 import { moveFromTop } from '../shared/styles/animations';
 
-const Authentication = ({ errorMessages, userData, authSignInRequest, authSignUpRequest }) => {
+/** Test mode (delete later) */
+const INITIAL_STATE_TEST_MODE = {
+  email: 'test@example.com',
+  username: 'Test Username',
+  password: '12345678'
+};
+
+const Authentication = ({ errorMessages, userData, authSignInRequest, authSignUpRequest, isLoading }) => {
   const history = useHistory();
   const isCreate = useLocation().pathname === '/register';
 
-  const [user, setUser] = useState({ email: 'test@example.com', username: '', password: '12345678' });
+  const [user, setUser] = useState(INITIAL_STATE_TEST_MODE);
   const [submitted, setSubmitted] = useState(false);
 
-  if (userData !== undefined) {
-    return <Redirect to="/home" />;
-  }
+  if (userData) return <Redirect to="/home" />;
 
   const onChangeInputHandler = e => {
     const { name, value } = e.target;
@@ -97,7 +103,7 @@ const Authentication = ({ errorMessages, userData, authSignInRequest, authSignUp
               {emailInputField}
               {usernameInputField}
               {passwordInputField}
-              <Button>Continue</Button>
+              {isLoading ? <Button icon={<Spinner />} /> : <Button>Continue</Button>}
             </FormContainer>
             <RedirectButtonWrapper>
               <TextButton
@@ -125,7 +131,7 @@ const Authentication = ({ errorMessages, userData, authSignInRequest, authSignUp
           <FormContainer onSubmit={submitFormHandler}>
             {emailInputField}
             {passwordInputField}
-            <Button>Login</Button>
+            {isLoading ? <Button icon={<Spinner />} /> : <Button>Login</Button>}
           </FormContainer>
           <RedirectButtonWrapper>
             <NeedAccountText>Need an account ?</NeedAccountText>
@@ -233,7 +239,8 @@ const NeedAccountText = styled.span`
 
 const mapStateToProps = state => ({
   errorMessages: state.authentication.errorMessages,
-  userData: state.authentication.user
+  userData: state.authentication.user,
+  isLoading: state.authentication.isFetching
 });
 
 const mapDispatchToProps = dispatch => ({

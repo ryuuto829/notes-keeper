@@ -1,9 +1,6 @@
-import React from 'react';
 import styled from 'styled-components';
 
-const Spinner = () => <Circle />;
-
-const Circle = styled.div`
+const Spinner = styled.div`
   font-size: 10px;
   position: relative;
   text-indent: -9999em;

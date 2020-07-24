@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -29,5 +30,9 @@ const BrandLink = styled.a`
     cursor: pointer;
   }
 `;
+
+Branding.propTypes = {
+  className: PropTypes.string.isRequired
+};
 
 export default Branding;

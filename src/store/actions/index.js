@@ -7,7 +7,6 @@ export {
 } from './list';
 
 export {
-  requestUserAuthData,
   authSignInRequest,
   authSignUpRequest,
   authSuccess,

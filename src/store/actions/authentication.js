@@ -1,6 +1,4 @@
 import {
-  REQUEST_USER_AUTH_DATA,
-
   AUTH_SIGN_IN_REQUEST,
   AUTH_SIGN_UP_REQUEST,
   AUTH_SUCCESS,
@@ -33,9 +31,4 @@ export const authFailure = errorMessages => ({
 
 export const authLogout = () => ({
   type: AUTH_LOGOUT
-});
-
-export const requestUserAuthData = userData => ({
-  type: REQUEST_USER_AUTH_DATA,
-  userData
 });

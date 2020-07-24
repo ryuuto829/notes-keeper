@@ -14,6 +14,7 @@ const configureStore = () => {
       applyMiddleware(sagaMiddleware)
     ));
 
+  /** Run all sagas */
   sagaMiddleware.run(watchAuthSaga);
   return store;
 };

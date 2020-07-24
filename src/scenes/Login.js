@@ -7,7 +7,8 @@ import {
   authSignInRequest,
   authSignUpRequest
 } from '../store/actions';
-import { signInWithGoogle } from '../server/firebase';
+import { signInWithGoogle } from '../server/firebase'; // ToDo: move to redux action
+import { getUserData, getErrorMessages, getLoadingState } from '../store/selectors';
 
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -19,17 +20,17 @@ import Spinner from '../components/Spinner';
 import { moveFromTop } from '../shared/styles/animations';
 
 /** Test mode (delete later) */
-const INITIAL_STATE_TEST_MODE = {
+const INITIAL_LOGIN_STATE_TEST_MODE = {
   email: 'test@example.com',
   username: 'Test Username',
   password: '12345678'
 };
 
-const Authentication = ({ errorMessages, userData, authSignInRequest, authSignUpRequest, isLoading }) => {
+const Authentication = ({ errorMessages, userData, isLoading, authSignInRequest, authSignUpRequest }) => {
   const history = useHistory();
   const isCreate = useLocation().pathname === '/register';
 
-  const [user, setUser] = useState(INITIAL_STATE_TEST_MODE);
+  const [user, setUser] = useState(INITIAL_LOGIN_STATE_TEST_MODE);
   const [submitted, setSubmitted] = useState(false);
 
   if (userData) return <Redirect to="/home" />;
@@ -67,7 +68,7 @@ const Authentication = ({ errorMessages, userData, authSignInRequest, authSignUp
       name='email'
       type='email'
       label='EMAIL'
-      errorMessages={submitted && errorMessages}
+      errorMessages={submitted ? errorMessages.email : null}
       value={user.email}
       onChange={onChangeInputHandler} />
   );
@@ -77,7 +78,7 @@ const Authentication = ({ errorMessages, userData, authSignInRequest, authSignUp
       name='username'
       type='text'
       label='USERNAME'
-      errorMessages={submitted && errorMessages}
+      errorMessages={submitted ? errorMessages.username : null}
       value={user.username}
       onChange={onChangeInputHandler} />
   );
@@ -87,7 +88,7 @@ const Authentication = ({ errorMessages, userData, authSignInRequest, authSignUp
       name='password'
       type='password'
       label='PASSWORD'
-      errorMessages={submitted && errorMessages}
+      errorMessages={submitted ? errorMessages.password : null}
       value={user.password}
       onChange={onChangeInputHandler} />
   );
@@ -238,9 +239,9 @@ const NeedAccountText = styled.span`
 `;
 
 const mapStateToProps = state => ({
-  errorMessages: state.authentication.errorMessages,
-  userData: state.authentication.user,
-  isLoading: state.authentication.isFetching
+  errorMessages: getErrorMessages(state),
+  userData: getUserData(state),
+  isLoading: getLoadingState(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -249,7 +250,15 @@ const mapDispatchToProps = dispatch => ({
 });
 
 Authentication.propTypes = {
-  // errorMessages: PropTypes.object
+  errorMessages: PropTypes.shape({
+    email: PropTypes.string,
+    password: PropTypes.string,
+    username: PropTypes.string
+  }),
+  isLoading: PropTypes.bool.isRequired,
+  userData: PropTypes.object,
+  authSignInRequest: PropTypes.func.isRequired,
+  authSignUpRequest: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Authentication);

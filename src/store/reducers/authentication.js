@@ -11,7 +11,8 @@ import {
 
 const initialState = {
   user: loadFromLocalStorage('user') || null,
-  isFetching: false
+  isFetching: false,
+  errorMessages: {}
 };
 
 const authSignInRequest = state => {
@@ -34,7 +35,8 @@ const authSuccess = (state, { userData }) => {
   console.log('Auth sign in success')
   return {
     user: { ...userData },
-    isFetching: false
+    isFetching: false,
+    errorMessages: {}
   };
 };
 
@@ -51,7 +53,8 @@ const authLogout = (state, action) => {
   console.log('Auth  logout')
   return {
     user: null,
-    isFetching: false
+    isFetching: false,
+    errorMessages: {}
   };
 };
 

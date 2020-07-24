@@ -5,7 +5,7 @@ import {
   AUTH_SIGN_UP_REQUEST,
   AUTH_LOGOUT
 } from '../actions/actionTypes';
-import { signInSaga, signUpSaga, logoutSaga } from './auth';
+import { signInSaga, signUpSaga, logoutSaga } from './authentication';
 
 export function* watchAuthSaga() {
   yield takeEvery(AUTH_SIGN_IN_REQUEST, signInSaga);

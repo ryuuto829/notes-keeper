@@ -8,22 +8,24 @@ const Input = ({
   label,
   value,
   onChange,
-  errorMessages = {},
+  errorMessages,
   className
 }) => {
-  const isValid = errorMessages[name] === undefined;
+  const isValid = errorMessages === undefined || errorMessages === null;
+
+  const LabelBox = (
+    <Label isValid={isValid} htmlFor={label}>
+      {label}
+      <InvalidMessage
+        isValid={isValid}>
+        {errorMessages || null}
+      </InvalidMessage>
+    </Label>
+  );
 
   return (
     <React.Fragment>
-      <Label
-        isValid={isValid}
-        htmlFor={label}>
-        {label}
-        <InvalidMessage
-          isValid={isValid}>
-          {errorMessages[name] || null}
-        </InvalidMessage>
-      </Label>
+      {LabelBox}
       <InputField
         className={className}
         id={name}
@@ -83,13 +85,13 @@ const InputField = styled.input`
 `;
 
 Input.propTypes = {
-  name: PropTypes.string,
+  name: PropTypes.string.isRequired,
   label: PropTypes.string,
   type: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  // errorMessages: PropTypes.object,
-  className: PropTypes.string
+  errorMessages: PropTypes.string,
+  className: PropTypes.string.isRequired
 };
 
 export default Input;

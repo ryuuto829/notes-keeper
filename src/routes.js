@@ -5,12 +5,11 @@ import Authenticated from './components/Authenticated';
 import Login from './scenes/Login';
 import Home from './scenes/Home';
 
-/** Delete later route `/test` */
-import TestingPlayground from './_testing';
+import TestingPlayground from './_testing'; // ToDo: Delete
 
 const Routes = () => (
   <Switch>
-    <Route exact path="/test" component={TestingPlayground} />
+    <Route exact path="/test" component={TestingPlayground} /> {/* ToDo: Delete */}
     <Route exact path="/" >
       <Redirect to="/login" />
     </Route>

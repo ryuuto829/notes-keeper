@@ -2,18 +2,25 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Branding from '../components/Branding';
+import LeftArrowIcon from '../shared/components/LeftArrowIcon';
 
-const Sidebar = ({ isLocked, toggleLock }) => {
+const Sidebar = ({ isLocked, toggleLock, showSidebar }) => {
   return (
-    <SidebarContainer isLocked={isLocked}>
-      <Header>
-        <HeaderName>User Name</HeaderName>
-        <button onClick={() => toggleLock()}>no</button>
+    <SidebarContainer
+      showSidebar={showSidebar}
+      isLocked={isLocked}>
+      <Header onClick={() => toggleLock()}>
+        <HeaderTitle>User Name</HeaderTitle>
+        <Button isLocked={isLocked}>
+          <LeftArrowIcon />
+        </Button>
       </Header>
-      <PageContainer>DAILY NOTES</PageContainer>
-      <PageContainer>ALL PAGES</PageContainer>
-      <h2>SHORTCUTS</h2>
-      <div style={{ overflow: 'scroll' }}>
+      <SectionContainer>
+        <PageContainer>DAILY NOTES</PageContainer>
+        <PageContainer>ALL PAGES</PageContainer>
+      </SectionContainer>
+      <SectionTitle>SHORTCUTS</SectionTitle>
+      <Scrollable>
         <PageContainer>PAGE 1</PageContainer>
         <PageContainer>PAGE 2</PageContainer>
         <PageContainer>PAGE 3</PageContainer>
@@ -30,8 +37,9 @@ const Sidebar = ({ isLocked, toggleLock }) => {
         <PageContainer>PAGE 14</PageContainer>
         <PageContainer>PAGE 15</PageContainer>
         <PageContainer>PAGE 16</PageContainer>
-      </div>
-      <Branding />
+      </Scrollable>
+      {/* <Branding /> */}
+      {/* <div>ver. 1.0.0</div> */}
     </SidebarContainer>
   );
 };
@@ -41,6 +49,7 @@ const SidebarContainer = styled.div`
   left: ${props => props.isLocked ? '0' : '-232px'};
   top: ${props => props.isLocked ? '0' : '45px'};
   bottom: ${props => props.isLocked ? '0' : '45px'};
+  ${props => props.showSidebar && !props.isLocked ? 'left: 0;' : null};
   background-color: #2f3136;
   color: white;
   width: 232px;
@@ -58,23 +67,40 @@ const SidebarContainer = styled.div`
 
 const Header = styled.header`
   height: 48px;
+  flex: 1 0;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 16px;
   box-shadow: 0 1px 0 rgba(4,4,5,0.2),0 1.5px 0 rgba(6,6,7,0.05),0 2px 0 rgba(4,4,5,0.05);;
+  transition: background-color .1s linear;
   cursor: pointer;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: rgb(79 84 92 / 16%);
+  }
 `;
 
-const HeaderName = styled.h1`
+const HeaderTitle = styled.h1`
   font-size: 16px;
-  line-height: 20px;
+  line-height: 48px;
   white-space: nowrap;
   text-overflow: ellipsis;
-  flex: 1;
+  margin: 0;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 16px;
+  line-height: 20px;
+  padding: 0 16px;
+  margin: 0;
+  margin-bottom: 12px;
+  flex: 1 0;
+  color: #8e9297;
 `;
 
 const PageContainer = styled.div`
-  position: relative;
   height: 32px;
   padding: 0 8px;
   margin: 0 8px;
@@ -82,11 +108,45 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  color: #8e9297;
   cursor: pointer;
+  transition: all 100ms ease-in;
 
   &:hover {
     background-color: rgb(79 84 92 / 32%);
+    color: #dcddde;
   }
+`;
+
+const Scrollable = styled.div`
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+
+  ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+`;
+
+const Button = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  fill: white;
+  border-radius: 3px;
+  padding: 2px;
+  outline: 0;
+  border: none;
+  transition: transform 100ms ease-in;
+  ${props => props.isLocked ? null : 'transform: rotate(180deg);'};
+  cursor: pointer;
+`;
+
+const SectionContainer = styled.section`
+  padding: 16px 0;
 `;
 
 export default Sidebar;

@@ -5,6 +5,7 @@ import { authLogout } from '../store/actions';
 
 import Sidebar from './Sidebar/Sidebar';
 import Toolbar from './Toolbar';
+// import List from './List';
 
 const Home = ({ authLogout }) => {
   const [lockSidebar, setLockSidebar] = useState(true);
@@ -22,6 +23,7 @@ const Home = ({ authLogout }) => {
         hideSidebar={() => setShowSidebar(false)}
         isLocked={lockSidebar} />
       <MainWrapper isLocked={lockSidebar}>
+        {/* <List /> */}
         <h1>Home page can view only authorized user</h1>
         <button onClick={authLogout}>Log out</button>
       </MainWrapper>

@@ -23,6 +23,6 @@ export const clearLocalStorage = name => {
   try {
     localStorage.removeItem(name);
   } catch (error) {
-    return undefined;
+    console.log(error);
   }
 };

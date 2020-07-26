@@ -19,5 +19,5 @@ ReactDOM.render(
       </Theme>
     </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('notes-keeper-app')
 );

@@ -9,17 +9,18 @@ import TableIcon from '../../shared/components/TableIcon';
 import SettingsIcon from '../../shared/components/SettingsIcon';
 
 import Header from './components/Header';
+import Flex from '../../components/Flex';
 
 const Sidebar = ({ isLocked, toggleLock, showSidebar, userName }) => {
   return (
     <SidebarContainer
+      column
       showSidebar={showSidebar}
       isLocked={isLocked}>
       <Header
         isLocked={isLocked}
         userName={userName}
         toggleLock={toggleLock} />
-
       <SectionContainer>
         <SidebarLink
           to='/somelink'
@@ -28,9 +29,7 @@ const Sidebar = ({ isLocked, toggleLock, showSidebar, userName }) => {
           to='/somelink'
           icon={<TableIcon />}>ALL PAGES</SidebarLink>
       </SectionContainer>
-
       <SectionTitle>SHORTCUTS</SectionTitle>
-
       <Scrollable>
         {/* Render user pages */}
         {[...Array(15).keys()].map(el => (
@@ -39,19 +38,19 @@ const Sidebar = ({ isLocked, toggleLock, showSidebar, userName }) => {
             to='/somelink'>PAGE {el + 1}</SidebarLink>
         ))}
       </Scrollable>
-
-      <SettingsSection>
+      <SettingsSection
+        justify='space-between'
+        align='center'>
         <Branding size={24} />
-        <Button isLocked={isLocked}>
-          <SettingsIcon />
-        </Button>
+        <SidebarLink
+          to='/settings'
+          icon={<SettingsIcon />} />
       </SettingsSection>
-
     </SidebarContainer>
   );
 };
 
-const SidebarContainer = styled.div`
+const SidebarContainer = styled(Flex)`
   position: absolute;
   left: ${props => props.isLocked ? '0' : '-232px'};
   top: ${props => props.isLocked ? '0' : '45px'};
@@ -60,8 +59,6 @@ const SidebarContainer = styled.div`
   background-color: #2f3136;
   color: white;
   width: 232px;
-  display: flex;
-  flex-direction: column;
   transition: all 200ms ease-in;
   border-right: 5px solid #36393f; /** Invisible hover area */
   box-sizing: content-box;
@@ -73,9 +70,9 @@ const SidebarContainer = styled.div`
 `;
 
 const SectionTitle = styled.div`
-  font-size: 16px;
-  line-height: 20px;
-  padding: 0 16px;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 0 14px;
   margin: 0;
   margin-bottom: 12px;
   flex: 1 0;
@@ -87,6 +84,7 @@ const Scrollable = styled.nav`
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: none;
+  padding: 0 8px;
 
   ::-webkit-scrollbar {
     width: 0px;
@@ -94,31 +92,16 @@ const Scrollable = styled.nav`
   }
 `;
 
-const Button = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  fill: white;
-  border-radius: 3px;
-  padding: 2px;
-  outline: 0;
-  border: none;
-  transition: transform 100ms ease-in;
-  ${props => props.isLocked ? null : 'transform: rotate(180deg);'};
-  cursor: pointer;
-`;
-
 const SectionContainer = styled.nav`
-  padding: 16px 0;
+  padding: 16px 8px;
 `;
 
-const SettingsSection = styled.section`
-  padding:  16px;
+const SettingsSection = styled(Flex)`
+  flex: 1 0 auto;
+  height: 52px;
+  padding: 0 16px;
   background-color: #292b2f;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  margin-top: 12px;
 `;
 
 const mapStateToProps = state => ({

@@ -5,21 +5,19 @@ import styled from 'styled-components';
 
 const SidebarLink = ({ to, icon, children }) => {
   const hasIcon = icon !== undefined;
+  const hasChildren = children !== undefined;
 
   return (
     <StyledNavLink to={to} >
       {hasIcon ? icon : null}
-      <Label hasIcon={hasIcon}>
-        {children}
-      </Label>
+      {hasChildren ? <Label hasIcon={hasIcon}>{children}</Label> : null}
     </StyledNavLink >
   );
 };
 
 const StyledNavLink = styled(NavLink)`
   height: 32px;
-  padding: 0 8px;
-  margin: 0 8px;
+  padding: 0 6px;
   border-radius: 4px;
   display: flex;
   flex-direction: row;
@@ -33,11 +31,13 @@ const StyledNavLink = styled(NavLink)`
   &:hover {
     background-color: rgb(79 84 92 / 32%);
     color: #dcddde;
+    fill: #dcddde;
   }
 `;
 
 const Label = styled.span`
   ${props => props.hasIcon ? 'margin-left: 6px' : null};
+  font-size: 14px;
   overflow:hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

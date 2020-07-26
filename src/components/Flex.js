@@ -13,8 +13,6 @@ const Container = styled.div`
   align-items: ${({ align }) => align};
   justify-content: ${({ justify }) => justify};
   flex-shrink: ${({ shrink }) => (shrink ? 1 : 'initial')};
-  min-height: 0;
-  min-width: 0;
 `;
 
 Flex.propTypes = {
@@ -24,7 +22,7 @@ Flex.propTypes = {
   justify: PropTypes.oneOf(['center', 'space-around', 'space-between', 'flex-start', 'flex-end']),
   auto: PropTypes.bool,
   className: PropTypes.string,
-  children: PropTypes.arrayOf(PropTypes.element)
+  children: PropTypes.node
 };
 
 export default Flex;

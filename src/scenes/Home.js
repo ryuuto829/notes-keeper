@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { authLogout } from '../store/actions';
 
 import Sidebar from './Sidebar/Sidebar';
-import Toolbar from './Toolbar';
+import Toolbar from './Toolbar/Toolbar';
 // import List from './List';
 
 const Home = ({ authLogout }) => {
@@ -14,7 +14,9 @@ const Home = ({ authLogout }) => {
   return (
     <PageContainer>
       <Sidebar
-        showSidebar={showSidebar}
+        showedSidebar={showSidebar}
+        hideSidebar={() => setShowSidebar(false)}
+        showSidebar={() => setShowSidebar(true)}
         toggleLock={() => setLockSidebar(!lockSidebar)}
         isLocked={lockSidebar} />
       <Toolbar

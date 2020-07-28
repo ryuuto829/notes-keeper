@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import TestComponent from './components/Button';
-import GoogleLogo from './components/GoogleLogo';
-import SettingsIcon from './shared/components/SettingsIcon';
+import TestComponent from './components/Tooltip';
 
 const TestingPlayground = () => {
   const [darkmode, setDarkmode] = useState(true);
@@ -17,11 +15,9 @@ const TestingPlayground = () => {
       <PlaygroundBox darkMode={darkmode}>
 
 
-        <TestComponent>Login</TestComponent>
-        <TestComponent icon={<GoogleLogo size={20} />}>Sign with Google</TestComponent>
-        <TestComponent
-          fullWidth={false}
-          icon={<SettingsIcon />} />
+        <TestComponent left>Tooltip</TestComponent>
+        <button>lol</button>
+
 
 
 

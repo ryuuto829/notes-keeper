@@ -11,42 +11,49 @@ import SettingsIcon from '../../shared/components/SettingsIcon';
 import Header from './components/Header';
 import Flex from '../../components/Flex';
 
-const Sidebar = ({ isLocked, toggleLock, showSidebar, userName }) => {
+const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar, userName }) => {
   return (
-    <SidebarContainer
-      column
-      showSidebar={showSidebar}
-      isLocked={isLocked}>
-      <Header
-        isLocked={isLocked}
-        userName={userName}
-        toggleLock={toggleLock} />
-      <SectionContainer>
-        <SidebarLink
-          to='/somelink'
-          icon={<EventNoteIcon />}>DAILY NOTES</SidebarLink>
-        <SidebarLink
-          to='/somelink'
-          icon={<TableIcon />}>ALL PAGES</SidebarLink>
-      </SectionContainer>
-      <SectionTitle>SHORTCUTS</SectionTitle>
-      <Scrollable>
-        {/* Render user pages */}
-        {[...Array(15).keys()].map(el => (
+    <React.Fragment>
+      {!isLocked ?
+        <HoverArea
+          onMouseEnter={showSidebar}
+          onMouseLeave={hideSidebar} /> :
+        null}
+      <SidebarContainer
+        column
+        showSidebar={showedSidebar}
+        isLocked={isLocked}>
+        <Header
+          isLocked={isLocked}
+          userName={userName}
+          toggleLock={toggleLock} />
+        <SectionContainer>
           <SidebarLink
-            key={el}
-            to='/somelink'>PAGE {el + 1}</SidebarLink>
-        ))}
-      </Scrollable>
-      <SettingsSection
-        justify='space-between'
-        align='center'>
-        <Branding size={24} />
-        <SidebarLink
-          to='/settings'
-          icon={<SettingsIcon />} />
-      </SettingsSection>
-    </SidebarContainer>
+            to='/somelink'
+            icon={<EventNoteIcon />}>DAILY NOTES</SidebarLink>
+          <SidebarLink
+            to='/somelink'
+            icon={<TableIcon />}>ALL PAGES</SidebarLink>
+        </SectionContainer>
+        <SectionTitle>SHORTCUTS</SectionTitle>
+        <Scrollable>
+          {/* Render user pages */}
+          {[...Array(15).keys()].map(el => (
+            <SidebarLink
+              key={el}
+              to='/somelink'>PAGE {el + 1}</SidebarLink>
+          ))}
+        </Scrollable>
+        <SettingsSection
+          justify='space-between'
+          align='center'>
+          <Branding size={24} />
+          <SidebarLink
+            to='/settings'
+            icon={<SettingsIcon />} />
+        </SettingsSection>
+      </SidebarContainer>
+    </React.Fragment>
   );
 };
 
@@ -55,18 +62,29 @@ const SidebarContainer = styled(Flex)`
   left: ${props => props.isLocked ? '0' : '-232px'};
   top: ${props => props.isLocked ? '0' : '45px'};
   bottom: ${props => props.isLocked ? '0' : '45px'};
-  ${props => props.showSidebar && !props.isLocked ? 'left: 0;' : null};
+  ${props => props.showSidebar && !props.isLocked ? 'left: 0' : null};
   background-color: #2f3136;
   color: white;
   width: 232px;
   transition: all 200ms ease-in;
-  border-right: 5px solid #36393f; /** Invisible hover area */
+  /* border-right: 5px solid #36393f; * Invisible hover area */
   box-sizing: content-box;
   z-index: 999;
+  ${props => !props.isLocked ? 'box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 8px 0px, rgba(0, 0, 0, 0.19) 0px 6px 20px 0px' : null};
+  
 
   &:hover {
     left: ${props => props.isLocked ? 'inherit' : '0'};
   }
+`;
+
+const HoverArea = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 100%;
+  z-index: 102;
 `;
 
 const SectionTitle = styled.div`

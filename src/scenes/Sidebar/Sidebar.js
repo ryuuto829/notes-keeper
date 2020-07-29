@@ -10,6 +10,7 @@ import SettingsIcon from '../../shared/components/SettingsIcon';
 
 import Header from './components/Header';
 import Flex from '../../components/Flex';
+import Scrollable from '../../components/Scrollable';
 
 const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar, userName }) => {
   return (
@@ -37,12 +38,14 @@ const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar
         </SectionContainer>
         <SectionTitle>SHORTCUTS</SectionTitle>
         <Scrollable>
-          {/* Render user pages */}
-          {[...Array(15).keys()].map(el => (
-            <SidebarLink
-              key={el}
-              to='/somelink'>PAGE {el + 1}</SidebarLink>
-          ))}
+          <ScrollableWrapper>
+            {/* Render user pages */}
+            {[...Array(15).keys()].map(el => (
+              <SidebarLink
+                key={el}
+                to='/somelink'>PAGE {el + 1}</SidebarLink>
+            ))}
+          </ScrollableWrapper>
         </Scrollable>
         <SettingsSection
           justify='space-between'
@@ -67,12 +70,10 @@ const SidebarContainer = styled(Flex)`
   color: white;
   width: 232px;
   transition: all 200ms ease-in;
-  /* border-right: 5px solid #36393f; * Invisible hover area */
   box-sizing: content-box;
   z-index: 999;
   ${props => !props.isLocked ? 'box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 8px 0px, rgba(0, 0, 0, 0.19) 0px 6px 20px 0px' : null};
   
-
   &:hover {
     left: ${props => props.isLocked ? 'inherit' : '0'};
   }
@@ -97,17 +98,8 @@ const SectionTitle = styled.div`
   color: #8e9297;
 `;
 
-const Scrollable = styled.nav`
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: none;
+const ScrollableWrapper = styled.div`
   padding: 0 8px;
-
-  ::-webkit-scrollbar {
-    width: 0px;
-    background: transparent;
-  }
 `;
 
 const SectionContainer = styled.nav`

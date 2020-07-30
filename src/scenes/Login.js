@@ -14,7 +14,7 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import TextButton from '../components/TextButton';
 import Branding from '../components/Branding';
-import GoogleLogo from '../components/GoogleLogo';
+import GoogleLogo from '../shared/icons/GoogleLogo';
 import Divider from '../components/Divider';
 import Spinner from '../components/Spinner';
 import { moveFromTop } from '../shared/styles/animations';

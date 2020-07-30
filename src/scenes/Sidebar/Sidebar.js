@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 
 import SidebarLink from './components/SidebarLink';
 import Branding from '../../components/Branding';
-import EventNoteIcon from '../../shared/components/EventNoteIcon';
-import TableIcon from '../../shared/components/TableIcon';
-import SettingsIcon from '../../shared/components/SettingsIcon';
+import EventNoteIcon from '../../shared/icons/EventNote';
+import TableIcon from '../../shared/icons/Table';
+import SettingsIcon from '../../shared/icons/Settings';
 
 import Header from './components/Header';
 import Flex from '../../components/Flex';

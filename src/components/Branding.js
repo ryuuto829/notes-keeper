@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import NotesKeeperLogo from './NotesKeeperLogo';
+import NotesKeeperLogo from '../shared/icons/NotesKeeperLogo';
 
 const Branding = ({ className, size = 36 }) => (
   <Link to='/' component={CustomStyledLink} className={className} >

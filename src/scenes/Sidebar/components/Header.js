@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import LeftArrowIcon from '../../../shared/components/LeftArrowIcon';
+import LeftArrowIcon from '../../../shared/icons/LeftArrow';
 import Flex from '../../../components/Flex';
 
 const Header = ({ isLocked, toggleLock, userName }) => (

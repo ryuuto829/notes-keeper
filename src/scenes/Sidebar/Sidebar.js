@@ -33,7 +33,7 @@ const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar
             to='/somelink'
             icon={<EventNoteIcon />}>DAILY NOTES</SidebarLink>
           <SidebarLink
-            to='/somelink'
+            to='/collection'
             icon={<TableIcon />}>ALL PAGES</SidebarLink>
         </SectionContainer>
         <SectionTitle>SHORTCUTS</SectionTitle>

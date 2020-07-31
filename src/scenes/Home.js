@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { authLogout } from '../store/actions';
 
 import Sidebar from './Sidebar/Sidebar';
 import Toolbar from './Toolbar/Toolbar';
-// import List from './List';
 
-const Home = ({ authLogout }) => {
+const Home = () => {
   const [lockSidebar, setLockSidebar] = useState(true);
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -25,9 +22,7 @@ const Home = ({ authLogout }) => {
         hideSidebar={() => setShowSidebar(false)}
         isLocked={lockSidebar} />
       <MainWrapper isLocked={lockSidebar}>
-        {/* <List /> */}
         <h1>Home page can view only authorized user</h1>
-        <button onClick={authLogout}>Log out</button>
       </MainWrapper>
     </PageContainer>
   );
@@ -53,8 +48,4 @@ const MainWrapper = styled.div`
   color: white;
 `;
 
-const mapDispatchToProps = dispatch => ({
-  authLogout: () => dispatch(authLogout())
-});
-
-export default connect(null, mapDispatchToProps)(Home);
+export default Home;

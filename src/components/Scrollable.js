@@ -12,7 +12,6 @@ const Wrapper = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: none;
-  transition: all 250ms ease-in-out;
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -23,9 +22,24 @@ const Wrapper = styled.div`
     border-radius: 6px;
   }
 
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 6px;
+  }
+
   &:hover {
     &::-webkit-scrollbar-thumb {
       background-color: #202225;
+
+      &:hover {
+        background-color: #4e4e4e;
+      }
+    }
+
+    &::-webkit-scrollbar-track {
+      &:hover {
+        background-color: #3a3a3a;
+      }
     }
   }
 `;

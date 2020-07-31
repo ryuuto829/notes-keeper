@@ -5,3 +5,7 @@ export {
   authFailure,
   authLogout
 } from './authentication';
+
+export {
+  uiUpdateShortcuts
+} from './uiStore'

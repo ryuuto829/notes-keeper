@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { getShortcuts } from '../server/firebase';
 
 import Sidebar from './Sidebar/Sidebar';
 import Toolbar from './Toolbar/Toolbar';
@@ -23,6 +24,7 @@ const Home = () => {
         isLocked={lockSidebar} />
       <MainWrapper isLocked={lockSidebar}>
         <h1>Home page can view only authorized user</h1>
+        <button onClick={() => getShortcuts()}>database</button>
       </MainWrapper>
     </PageContainer>
   );

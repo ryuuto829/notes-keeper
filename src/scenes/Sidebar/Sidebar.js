@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { uiUpdateShortcuts } from '../../store/actions';
 
 import SidebarLink from './components/SidebarLink';
 import Branding from '../../components/Branding';
@@ -12,7 +13,7 @@ import Header from './components/Header';
 import Flex from '../../components/Flex';
 import Scrollable from '../../components/Scrollable';
 
-const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar, userName }) => {
+const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar, userName, shortcuts }) => {
   return (
     <React.Fragment>
       {!isLocked ?
@@ -40,10 +41,10 @@ const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar
         <Scrollable>
           <ScrollableWrapper>
             {/* Render user pages */}
-            {[...Array(15).keys()].map(el => (
+            {Object.keys(shortcuts).map(id => (
               <SidebarLink
-                key={el}
-                to='/somelink'>PAGE {el + 1}</SidebarLink>
+                key={id}
+                to='/somelink'>{shortcuts[id]}</SidebarLink>
             ))}
           </ScrollableWrapper>
         </Scrollable>
@@ -115,7 +116,8 @@ const SettingsSection = styled(Flex)`
 `;
 
 const mapStateToProps = state => ({
-  userName: state.authentication.user.displayName
-})
+  userName: state.authentication.user.displayName,
+  shortcuts: state.UI.shortcuts
+});
 
 export default connect(mapStateToProps)(Sidebar);

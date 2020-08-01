@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import authentication from './authentication';
-import UI from './UI';
+import document from './document';
 
 const rootReducer = combineReducers({
-  UI,
-  authentication
+  authentication,
+  document,
 });
 
 export default rootReducer;

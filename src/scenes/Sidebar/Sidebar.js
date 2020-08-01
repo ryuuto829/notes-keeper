@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
-import { uiUpdateShortcuts } from '../../store/actions';
+import { useSelector } from 'react-redux';
+import { selectShortcuts, selectDocumentById } from '../../store/reducers/document';
 
 import SidebarLink from './components/SidebarLink';
 import Branding from '../../components/Branding';
@@ -13,7 +13,11 @@ import Header from './components/Header';
 import Flex from '../../components/Flex';
 import Scrollable from '../../components/Scrollable';
 
-const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar, userName, shortcuts }) => {
+const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar }) => {
+  const shortcuts = useSelector(selectShortcuts);
+  const documents = useSelector(selectDocumentById);
+  const userName = 'userName'; // TODO: GET FROM THE STORE
+
   return (
     <React.Fragment>
       {!isLocked ?
@@ -31,7 +35,7 @@ const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar
           toggleLock={toggleLock} />
         <SectionContainer>
           <SidebarLink
-            to='/somelink'
+            to='/home'
             icon={<EventNoteIcon />}>DAILY NOTES</SidebarLink>
           <SidebarLink
             to='/collection'
@@ -41,10 +45,10 @@ const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar
         <Scrollable>
           <ScrollableWrapper>
             {/* Render user pages */}
-            {Object.keys(shortcuts).map(id => (
+            {shortcuts.map(id => (
               <SidebarLink
                 key={id}
-                to='/somelink'>{shortcuts[id]}</SidebarLink>
+                to={documents[id].url}>{documents[id].title}</SidebarLink>
             ))}
           </ScrollableWrapper>
         </Scrollable>
@@ -115,9 +119,4 @@ const SettingsSection = styled(Flex)`
   margin-top: 12px;
 `;
 
-const mapStateToProps = state => ({
-  userName: state.authentication.user.displayName,
-  shortcuts: state.UI.shortcuts
-});
-
-export default connect(mapStateToProps)(Sidebar);
+export default Sidebar;

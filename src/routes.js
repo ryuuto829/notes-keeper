@@ -2,9 +2,9 @@ import React from 'react';
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import Authenticated from './components/Authenticated';
+import Layout from './components/Layout';
 import Login from './scenes/Login';
-import Home from './scenes/Home';
-import Collection from './scenes/Collection';
+import Document from './scenes/Document';
 
 const Routes = () => (
   <Switch>
@@ -14,8 +14,10 @@ const Routes = () => (
     <Route exact path="/login" component={Login} />
     <Route exact path="/register" component={Login} />
     <Authenticated>
-      <Route exact path="/home" component={Home} />
-      <Route exact path="/collection" component={Collection} />
+      <Layout>
+        <Route exact path="/home" component={Document} />
+        <Route exact path="/page/:id" component={Document} />
+      </Layout>
     </Authenticated>
   </Switch >
 );

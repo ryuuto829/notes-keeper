@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectDocumentById, updateShortcut, selectShorcuted } from '../../store/reducers/document';
 
 import LeftArrowIcon from '../../shared/icons/LeftArrow';
 import IconButton from './components/IconButton';
 import Flex from '../../components/Flex';
 
-import { authLogout } from '../../store/actions';
+const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }) => {
+  const dispatch = useDispatch();
+  const shortcuted = useSelector(selectShorcuted);
+  const { id } = useSelector(selectDocumentById);
 
-const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock, authLogout }) => {
+  useEffect(() => {
+    console.log(shortcuted)
+  }, [shortcuted])
+
   return (
     <Wrapper isLocked={isLocked}>
       {isLocked ? null : <HoverArea onMouseLeave={hideSidebar} />}
@@ -23,9 +30,10 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock, authLogout })
             onClick={toggleLock}
             onMouseEnter={showSidebar} />}
         <Flex>
-          <button onClick={authLogout}>Log out</button>
-          <input type='text' />
-          <Button>Add to shortcut</Button>
+          <Button
+            onClick={() => dispatch(updateShortcut({ id: id }))}>
+            {shortcuted ? 'Remove from shortcuts' : 'Add to shortcut'}
+          </Button>
           <Button>Menu</Button>
         </Flex>
       </ToolbarWrapper>
@@ -83,8 +91,4 @@ const Button = styled.button`
   }
 `;
 
-const mapDispatchToProps = dispatch => ({
-  authLogout: () => dispatch(authLogout())
-});
-
-export default connect(null, mapDispatchToProps)(Toolbar);
+export default Toolbar;

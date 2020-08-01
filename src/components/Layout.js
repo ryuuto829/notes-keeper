@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { getShortcuts } from '../server/firebase';
 
-import Sidebar from './Sidebar/Sidebar';
-import Toolbar from './Toolbar/Toolbar';
+import Sidebar from '../scenes/Sidebar/Sidebar';
+import Toolbar from '../scenes/Toolbar/Toolbar';
 
-const Home = () => {
+const Layout = ({ children }) => {
   const [lockSidebar, setLockSidebar] = useState(true);
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -23,8 +23,7 @@ const Home = () => {
         hideSidebar={() => setShowSidebar(false)}
         isLocked={lockSidebar} />
       <MainWrapper isLocked={lockSidebar}>
-        <h1>Home page can view only authorized user</h1>
-        <button onClick={() => getShortcuts()}>database</button>
+        {children}
       </MainWrapper>
     </PageContainer>
   );
@@ -50,4 +49,9 @@ const MainWrapper = styled.div`
   color: white;
 `;
 
-export default Home;
+Layout.propTypes = {
+  /** Show current document */
+  children: PropTypes.node
+};
+
+export default Layout;

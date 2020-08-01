@@ -1,28 +1,36 @@
-import {
-  DOCUMENT_ADD_TO_SHORTCUT
-} from '../actions/actionTypes';
+import { createSlice } from '@reduxjs/toolkit';
+import { DATA } from '../_test_database'; // DELETE LATER
 
-const initialState = {
-  user: loadFromLocalStorage('user') || null,
-  isFetching: false,
-  errorMessages: {}
-};
+export const documentSlice = createSlice({
+  name: 'document',
+  initialState: {
+    shortcuted: false,
+    shortcuts: DATA.shortcutsById,
+    allDocuments: DATA.documentsMeta,
+  },
+  reducers: {
+    updateShortcut: (state, action) => {
+      const { id } = action.payload;
+      const updatedState = state.shortcuts;
+      const index = updatedState.indexOf(id);
 
-const documentAddToShortcut = state => {
-  console.log('[document] add to shortcut')
-  return {
-    ...state,
-    isFetching: true
-  };
-};
+      if (state.shortcuts.includes(id)) {
+        updatedState.splice(index, 0);
+      } else {
+        updatedState.push(id);
+      }
 
-
-const authentication = (state = initialState, action) => {
-  switch (action.type) {
-    case DOCUMENT_ADD_TO_SHORTCUT: return documentAddToShortcut(state, action);
-    default:
-      return state;
+      return {
+        ...state,
+        shortcuted: !state.shortcuted,
+        shortcuts: updatedState
+      };
+    },
   }
-};
+});
 
-export default authentication;
+export const selectShortcuts = state => state.document.shortcuts;
+export const selectShorcuted = state => state.document.shortcuted;
+export const selectDocumentById = state => state.document.allDocuments;
+export const { updateShortcut } = documentSlice.actions;
+export default documentSlice.reducer;

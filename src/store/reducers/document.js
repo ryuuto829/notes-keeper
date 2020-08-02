@@ -4,15 +4,16 @@ import { DATA } from '../_test_database'; // DELETE LATER
 export const documentSlice = createSlice({
   name: 'document',
   initialState: {
-    shortcuted: false,
+    data: DATA.documentsMeta.id3,
     shortcuts: DATA.shortcutsById,
-    allDocuments: DATA.documentsMeta,
   },
   reducers: {
     updateShortcut: (state, action) => {
       const { id } = action.payload;
       const updatedState = state.shortcuts;
       const index = updatedState.indexOf(id);
+
+      if (id === '') return state;
 
       if (state.shortcuts.includes(id)) {
         updatedState.splice(index, 0);

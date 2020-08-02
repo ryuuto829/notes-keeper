@@ -1,5 +1,4 @@
 import { put } from 'redux-saga/effects';
-import { authSuccess, authFailure } from '../actions';
 import { validateLoginForm, validateRegisterForm, } from '../../utils';
 import {
   signInWithEmail,
@@ -8,7 +7,12 @@ import {
   logout,
   auth
 } from '../../server/firebase';
-import { saveToLocalStorage, clearLocalStorage } from '../../utils/localStorage';
+import {
+  saveToLocalStorage,
+  clearLocalStorage
+} from '../../utils/localStorage';
+import { updateUserData, removeUserData } from '../reducers/user';
+import { success, failure } from '../reducers/auth';
 
 const setUserData = user => ({
   displayName: user.displayName,
@@ -19,42 +23,47 @@ const setUserData = user => ({
   lastSignInTime: user.metadata.lastSignInTime,
 });
 
-function* updateUserData() {
+function* changeUserData() {
   const user = yield auth.currentUser;
   const userData = yield setUserData(user);
 
   yield saveToLocalStorage('user', userData);
-  yield put(authSuccess(userData));
+  yield put(updateUserData({ user: user }));
+  yield put(success());
 };
 
-export function* signInSaga({ email, password }) {
+export function* signInSaga(action) {
+  const { email, password } = action.payload;
   /** Form validation */
   const errors = validateLoginForm(email, password);
 
   if (Object.keys(errors).length !== 0) {
-    yield put(authFailure(errors));
+    yield put(failure({ errorMessages: errors }));
     return;
   }
 
   /** Fetch user data from firebase */
   try {
     yield signInWithEmail(email, password);
-    yield updateUserData();
+    yield changeUserData();
 
   } catch (error) {
-    yield put(authFailure({
-      email: error.message,
-      password: error.message
+    yield put(failure({
+      errorMessages: {
+        email: error.message,
+        password: error.message
+      }
     }));
   }
 };
 
-export function* signUpSaga({ email, username, password }) {
+export function* signUpSaga(action) {
+  const { email, username, password } = action.payload;
   /** Form validation */
   const errors = validateRegisterForm(email, username, password);
 
   if (Object.keys(errors).length !== 0) {
-    yield put(authFailure(errors));
+    yield put(failure({ errorMessages: errors }));
     return;
   }
 
@@ -62,18 +71,21 @@ export function* signUpSaga({ email, username, password }) {
   try {
     yield createUser(email, password);
     yield updateUsername(username);
-    yield updateUserData();
+    yield changeUserData();
 
   } catch (error) {
-    yield put(authFailure({
-      email: error.message,
-      username: error.message,
-      password: error.message
+    yield put(failure({
+      errorMessages: {
+        email: error.message,
+        username: error.message,
+        password: error.message
+      }
     }));
   }
 };
 
 export function* logoutSaga() {
   yield clearLocalStorage('user');
+  yield put(removeUserData());
   yield logout();
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { selectShortcuts, selectDocumentById } from '../../store/reducers/document';
 
 import SidebarLink from './components/SidebarLink';
 import Branding from '../../components/Branding';
@@ -14,8 +13,6 @@ import Flex from '../../components/Flex';
 import Scrollable from '../../components/Scrollable';
 
 const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar }) => {
-  const shortcuts = useSelector(selectShortcuts);
-  const documents = useSelector(selectDocumentById);
   const userName = 'userName'; // TODO: GET FROM THE STORE
 
   return (
@@ -45,11 +42,11 @@ const Sidebar = ({ isLocked, toggleLock, showedSidebar, hideSidebar, showSidebar
         <Scrollable>
           <ScrollableWrapper>
             {/* Render user pages */}
-            {shortcuts.map(id => (
+            {/* {shortcuts.map(id => (
               <SidebarLink
                 key={id}
                 to={documents[id].url}>{documents[id].title}</SidebarLink>
-            ))}
+            ))} */}
           </ScrollableWrapper>
         </Scrollable>
         <SettingsSection

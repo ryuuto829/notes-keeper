@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useHistory, useLocation, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import {
-  authSignInRequest,
-  authSignUpRequest
-} from '../store/actions';
+import { useSelector, useDispatch } from 'react-redux';
 import { signInWithGoogle } from '../server/firebase'; // ToDo: move to redux action
-import { getUserData, getErrorMessages, getLoadingState } from '../store/selectors';
+import {
+  selectAuthenticated,
+  selectFetching,
+  selectErrorMessages,
+  signIn,
+  signUp
+} from '../store/reducers/auth';
 
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -26,14 +28,19 @@ const INITIAL_LOGIN_STATE_TEST_MODE = {
   password: '12345678'
 };
 
-const Authentication = ({ errorMessages, userData, isLoading, authSignInRequest, authSignUpRequest }) => {
+const Authentication = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
+
   const isCreate = useLocation().pathname === '/register';
+  const isAuthenticated = useSelector(selectAuthenticated);
+  const isFetching = useSelector(selectFetching);
+  const errorMessages = useSelector(selectErrorMessages);
 
   const [user, setUser] = useState(INITIAL_LOGIN_STATE_TEST_MODE);
   const [submitted, setSubmitted] = useState(false);
 
-  if (userData) return <Redirect to="/home" />;
+  if (isAuthenticated) return <Redirect to="/home" />;
 
   const onChangeInputHandler = e => {
     const { name, value } = e.target;
@@ -45,9 +52,17 @@ const Authentication = ({ errorMessages, userData, isLoading, authSignInRequest,
     setSubmitted(true);
 
     if (isCreate) {
-      authSignUpRequest(user.email, user.username, user.password);
+      dispatch(signUp({
+        email: user.email,
+        username: user.username,
+        password: user.password
+      }));
+
     } else {
-      authSignInRequest(user.email, user.password);
+      dispatch(signIn({
+        email: user.email,
+        password: user.password
+      }));
     }
   };
 
@@ -104,7 +119,7 @@ const Authentication = ({ errorMessages, userData, isLoading, authSignInRequest,
               {emailInputField}
               {usernameInputField}
               {passwordInputField}
-              {isLoading ? <Button icon={<Spinner />} /> : <Button>Continue</Button>}
+              {isFetching ? <Button icon={<Spinner />} /> : <Button>Continue</Button>}
             </FormContainer>
             <RedirectButtonWrapper>
               <TextButton
@@ -132,7 +147,7 @@ const Authentication = ({ errorMessages, userData, isLoading, authSignInRequest,
           <FormContainer onSubmit={submitFormHandler}>
             {emailInputField}
             {passwordInputField}
-            {isLoading ? <Button icon={<Spinner />} /> : <Button>Login</Button>}
+            {isFetching ? <Button icon={<Spinner />} /> : <Button>Login</Button>}
           </FormContainer>
           <RedirectButtonWrapper>
             <NeedAccountText>Need an account ?</NeedAccountText>
@@ -238,27 +253,16 @@ const NeedAccountText = styled.span`
   color: rgb(114, 118, 125);
 `;
 
-const mapStateToProps = state => ({
-  errorMessages: getErrorMessages(state),
-  userData: getUserData(state),
-  isLoading: getLoadingState(state)
-});
-
-const mapDispatchToProps = dispatch => ({
-  authSignInRequest: (email, password) => dispatch(authSignInRequest(email, password)),
-  authSignUpRequest: (email, username, password) => dispatch(authSignUpRequest(email, username, password))
-});
-
 Authentication.propTypes = {
-  errorMessages: PropTypes.shape({
-    email: PropTypes.string,
-    password: PropTypes.string,
-    username: PropTypes.string
-  }),
-  isLoading: PropTypes.bool.isRequired,
-  userData: PropTypes.object,
-  authSignInRequest: PropTypes.func.isRequired,
-  authSignUpRequest: PropTypes.func.isRequired
+  // errorMessages: PropTypes.shape({
+  //   email: PropTypes.string,
+  //   password: PropTypes.string,
+  //   username: PropTypes.string
+  // }),
+  // isLoading: PropTypes.bool.isRequired,
+  // userData: PropTypes.object,
+  // authSignInRequest: PropTypes.func.isRequired,
+  // authSignUpRequest: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Authentication);
+export default Authentication;

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
@@ -28,12 +29,23 @@ export const updateUsername = username => {
 
 export const logout = () => auth.signOut();
 
-export const getShortcuts = () => {
-  return database.ref('/users/' + 'zbAgXSyIcXRmwR06QL47CdvV4zw1' + '/shortcuts').once('value')
-    .then(data => {
-      console.log(data.val())
-      return data.val();
-    });
-}
+export const useAuth = () => {
+  const [state, setState] = useState(() => {
+    const user = firebase.auth().currentUser;
+    return { initializing: !user, user };
+  });
+
+  const onChange = user => {
+    console.log(user);
+    setState({ initializing: false, user });
+  };
+
+  useEffect(() => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(onChange);
+    return () => unsubscribe();
+  }, []);
+
+  return state;
+};
 
 export default firebase;

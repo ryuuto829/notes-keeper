@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { selectDocumentById } from '../store/reducers/document';
-import { authLogout } from '../store/actions';
+import { logout } from '../store/reducers/auth';
 
 const Document = () => {
   const { id } = useParams();
@@ -14,7 +14,7 @@ const Document = () => {
       <h1>My Main Page Title</h1>
       <div>Current page has id = " {id} "</div>
       {/* <div>{pages[id].text || 'HOME PAGE'}</div> */}
-      <button onClick={() => dispatch(authLogout())}>Log out</button>
+      <button onClick={() => dispatch(logout())}>Log out</button>
     </div>
   );
 };

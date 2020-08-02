@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectDocumentById, updateShortcut, selectShorcuted } from '../../store/reducers/document';
 
 import LeftArrowIcon from '../../shared/icons/LeftArrow';
 import IconButton from './components/IconButton';
@@ -9,12 +8,8 @@ import Flex from '../../components/Flex';
 
 const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }) => {
   const dispatch = useDispatch();
-  const shortcuted = useSelector(selectShorcuted);
-  const { id } = useSelector(selectDocumentById);
-
-  useEffect(() => {
-    console.log(shortcuted)
-  }, [shortcuted])
+  // const shortcuted = useSelector(selectShorcuted);
+  // const { id } = useSelector(selectDocumentById);
 
   return (
     <Wrapper isLocked={isLocked}>
@@ -30,10 +25,10 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }) => {
             onClick={toggleLock}
             onMouseEnter={showSidebar} />}
         <Flex>
-          <Button
+          {/* <Button
             onClick={() => dispatch(updateShortcut({ id: id }))}>
             {shortcuted ? 'Remove from shortcuts' : 'Add to shortcut'}
-          </Button>
+          </Button> */}
           <Button>Menu</Button>
         </Flex>
       </ToolbarWrapper>

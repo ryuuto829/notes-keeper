@@ -1,5 +1,8 @@
 import { put } from 'redux-saga/effects';
-import { validateLoginForm, validateRegisterForm, } from '../../utils';
+import {
+  validateLoginForm,
+  validateRegisterForm
+} from '../../utils';
 import {
   signInWithEmail,
   createUser,
@@ -11,8 +14,8 @@ import {
   saveToLocalStorage,
   clearLocalStorage
 } from '../../utils/localStorage';
-import { updateUserData, removeUserData } from '../reducers/user';
-import { success, failure } from '../reducers/auth';
+import { updateUserData, removeUserData } from '../modules/user';
+import { success, failure } from '../modules/auth';
 
 const setUserData = user => ({
   displayName: user.displayName,

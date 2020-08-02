@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { selectDocumentById } from '../store/reducers/document';
-import { logout } from '../store/reducers/auth';
+import { selectDocumentById } from '../store/modules/document';
+import { logout } from '../store/modules/auth';
 
 const Document = () => {
   const { id } = useParams();

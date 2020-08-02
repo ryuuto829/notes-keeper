@@ -4,7 +4,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: null,
   reducers: {
-    updateUserData: action => {
+    updateUserData: (state, action) => {
       const { user } = action.payload;
 
       if (!user) return null;

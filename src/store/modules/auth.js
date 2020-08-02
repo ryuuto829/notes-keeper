@@ -25,6 +25,7 @@ export const authSlice = createSlice({
     },
     failure: (state, action) => {
       const { errorMessages } = action.payload;
+      console.log(errorMessages)
       return {
         isAuthenticated: false,
         errorMessages: errorMessages,

@@ -10,7 +10,7 @@ import {
   selectErrorMessages,
   signIn,
   signUp
-} from '../store/reducers/auth';
+} from '../store/modules/auth';
 
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -59,6 +59,7 @@ const Authentication = () => {
       }));
 
     } else {
+
       dispatch(signIn({
         email: user.email,
         password: user.password
@@ -69,12 +70,17 @@ const Authentication = () => {
   const clickRedirectHandler = () => {
     /** Clear all inputs and hide validation errors */
     setSubmitted(false);
-    setUser({ email: '', username: '', password: '' });
 
     if (isCreate) {
-      history.push('/login')
+      setUser(INITIAL_LOGIN_STATE_TEST_MODE);
     } else {
-      history.push('/register')
+      setUser({ email: '', username: '', password: '' });
+    }
+
+    if (isCreate) {
+      history.push('/login');
+    } else {
+      history.push('/register');
     }
   };
 
@@ -83,7 +89,7 @@ const Authentication = () => {
       name='email'
       type='email'
       label='EMAIL'
-      errorMessages={submitted ? errorMessages.email : null}
+      errorMessages={submitted && !isFetching ? errorMessages.email : null}
       value={user.email}
       onChange={onChangeInputHandler} />
   );
@@ -93,7 +99,7 @@ const Authentication = () => {
       name='username'
       type='text'
       label='USERNAME'
-      errorMessages={submitted ? errorMessages.username : null}
+      errorMessages={submitted && !isFetching ? errorMessages.username : null}
       value={user.username}
       onChange={onChangeInputHandler} />
   );
@@ -103,7 +109,7 @@ const Authentication = () => {
       name='password'
       type='password'
       label='PASSWORD'
-      errorMessages={submitted ? errorMessages.password : null}
+      errorMessages={submitted && !isFetching ? errorMessages.password : null}
       value={user.password}
       onChange={onChangeInputHandler} />
   );

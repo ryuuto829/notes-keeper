@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import rootReducer from './reducers';
+import rootReducer from './modules';
 import createSagaMiddleware from 'redux-saga';
 import { watchAuthSaga } from './sagas';
 import { loadFromLocalStorage } from '../utils/localStorage';

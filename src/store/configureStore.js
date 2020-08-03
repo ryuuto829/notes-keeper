@@ -12,8 +12,7 @@ const userData = loadFromLocalStorage('user');
 const persistedUserData = {
   auth: {
     isAuthenticated: userData !== undefined && userData !== null,
-    isFetching: false,
-    errorMessages: {}
+    isFetching: false
   },
   user: userData || null
 };

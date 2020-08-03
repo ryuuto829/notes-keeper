@@ -1,67 +1,55 @@
-const formValidation = (text, type) => {
-  if (text === '') {
-    return 'This field is required';
-  }
+// @flow
+
+// When passing as a prop it's an input's text,
+// when returning -> error message for corresponding input
+type InputText = {
+  email: string,
+  username: string,
+  password: string
+};
+
+const formValidation = (text: string, type: string): ?string => {
+  if (text === "") return "This field is required";
 
   switch (type) {
-    case 'email':
+    case "email":
       if (!/\S+@\S+\.\S+/.test(text)) {
-        return 'Not a well formed email address';
+        return "Not a well formed email address";
       }
       if (text.length > 320) {
-        return 'Must be 320 or fewer in length';
+        return "Must be 320 or fewer in length";
       }
       return null;
-    case 'password':
+
+    case "password":
       if (text.length < 6) {
-        return 'Password must be 6 or more';
+        return "Password must be 6 or more";
       }
       if (text.length > 72) {
-        return 'Must be 72 or fewer in length';
+        return "Must be 72 or fewer in length";
       }
       return null;
-    case 'username':
+
+    case "username":
       if (text.length < 2 || text.length > 32) {
-        return 'Username must be between 2 or 32 in length';
+        return "Username must be between 2 or 32 in length";
       }
       return null;
+
     default:
       return null;
   }
 };
 
-export const checkEmailValidity = text => (
-  formValidation(text, 'email')
-);
-
-export const checkPasswordValidity = text => (
-  formValidation(text, 'password')
-);
-
-export const checkUsernameValidity = text => (
-  formValidation(text, 'username')
-);
-
-export const validateLoginForm = (email, password) => {
+export const validateForm = (payload: InputText): InputText | null => {
   const errors = {};
-  const emailError = checkEmailValidity(email);
-  const passwordError = checkPasswordValidity(password);
 
-  if (emailError) errors.email = emailError;
-  if (passwordError) errors.password = passwordError;
+  Object.keys(payload).map((type: string) => {
+    const errorMessage = formValidation(payload[type], type);
+    if (errorMessage) errors[type] = errorMessage;
+  });
 
-  return errors;
-};
-
-export const validateRegisterForm = (email, username, password) => {
-  const errors = {};
-  const emailError = checkEmailValidity(email);
-  const usernameError = checkUsernameValidity(username);
-  const passwordError = checkPasswordValidity(password);
-
-  if (emailError) errors.email = emailError;
-  if (usernameError) errors.username = usernameError;
-  if (passwordError) errors.password = passwordError;
+  if (Object.keys(errors).length === 0) return null;
 
   return errors;
 };

@@ -19,8 +19,7 @@ export const authSlice = createSlice({
     success: () => {
       return {
         isAuthenticated: true,
-        isFetching: false,
-        errorMessages: {}
+        isFetching: false
       };
     },
     failure: (state, action) => {
@@ -28,15 +27,13 @@ export const authSlice = createSlice({
       console.log(errorMessages)
       return {
         isAuthenticated: false,
-        errorMessages: errorMessages,
         isFetching: false
       };
     },
     logout: () => {
       return {
         isAuthenticated: false,
-        isFetching: false,
-        errorMessages: {}
+        isFetching: false
       };
     }
   }
@@ -44,6 +41,5 @@ export const authSlice = createSlice({
 
 export const selectAuthenticated = state => state.auth.isAuthenticated;
 export const selectFetching = state => state.auth.isFetching;
-export const selectErrorMessages = state => state.auth.errorMessages;
 export const { signIn, signUp, success, failure, logout } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,9 +1,5 @@
 import { put } from 'redux-saga/effects';
 import {
-  validateLoginForm,
-  validateRegisterForm
-} from '../../utils';
-import {
   signInWithEmail,
   createUser,
   updateUsername,
@@ -37,15 +33,7 @@ function* changeUserData() {
 
 export function* signInSaga(action) {
   const { email, password } = action.payload;
-  /** Form validation */
-  const errors = validateLoginForm(email, password);
 
-  if (Object.keys(errors).length !== 0) {
-    yield put(failure({ errorMessages: errors }));
-    return;
-  }
-
-  /** Fetch user data from firebase */
   try {
     yield signInWithEmail(email, password);
     yield changeUserData();
@@ -62,15 +50,7 @@ export function* signInSaga(action) {
 
 export function* signUpSaga(action) {
   const { email, username, password } = action.payload;
-  /** Form validation */
-  const errors = validateRegisterForm(email, username, password);
 
-  if (Object.keys(errors).length !== 0) {
-    yield put(failure({ errorMessages: errors }));
-    return;
-  }
-
-  /** Fetch user data from firebase */
   try {
     yield createUser(email, password);
     yield updateUsername(username);

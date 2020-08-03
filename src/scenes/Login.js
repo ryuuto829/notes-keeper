@@ -1,117 +1,131 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { useHistory, useLocation, Redirect } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { signInWithGoogle } from '../server/firebase'; // ToDo: move to redux action
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useHistory, useLocation, Redirect } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { signInWithGoogle } from "../server/firebase"; // ToDo: move to redux action
 import {
   selectAuthenticated,
   selectFetching,
-  selectErrorMessages,
   signIn,
   signUp
-} from '../store/modules/auth';
+} from "../store/modules/auth";
+import {
+  validateLoginForm,
+  validateRegisterForm,
+  validateForm
+} from "../utils/validation";
 
-import Input from '../components/Input';
-import Button from '../components/Button';
-import TextButton from '../components/TextButton';
-import Branding from '../components/Branding';
-import GoogleLogo from '../shared/icons/GoogleLogo';
-import Divider from '../components/Divider';
-import Spinner from '../components/Spinner';
-import { moveFromTop } from '../shared/styles/animations';
+import Input from "../components/Input";
+import Button from "../components/Button";
+import TextButton from "../components/TextButton";
+import Branding from "../components/Branding";
+import GoogleLogo from "../shared/icons/GoogleLogo";
+import Divider from "../components/Divider";
+import Spinner from "../components/Spinner";
+import { moveFromTop } from "../shared/styles/animations";
 
-/** Test mode (delete later) */
-const INITIAL_LOGIN_STATE_TEST_MODE = {
-  email: 'test@example.com',
-  username: 'Test Username',
-  password: '12345678'
+// const INITIAL_LOGIN_STATE_TEST_MODE = {
+//   email: "test@example.com",
+//   username: "Test Username",
+//   password: "12345678"
+// };
+
+// Different shapes of input state for Login and Register forms
+// is necessary for shaping payload to validate
+const initializeState = isCreate => {
+  const state = { email: "", password: "" };
+  if (isCreate) return Object.assign(state, { username: "" });
+  return state;
 };
 
-const Authentication = () => {
+const Login = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const isCreate = useLocation().pathname === '/register';
+  const isCreate = useLocation().pathname === "/register";
   const isAuthenticated = useSelector(selectAuthenticated);
   const isFetching = useSelector(selectFetching);
-  const errorMessages = useSelector(selectErrorMessages);
 
-  const [user, setUser] = useState(INITIAL_LOGIN_STATE_TEST_MODE);
+  const [inputs, setInputs] = useState(() => initializeState(isCreate));
   const [submitted, setSubmitted] = useState(false);
+  const [errorMessages, setErrorMessages] = useState(null);
 
   if (isAuthenticated) return <Redirect to="/home" />;
 
+  const hasErrorMessages = (submitted && !isFetching && errorMessages) || null;
+
   const onChangeInputHandler = e => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setInputs({ ...inputs, [name]: value });
   };
 
   const submitFormHandler = e => {
     e.preventDefault();
     setSubmitted(true);
 
-    if (isCreate) {
-      dispatch(signUp({
-        email: user.email,
-        username: user.username,
-        password: user.password
-      }));
+    const errors = validateForm(inputs);
 
-    } else {
+    if (errors) setErrorMessages(errors);
 
-      dispatch(signIn({
-        email: user.email,
-        password: user.password
-      }));
-    }
+    // if (isCreate) {
+    //   dispatch(signUp({
+    //     email: user.email,
+    //     username: user.username,
+    //     password: user.password
+    //   }));
+
+    // } else {
+
+    //   dispatch(signIn({
+    //     email: user.email,
+    //     password: user.password
+    //   }));
+    // }
   };
 
   const clickRedirectHandler = () => {
-    /** Clear all inputs and hide validation errors */
     setSubmitted(false);
+    setErrorMessages(null);
+    setInputs(initializeState(!isCreate));
 
     if (isCreate) {
-      setUser(INITIAL_LOGIN_STATE_TEST_MODE);
+      history.push("/login");
     } else {
-      setUser({ email: '', username: '', password: '' });
-    }
-
-    if (isCreate) {
-      history.push('/login');
-    } else {
-      history.push('/register');
+      history.push("/register");
     }
   };
 
   const emailInputField = (
     <InputField
-      name='email'
-      type='email'
-      label='EMAIL'
-      errorMessages={submitted && !isFetching ? errorMessages.email : null}
-      value={user.email}
-      onChange={onChangeInputHandler} />
+      name="email"
+      type="email"
+      label="EMAIL"
+      errorMessages={hasErrorMessages && errorMessages.email}
+      value={inputs.email}
+      onChange={onChangeInputHandler}
+    />
   );
 
   const usernameInputField = (
     <InputField
-      name='username'
-      type='text'
-      label='USERNAME'
-      errorMessages={submitted && !isFetching ? errorMessages.username : null}
-      value={user.username}
-      onChange={onChangeInputHandler} />
+      name="username"
+      type="text"
+      label="USERNAME"
+      errorMessages={hasErrorMessages && errorMessages.username}
+      value={inputs.username}
+      onChange={onChangeInputHandler}
+    />
   );
 
   const passwordInputField = (
     <InputField
-      name='password'
-      type='password'
-      label='PASSWORD'
-      errorMessages={submitted && !isFetching ? errorMessages.password : null}
-      value={user.password}
-      onChange={onChangeInputHandler} />
+      name="password"
+      type="password"
+      label="PASSWORD"
+      errorMessages={hasErrorMessages && errorMessages.password}
+      value={inputs.password}
+      onChange={onChangeInputHandler}
+    />
   );
 
   if (isCreate) {
@@ -125,11 +139,16 @@ const Authentication = () => {
               {emailInputField}
               {usernameInputField}
               {passwordInputField}
-              {isFetching ? <Button icon={<Spinner />} /> : <Button>Continue</Button>}
+              {isFetching ? (
+                <Button icon={<Spinner />} />
+              ) : (
+                <Button>Continue</Button>
+              )}
             </FormContainer>
             <RedirectButtonWrapper>
-              <TextButton
-                onClick={clickRedirectHandler}>Already have an account ?</TextButton>
+              <TextButton onClick={clickRedirectHandler}>
+                Already have an account ?
+              </TextButton>
             </RedirectButtonWrapper>
           </CenteringWrapper>
         </AuthBox>
@@ -145,20 +164,23 @@ const Authentication = () => {
           <HeaderPrimary>Sign in</HeaderPrimary>
           <HeaderSecondary>with your Google account</HeaderSecondary>
           <GoogleSignInWrapper>
-            <Button
-              icon={<GoogleLogo size={16} />}
-              clicked={signInWithGoogle}>Google</Button>
+            <Button icon={<GoogleLogo size={16} />} clicked={signInWithGoogle}>
+              Google
+            </Button>
           </GoogleSignInWrapper>
           <Divider />
           <FormContainer onSubmit={submitFormHandler}>
             {emailInputField}
             {passwordInputField}
-            {isFetching ? <Button icon={<Spinner />} /> : <Button>Login</Button>}
+            {isFetching ? (
+              <Button icon={<Spinner />} />
+            ) : (
+              <Button>Login</Button>
+            )}
           </FormContainer>
           <RedirectButtonWrapper>
             <NeedAccountText>Need an account ?</NeedAccountText>
-            <TextButton
-              onClick={clickRedirectHandler}>Register</TextButton>
+            <TextButton onClick={clickRedirectHandler}>Register</TextButton>
           </RedirectButtonWrapper>
         </CenteringWrapper>
       </AuthBox>
@@ -185,12 +207,12 @@ const Logo = styled(Branding)`
   position: absolute;
   top: 20px;
 
-  @media (min-width: 480px ) {
+  @media (min-width: 480px) {
     top: 24px;
   }
 
-  @media (min-width: 915px ) {
-    left: 20px
+  @media (min-width: 915px) {
+    left: 20px;
   }
 `;
 
@@ -200,11 +222,11 @@ const AuthBox = styled.div`
   width: 100%;
   max-width: 480px;
   border-radius: 5px;
-  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, .2);
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: ${moveFromTop} .3s;
+  animation: ${moveFromTop} 0.3s;
 
   @media (max-width: 480px) {
     height: 100%;
@@ -259,16 +281,4 @@ const NeedAccountText = styled.span`
   color: rgb(114, 118, 125);
 `;
 
-Authentication.propTypes = {
-  // errorMessages: PropTypes.shape({
-  //   email: PropTypes.string,
-  //   password: PropTypes.string,
-  //   username: PropTypes.string
-  // }),
-  // isLoading: PropTypes.bool.isRequired,
-  // userData: PropTypes.object,
-  // authSignInRequest: PropTypes.func.isRequired,
-  // authSignUpRequest: PropTypes.func.isRequired
-};
-
-export default Authentication;
+export default Login;

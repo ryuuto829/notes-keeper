@@ -7,7 +7,6 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "docz": "^2.3.1",
     "firebase": "^7.15.5",
     "flow-bin": "^0.130.0",
     "flow-typed": "^3.2.1",
@@ -26,8 +25,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "docz:dev": "docz dev",
-    "docz:build": "docz build",
     "flow": "flow"
   },
   "eslintConfig": {
@@ -47,14 +44,11 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.6.0",
-    "eslint-config-standard": "^14.1.1",
     "eslint-plugin-flowtype": "^5.2.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.20.5",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-react": "^7.20.5"
   }
 }

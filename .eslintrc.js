@@ -1,12 +1,14 @@
 module.exports ={
   "parser": "babel-eslint",
   "plugins": [
+    "prettier",
     "flowtype"
   ],
   "extends": [
     "plugin:flowtype/recommended"
   ],
   "rules": {
+    "max-len": ["error", { "code": 80, "tabWidth": 4 }],
     "flowtype/boolean-style": [
       2,
       "boolean"
@@ -54,16 +56,18 @@ module.exports ={
       2,
       "never"
     ],
-    "flowtype/type-id-match": [
-      2,
-      "^([A-Z][a-z0-9]+)+Type$"
-    ],
     "flowtype/union-intersection-spacing": [
       2,
       "always"
     ],
     "flowtype/use-flow-type": 1,
-    "flowtype/valid-syntax": 1
+    "flowtype/valid-syntax": 1,
+    "prettier/prettier": [
+      "error",
+      {
+        "printWidth": 80
+      }
+    ]
   },
   "settings": {
     "flowtype": {

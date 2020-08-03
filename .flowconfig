@@ -1,0 +1,8 @@
+[ignore]
+.*/node_modules/.*
+.*/.docz/.*
+.*/docs/.*
+.*/public/.*
+
+[include]
+*/src/.*

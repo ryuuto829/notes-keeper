@@ -1,14 +1,15 @@
-import React from 'react';
+// @flow
+import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
-import Authenticated from './components/Authenticated';
-import Layout from './components/Layout';
-import Login from './scenes/Login';
-import Document from './scenes/Document';
+import Authenticated from "./components/Authenticated";
+import Layout from "./components/Layout";
+import Login from "./scenes/Login";
+import Document from "./scenes/Document";
 
 const Routes = () => (
   <Switch>
-    <Route exact path="/" >
+    <Route exact path="/">
       <Redirect to="/login" />
     </Route>
     <Route exact path="/login" component={Login} />
@@ -19,7 +20,7 @@ const Routes = () => (
         <Route exact path="/page/:id" component={Document} />
       </Layout>
     </Authenticated>
-  </Switch >
+  </Switch>
 );
 
 export default Routes;

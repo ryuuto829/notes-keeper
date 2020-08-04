@@ -1,13 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import configureStore from './store/configureStore';
-import { BrowserRouter as Router } from 'react-router-dom';
+// @flow
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
+import configureStore from "./store/configureStore";
 
-import Theme from './components/Theme';
-import Routes from './routes';
+import Theme from "./components/Theme";
+import Routes from "./routes";
 
 const store = configureStore();
+const element = document.getElementById("notes-keeper-app");
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,5 +21,6 @@ ReactDOM.render(
       </Theme>
     </Provider>
   </React.StrictMode>,
-  document.getElementById('notes-keeper-app')
+  // $FlowIssue flow assumes that the call can return null, but we control it
+  element
 );

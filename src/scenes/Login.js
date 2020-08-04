@@ -1,19 +1,18 @@
+// @flow
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory, useLocation, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signInWithGoogle } from "../server/firebase"; // ToDo: move to redux action
+import { signInWithGoogle } from "../server/firebase"; // ToDo: move to redux
 import {
   selectAuthenticated,
-  selectFetching,
+  selectSubmitted,
+  selectErrorMessage,
   signIn,
   signUp
 } from "../store/modules/auth";
-import {
-  validateLoginForm,
-  validateRegisterForm,
-  validateForm
-} from "../utils/validation";
+import validateForm from "../utils/validation";
+import { type InputText } from "../types";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -22,19 +21,23 @@ import Branding from "../components/Branding";
 import GoogleLogo from "../shared/icons/GoogleLogo";
 import Divider from "../components/Divider";
 import Spinner from "../components/Spinner";
-import { moveFromTop } from "../shared/styles/animations";
+import Notice from "../components/Notice";
+import {
+  growFromCenter,
+  moveFromTop,
+  animateGradientBackground
+} from "../shared/styles/animations";
 
 // const INITIAL_LOGIN_STATE_TEST_MODE = {
 //   email: "test@example.com",
-//   username: "Test Username",
 //   password: "12345678"
 // };
 
 // Different shapes of input state for Login and Register forms
 // is necessary for shaping payload to validate
-const initializeState = isCreate => {
+const initializeState = (isCreate: boolean): InputText => {
   const state = { email: "", password: "" };
-  if (isCreate) return Object.assign(state, { username: "" });
+  if (isCreate) return { ...state, username: "" };
   return state;
 };
 
@@ -44,55 +47,43 @@ const Login = () => {
 
   const isCreate = useLocation().pathname === "/register";
   const isAuthenticated = useSelector(selectAuthenticated);
-  const isFetching = useSelector(selectFetching);
+  const isSubmitted = useSelector(selectSubmitted);
+  const errorNotice = useSelector(selectErrorMessage);
 
   const [inputs, setInputs] = useState(() => initializeState(isCreate));
-  const [submitted, setSubmitted] = useState(false);
   const [errorMessages, setErrorMessages] = useState(null);
+  const [showNotice, setShowNotice] = useState(false);
 
   if (isAuthenticated) return <Redirect to="/home" />;
 
-  const hasErrorMessages = (submitted && !isFetching && errorMessages) || null;
-
-  const onChangeInputHandler = e => {
+  const onChangeInputHandler = (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInputs({ ...inputs, [name]: value });
   };
 
-  const submitFormHandler = e => {
+  const submitFormHandler = (e: SyntheticInputEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setShowNotice(true);
 
     const errors = validateForm(inputs);
 
-    if (errors) setErrorMessages(errors);
-
-    // if (isCreate) {
-    //   dispatch(signUp({
-    //     email: user.email,
-    //     username: user.username,
-    //     password: user.password
-    //   }));
-
-    // } else {
-
-    //   dispatch(signIn({
-    //     email: user.email,
-    //     password: user.password
-    //   }));
-    // }
+    if (errors) {
+      setErrorMessages(errors);
+    } else {
+      if (isCreate) {
+        dispatch(signUp(inputs));
+      } else {
+        dispatch(signIn(inputs));
+      }
+    }
   };
 
   const clickRedirectHandler = () => {
-    setSubmitted(false);
     setErrorMessages(null);
+    setShowNotice(false);
     setInputs(initializeState(!isCreate));
 
-    if (isCreate) {
-      history.push("/login");
-    } else {
-      history.push("/register");
-    }
+    history.push(isCreate ? "/login" : "/register");
   };
 
   const emailInputField = (
@@ -100,7 +91,7 @@ const Login = () => {
       name="email"
       type="email"
       label="EMAIL"
-      errorMessages={hasErrorMessages && errorMessages.email}
+      errorMessages={errorMessages && errorMessages.email}
       value={inputs.email}
       onChange={onChangeInputHandler}
     />
@@ -111,7 +102,7 @@ const Login = () => {
       name="username"
       type="text"
       label="USERNAME"
-      errorMessages={hasErrorMessages && errorMessages.username}
+      errorMessages={errorMessages && errorMessages.username}
       value={inputs.username}
       onChange={onChangeInputHandler}
     />
@@ -122,7 +113,7 @@ const Login = () => {
       name="password"
       type="password"
       label="PASSWORD"
-      errorMessages={hasErrorMessages && errorMessages.password}
+      errorMessages={errorMessages && errorMessages.password}
       value={inputs.password}
       onChange={onChangeInputHandler}
     />
@@ -132,14 +123,17 @@ const Login = () => {
     return (
       <Background>
         <Logo />
-        <AuthBox>
+        <AuthBox key="register">
           <CenteringWrapper>
             <HeaderPrimary>Create an account</HeaderPrimary>
             <FormContainer onSubmit={submitFormHandler}>
               {emailInputField}
               {usernameInputField}
               {passwordInputField}
-              {isFetching ? (
+              {errorNotice && showNotice ? (
+                <NoticeAlert>{errorNotice}</NoticeAlert>
+              ) : null}
+              {isSubmitted ? (
                 <Button icon={<Spinner />} />
               ) : (
                 <Button>Continue</Button>
@@ -159,7 +153,7 @@ const Login = () => {
   return (
     <Background>
       <Logo />
-      <AuthBox>
+      <AuthBox key="login">
         <CenteringWrapper>
           <HeaderPrimary>Sign in</HeaderPrimary>
           <HeaderSecondary>with your Google account</HeaderSecondary>
@@ -172,7 +166,10 @@ const Login = () => {
           <FormContainer onSubmit={submitFormHandler}>
             {emailInputField}
             {passwordInputField}
-            {isFetching ? (
+            {errorNotice && showNotice ? (
+              <NoticeAlert>{errorNotice}</NoticeAlert>
+            ) : null}
+            {isSubmitted ? (
               <Button icon={<Spinner />} />
             ) : (
               <Button>Login</Button>
@@ -201,11 +198,15 @@ const Background = styled.div`
   z-index: -1;
   width: 100%;
   height: 100%;
+  background: linear-gradient(-45deg, #363237, #2d4262, #73605b, #d09683);
+  background-size: 400% 400%;
+  animation: ${animateGradientBackground} 15s ease infinite;
 `;
 
 const Logo = styled(Branding)`
   position: absolute;
   top: 20px;
+  animation: ${moveFromTop} 0.3s ease-out;
 
   @media (min-width: 480px) {
     top: 24px;
@@ -226,7 +227,7 @@ const AuthBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: ${moveFromTop} 0.3s;
+  animation: ${growFromCenter} 0.3s ease-out;
 
   @media (max-width: 480px) {
     height: 100%;
@@ -243,6 +244,7 @@ const CenteringWrapper = styled.div`
 
 const FormContainer = styled.form`
   margin-top: 8px;
+  transform: all 500ms ease-in; /** NOT WORKING */
 `;
 
 const HeaderPrimary = styled.h1`
@@ -279,6 +281,10 @@ const NeedAccountText = styled.span`
   line-height: 16px;
   text-align: left;
   color: rgb(114, 118, 125);
+`;
+
+const NoticeAlert = styled(Notice)`
+  margin-bottom: 20px;
 `;
 
 export default Login;

@@ -1,32 +1,31 @@
-import { createStore, applyMiddleware, compose } from 'redux';
-import rootReducer from './modules';
-import createSagaMiddleware from 'redux-saga';
-import { watchAuthSaga } from './sagas';
-import { loadFromLocalStorage } from '../utils/localStorage';
+import { createStore, applyMiddleware, compose } from "redux";
+import rootReducer from "./modules";
+import createSagaMiddleware from "redux-saga";
+import { watchAuthSaga } from "./sagas";
+import { loadFromLocalStorage } from "../utils/localStorage";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
 const sagaMiddleware = createSagaMiddleware();
 
-const userData = loadFromLocalStorage('user');
+const userData = loadFromLocalStorage("user");
 const persistedUserData = {
   auth: {
     isAuthenticated: userData !== undefined && userData !== null,
-    isFetching: false
+    isSubmitted: false,
+    errorMessage: null
   },
   user: userData || null
 };
 
-/** To enable sagas return store instead of function creator */
+// To enable sagas return store instead of function creator
 const configureStore = () => {
   const store = createStore(
     rootReducer,
     persistedUserData,
-    composeEnhancers(
-      applyMiddleware(sagaMiddleware)
-    ));
+    composeEnhancers(applyMiddleware(sagaMiddleware))
+  );
 
-  /** Run all sagas */
+  // Run all sagas here
   sagaMiddleware.run(watchAuthSaga);
   return store;
 };

@@ -1,45 +1,60 @@
-import { createSlice } from '@reduxjs/toolkit';
+// @flow
+import { createSlice } from "@reduxjs/toolkit";
+
+type AuthStore = {
+  isAuthenticated: boolean,
+  isSubmitted: boolean,
+  errorMessage: ?string
+};
+
+type Action = {};
 
 export const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState: null,
   reducers: {
-    signIn: state => {
+    signIn: (state: AuthStore) => {
       return {
         ...state,
-        isFetching: true
+        isSubmitted: true,
+        errorMessage: null
       };
     },
-    signUp: state => {
+    signUp: (state: AuthStore) => {
       return {
         ...state,
-        isFetching: true
+        isSubmitted: true,
+        errorMessage: null
       };
     },
     success: () => {
       return {
         isAuthenticated: true,
-        isFetching: false
+        isSubmitted: false,
+        errorMessage: null
       };
     },
-    failure: (state, action) => {
+    failure: (state: AuthStore, action) => {
       const { errorMessages } = action.payload;
-      console.log(errorMessages)
       return {
         isAuthenticated: false,
-        isFetching: false
+        isSubmitted: false,
+        errorMessage: errorMessages
       };
     },
     logout: () => {
       return {
         isAuthenticated: false,
-        isFetching: false
+        isSubmitted: false,
+        errorMessage: null
       };
     }
   }
 });
 
-export const selectAuthenticated = state => state.auth.isAuthenticated;
-export const selectFetching = state => state.auth.isFetching;
+export const selectAuthenticated = (state: AuthStore) =>
+  state.auth.isAuthenticated;
+export const selectSubmitted = (state: AuthStore) => state.auth.isSubmitted;
+export const selectErrorMessage = (state: AuthStore) => state.auth.errorMessage;
 export const { signIn, signUp, success, failure, logout } = authSlice.actions;
 export default authSlice.reducer;

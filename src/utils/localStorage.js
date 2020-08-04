@@ -1,4 +1,5 @@
-export const saveToLocalStorage = (name, state) => {
+// @flow
+export const saveToLocalStorage = (name: string, state: {}) => {
   try {
     const serializedState = JSON.stringify(state);
     localStorage.setItem(name, serializedState);
@@ -7,10 +8,10 @@ export const saveToLocalStorage = (name, state) => {
   }
 };
 
-export const loadFromLocalStorage = name => {
+export const loadFromLocalStorage = (name: string): ?{} => {
   try {
     const serializedState = localStorage.getItem(name);
-    if (serializedState === null) {
+    if (serializedState === null || serializedState === undefined) {
       return undefined;
     }
     return JSON.parse(serializedState);
@@ -19,7 +20,7 @@ export const loadFromLocalStorage = name => {
   }
 };
 
-export const clearLocalStorage = name => {
+export const clearLocalStorage = (name: string) => {
   try {
     localStorage.removeItem(name);
   } catch (error) {

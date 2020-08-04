@@ -1,12 +1,5 @@
 // @flow
-
-// When passing as a prop it's an input's text,
-// when returning -> error message for corresponding input
-type InputText = {
-  email: string,
-  username: string,
-  password: string
-};
+import { type InputText } from "../types";
 
 const formValidation = (text: string, type: string): ?string => {
   if (text === "") return "This field is required";
@@ -41,10 +34,10 @@ const formValidation = (text: string, type: string): ?string => {
   }
 };
 
-export const validateForm = (payload: InputText): InputText | null => {
+const validateForm = (payload: InputText): ?InputText => {
   const errors = {};
 
-  Object.keys(payload).map((type: string) => {
+  Object.keys(payload).forEach((type: string) => {
     const errorMessage = formValidation(payload[type], type);
     if (errorMessage) errors[type] = errorMessage;
   });
@@ -53,3 +46,5 @@ export const validateForm = (payload: InputText): InputText | null => {
 
   return errors;
 };
+
+export default validateForm;

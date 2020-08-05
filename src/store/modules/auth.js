@@ -2,9 +2,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type AuthStore = {
-  isAuthenticated: boolean,
-  isSubmitted: boolean,
-  errorMessage: ?string
+  auth: {
+    isAuthenticated: boolean,
+    isSubmitted: boolean,
+    errorMessage: ?string
+  }
 };
 
 type Action = {};

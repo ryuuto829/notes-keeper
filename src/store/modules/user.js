@@ -1,24 +1,33 @@
-import { createSlice } from '@reduxjs/toolkit';
+// @flow
+import { createSlice } from "@reduxjs/toolkit";
+
+export type UserStore = {
+  user: ?{
+    displayName: string,
+    email: string,
+    emailVerified: boolean,
+    uid: string,
+    creationTime: string,
+    lastSignInTime: string
+  }
+};
+
+type Action = {
+  payload: {
+    user: ?{ ... }
+  }
+};
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState: null,
   reducers: {
-    updateUserData: (state, action) => {
+    updateUserData: (state: UserStore, action: Action) => {
       const { user } = action.payload;
-
       if (!user) return null;
-
-      return {
-        displayName: user.displayName,
-        email: user.email,
-        emailVerified: user.emailVerified,
-        uid: user.uid,
-        creationTime: user.metadata.creationTime,
-        lastSignInTime: user.metadata.lastSignInTime,
-      };
+      return user;
     },
-    removeUserData: () => null,
+    removeUserData: () => null
   }
 });
 

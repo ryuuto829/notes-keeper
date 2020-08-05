@@ -1,3 +1,4 @@
+// @flow
 import { put } from "redux-saga/effects";
 import {
   signInWithEmail,
@@ -12,6 +13,7 @@ import {
 } from "../../utils/localStorage";
 import { updateUserData, removeUserData } from "../modules/user";
 import { success, failure } from "../modules/auth";
+// import { type UserStore } from "../../types/stores";
 
 const setUserData = user => ({
   displayName: user.displayName,
@@ -22,21 +24,53 @@ const setUserData = user => ({
   lastSignInTime: user.metadata.lastSignInTime
 });
 
-function* changeUserData() {
-  const user = yield auth.currentUser;
-  const userData = yield setUserData(user);
+function* changeUserData(user) {
+  // const user = yield auth.currentUser;
+  // const userData = yield setUserData(user);
+
+  // yield saveToLocalStorage("user", userData);
+  // yield put(updateUserData({ user: user }));
+  // yield put(success());
+  const userData = {
+    displayName: user.displayName,
+    email: user.email,
+    emailVerified: user.emailVerified,
+    uid: user.uid,
+    creationTime: user.metadata.creationTime,
+    lastSignInTime: user.metadata.lastSignInTime
+  };
 
   yield saveToLocalStorage("user", userData);
-  yield put(updateUserData({ user: user }));
+  yield put(updateUserData({ user: userData }));
   yield put(success());
 }
 
 export function* signInSaga(action) {
-  const { email, password } = action.payload;
+  const { email, username, password } = action.payload;
+  const isRegister = username === undefined;
 
   try {
-    yield signInWithEmail(email, password);
-    yield changeUserData();
+    if (isRegister) {
+      yield createUser(email, password);
+      const { user } = yield updateUsername(username);
+      yield changeUserData(user);
+    } else {
+      const { user } = yield signInWithEmail(email, password);
+      yield changeUserData(user);
+    }
+
+    // const userData = {
+    //   displayName: user.displayName,
+    //   email: user.email,
+    //   emailVerified: user.emailVerified,
+    //   uid: user.uid,
+    //   creationTime: user.metadata.creationTime,
+    //   lastSignInTime: user.metadata.lastSignInTime
+    // };
+
+    // yield saveToLocalStorage("user", userData);
+    // yield put(updateUserData({ user: userData }));
+    // yield put(success());
   } catch (error) {
     yield put(failure({ errorMessages: error.message }));
   }
@@ -55,7 +89,7 @@ export function* signUpSaga(action) {
 }
 
 export function* logoutSaga() {
-  yield clearLocalStorage("user");
-  yield put(removeUserData());
   yield logout();
+  yield put(removeUserData());
+  yield clearLocalStorage("user");
 }

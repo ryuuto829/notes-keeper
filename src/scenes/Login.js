@@ -13,6 +13,7 @@ import {
 } from "../store/modules/auth";
 import validateForm from "../utils/validation";
 import { type InputText } from "../types";
+import { updateUserData } from "../store/modules/user";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -22,6 +23,7 @@ import GoogleLogo from "../shared/icons/GoogleLogo";
 import Divider from "../components/Divider";
 import Spinner from "../components/Spinner";
 import Notice from "../components/Notice";
+import Flex from "../components/Flex";
 import {
   growFromCenter,
   moveFromTop,
@@ -67,14 +69,13 @@ const Login = () => {
 
     const errors = validateForm(inputs);
 
-    if (errors) {
-      setErrorMessages(errors);
+    if (errors) return setErrorMessages(errors);
+
+    setErrorMessages(null);
+    if (isCreate) {
+      dispatch(signUp(inputs));
     } else {
-      if (isCreate) {
-        dispatch(signUp(inputs));
-      } else {
-        dispatch(signIn(inputs));
-      }
+      dispatch(signIn(inputs));
     }
   };
 
@@ -121,9 +122,9 @@ const Login = () => {
 
   if (isCreate) {
     return (
-      <Background>
+      <Background align="center" justify="center">
         <Logo />
-        <AuthBox key="register">
+        <AuthBox align="center" justify="center" key="register">
           <CenteringWrapper>
             <HeaderPrimary>Create an account</HeaderPrimary>
             <FormContainer onSubmit={submitFormHandler}>
@@ -151,9 +152,9 @@ const Login = () => {
   }
 
   return (
-    <Background>
+    <Background align="center" justify="center">
       <Logo />
-      <AuthBox key="login">
+      <AuthBox align="center" justify="center" key="login">
         <CenteringWrapper>
           <HeaderPrimary>Sign in</HeaderPrimary>
           <HeaderSecondary>with your Google account</HeaderSecondary>
@@ -185,11 +186,7 @@ const Login = () => {
   );
 };
 
-const Background = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${props => props.theme.mainBackground};
+const Background = styled(Flex)`
   position: absolute;
   left: 0;
   right: 0;
@@ -198,6 +195,7 @@ const Background = styled.div`
   z-index: -1;
   width: 100%;
   height: 100%;
+  background-color: ${props => props.theme.mainBackground};
   background: linear-gradient(-45deg, #363237, #2d4262, #73605b, #d09683);
   background-size: 400% 400%;
   animation: ${animateGradientBackground} 15s ease infinite;
@@ -217,16 +215,13 @@ const Logo = styled(Branding)`
   }
 `;
 
-const AuthBox = styled.div`
+const AuthBox = styled(Flex)`
   background-color: ${props => props.theme.primary};
   padding: 32px;
   width: 100%;
   max-width: 480px;
   border-radius: 5px;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   animation: ${growFromCenter} 0.3s ease-out;
 
   @media (max-width: 480px) {
@@ -244,7 +239,6 @@ const CenteringWrapper = styled.div`
 
 const FormContainer = styled.form`
   margin-top: 8px;
-  transform: all 500ms ease-in; /** NOT WORKING */
 `;
 
 const HeaderPrimary = styled.h1`
@@ -285,6 +279,7 @@ const NeedAccountText = styled.span`
 
 const NoticeAlert = styled(Notice)`
   margin-bottom: 20px;
+  transition: all 2s ease-in;
 `;
 
 export default Login;

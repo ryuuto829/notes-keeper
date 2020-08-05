@@ -1,12 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Redirect } from 'react-router-dom';
-import { useAuth, logout } from '../server/firebase';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { Redirect } from "react-router-dom";
+import { useAuth } from "../server/firebase";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/modules/auth";
 
-import LoaderBar from './LoaderBar';
+import LoaderBar from "./LoaderBar";
 
 const Authenticated = ({ children }) => {
+  const dispatch = useDispatch();
   const { initializing, user } = useAuth();
 
   if (initializing) {
@@ -19,8 +22,8 @@ const Authenticated = ({ children }) => {
 
   if (user) return children;
 
-  logout();
-  return <Redirect to='/login' />;
+  dispatch(logout());
+  return <Redirect to="/login" />;
 };
 
 /** TODO: Dont repeat, create a new component */

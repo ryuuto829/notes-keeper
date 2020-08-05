@@ -25,12 +25,6 @@ const setUserData = user => ({
 });
 
 function* changeUserData(user) {
-  // const user = yield auth.currentUser;
-  // const userData = yield setUserData(user);
-
-  // yield saveToLocalStorage("user", userData);
-  // yield put(updateUserData({ user: user }));
-  // yield put(success());
   const userData = {
     displayName: user.displayName,
     email: user.email,
@@ -47,30 +41,10 @@ function* changeUserData(user) {
 
 export function* signInSaga(action) {
   const { email, username, password } = action.payload;
-  const isRegister = username === undefined;
 
   try {
-    if (isRegister) {
-      yield createUser(email, password);
-      const { user } = yield updateUsername(username);
-      yield changeUserData(user);
-    } else {
-      const { user } = yield signInWithEmail(email, password);
-      yield changeUserData(user);
-    }
-
-    // const userData = {
-    //   displayName: user.displayName,
-    //   email: user.email,
-    //   emailVerified: user.emailVerified,
-    //   uid: user.uid,
-    //   creationTime: user.metadata.creationTime,
-    //   lastSignInTime: user.metadata.lastSignInTime
-    // };
-
-    // yield saveToLocalStorage("user", userData);
-    // yield put(updateUserData({ user: userData }));
-    // yield put(success());
+    const { user } = yield signInWithEmail(email, password);
+    yield changeUserData(user);
   } catch (error) {
     yield put(failure({ errorMessages: error.message }));
   }
@@ -82,7 +56,8 @@ export function* signUpSaga(action) {
   try {
     yield createUser(email, password);
     yield updateUsername(username);
-    yield changeUserData();
+    const user = yield auth.currentUser;
+    yield changeUserData(user);
   } catch (error) {
     yield put(failure({ errorMessages: error.message }));
   }

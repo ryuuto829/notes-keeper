@@ -7,8 +7,8 @@ export type UserStore = {
     email: string,
     emailVerified: boolean,
     uid: string,
-    creationTime: string,
-    lastSignInTime: string
+    createAt: string,
+    lastLoginAt: string
   }
 };
 
@@ -22,14 +22,16 @@ export const userSlice = createSlice({
   name: "user",
   initialState: null,
   reducers: {
-    updateUserData: (state: UserStore, action: Action) => {
+    updateUser: (state: UserStore, action: Action) => {
       const { user } = action.payload;
+
       if (!user) return null;
+
       return user;
     },
-    removeUserData: () => null
+    removeUser: () => null
   }
 });
 
-export const { updateUserData, removeUserData } = userSlice.actions;
+export const { updateUser, removeUser } = userSlice.actions;
 export default userSlice.reducer;

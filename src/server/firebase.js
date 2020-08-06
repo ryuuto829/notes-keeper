@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
-import config from './firebaseConfig';
+import { useState, useEffect } from "react";
+import * as firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/database";
+import config from "./firebaseConfig";
 
 firebase.initializeApp(config);
 
@@ -11,11 +11,12 @@ export const database = firebase.database();
 
 /** Google Sign In configuration */
 const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt: 'select_account' });
+provider.setCustomParameters({ prompt: "select_account" });
 export const signInWithGoogle = () => auth.signInWithRedirect(provider);
 
 /** Email Sign In configuration */
-export const signInWithEmail = (email, password) => auth.signInWithEmailAndPassword(email, password);
+export const signInWithEmail = (email, password) =>
+  auth.signInWithEmailAndPassword(email, password);
 
 /** Create a new account */
 export const createUser = (email, password) => {
@@ -36,7 +37,6 @@ export const useAuth = () => {
   });
 
   const onChange = user => {
-    console.log(user);
     setState({ initializing: false, user });
   };
 

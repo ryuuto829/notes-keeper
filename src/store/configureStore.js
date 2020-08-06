@@ -10,7 +10,9 @@ const sagaMiddleware = createSagaMiddleware();
 const userData = loadFromLocalStorage("user");
 const persistedUserData = {
   auth: {
-    isAuthenticated: userData !== undefined && userData !== null,
+    isAuthenticated: false,
+    isSignSuccess: userData !== undefined && userData !== null,
+    initializing: true,
     isSubmitted: false,
     errorMessage: null
   },

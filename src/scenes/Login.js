@@ -5,7 +5,7 @@ import { useHistory, useLocation, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signInWithGoogle } from "../server/firebase"; // ToDo: move to redux
 import {
-  selectAuthenticated,
+  selectSignSuccess,
   selectSubmitted,
   selectErrorMessage,
   signIn,
@@ -32,7 +32,7 @@ import {
 
 // const INITIAL_LOGIN_STATE_TEST_MODE = {
 //   email: "test@example.com",
-//   password: "12345678"
+//   password: "test123example"
 // };
 
 // Different shapes of input state for Login and Register forms
@@ -48,7 +48,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const isCreate = useLocation().pathname === "/register";
-  const isAuthenticated = useSelector(selectAuthenticated);
+  const isSignSuccess = useSelector(selectSignSuccess);
   const isSubmitted = useSelector(selectSubmitted);
   const errorNotice = useSelector(selectErrorMessage);
 
@@ -56,7 +56,7 @@ const Login = () => {
   const [errorMessages, setErrorMessages] = useState(null);
   const [showNotice, setShowNotice] = useState(false);
 
-  if (isAuthenticated) return <Redirect to="/home" />;
+  if (isSignSuccess) return <Redirect to="/home" />;
 
   const onChangeInputHandler = (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

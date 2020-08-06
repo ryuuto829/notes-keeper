@@ -1,28 +1,45 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+// @flow
+import * as React from "react";
+import styled, { type ReactComponentStyled } from "styled-components";
 
-const Flex = ({ children, ...restProps }) => {
+type JustifyValues =
+  | "center"
+  | "space-around"
+  | "space-between"
+  | "flex-start"
+  | "flex-end";
+
+type AlignValues =
+  | "stretch"
+  | "center"
+  | "baseline"
+  | "flex-start"
+  | "flex-end";
+
+type Props = {
+  children?: React.Node,
+  column?: ?boolean,
+  shrink?: ?boolean,
+  align?: AlignValues,
+  justify?: JustifyValues,
+  auto?: ?boolean,
+  className?: string
+};
+
+const Flex = (props: Props) => {
+  const { children, ...restProps } = props;
   return <Container {...restProps}>{children}</Container>;
 };
 
 const Container = styled.div`
   display: flex;
-  flex: ${({ auto }) => (auto ? '1 1 auto' : 'initial')};
-  flex-direction: ${({ column }) => (column ? 'column' : 'row')};
+  flex: ${({ auto }) => (auto ? "1 1 auto" : "initial")};
+  flex-direction: ${({ column }) => (column ? "column" : "row")};
   align-items: ${({ align }) => align};
   justify-content: ${({ justify }) => justify};
-  flex-shrink: ${({ shrink }) => (shrink ? 1 : 'initial')};
+  flex-shrink: ${({ shrink }) => (shrink ? 1 : "initial")};
+  min-height: 0;
+  min-width: 0;
 `;
-
-Flex.propTypes = {
-  column: PropTypes.bool,
-  shrink: PropTypes.bool,
-  align: PropTypes.oneOf(['stretch', 'center', 'baseline', 'flex-start', 'flex-end']),
-  justify: PropTypes.oneOf(['center', 'space-around', 'space-between', 'flex-start', 'flex-end']),
-  auto: PropTypes.bool,
-  className: PropTypes.string,
-  children: PropTypes.node
-};
 
 export default Flex;

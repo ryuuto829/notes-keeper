@@ -1,18 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
 import { useAuth } from "../server/firebase";
-import { useDispatch } from "react-redux";
-import { logout } from "../store/modules/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, authRequest, authFailure } from "../store/modules/auth";
+import { updateUser } from "../store/modules/user";
+import { selectAuthenticated, selectInitializing } from "../store/modules/auth";
 
 import LoaderBar from "./LoaderBar";
 
 const Authenticated = ({ children }) => {
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(selectAuthenticated);
+  const isInitializing = useSelector(selectInitializing);
   const { initializing, user } = useAuth();
 
-  if (initializing) {
+  useEffect(() => {
+    if (initializing === false) {
+      dispatch(authRequest({ user: user }));
+    }
+  }, [initializing]);
+
+  if (isInitializing) {
     return (
       <Background>
         <LoaderBar />
@@ -20,9 +30,8 @@ const Authenticated = ({ children }) => {
     );
   }
 
-  if (user) return children;
-
-  dispatch(logout());
+  if (isAuthenticated) return children;
+  // dispatch(logout());
   return <Redirect to="/login" />;
 };
 

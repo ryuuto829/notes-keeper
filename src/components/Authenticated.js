@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
-import { useAuth } from "../server/firebase";
+import { useAuth, auth } from "../server/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, authRequest, authFailure } from "../store/modules/auth";
 import { updateUser } from "../store/modules/user";
@@ -14,13 +14,31 @@ const Authenticated = ({ children }) => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(selectAuthenticated);
   const isInitializing = useSelector(selectInitializing);
-  const { initializing, user } = useAuth();
 
-  useEffect(() => {
-    if (initializing === false) {
+  const [state, setState] = useState(() => {
+    const user = auth.currentUser;
+    return { initializing: !user, user };
+  });
+
+  const onChange = user => {
+    if (!state.initializing) {
       dispatch(authRequest({ user: user }));
     }
-  }, [initializing]);
+    setState({ initializing: false, user });
+  };
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(onChange);
+    return () => unsubscribe();
+  }, []);
+
+  // const { initializing, user } = useAuth();
+
+  // useEffect(() => {
+  //   if (initializing === false) {
+  //     dispatch(authRequest({ user: user }));
+  //   }
+  // }, [initializing]);
 
   if (isInitializing) {
     return (

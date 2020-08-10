@@ -1,15 +1,11 @@
 // flow
-import { combineReducers } from 'redux';
-import auth from './auth';
-import user from './user';
-import document from './document';
-import collection from './collection';
+import { combineReducers } from "redux";
+import login from "./login";
+import _test_database from "./_test_database";
 
 const rootReducer = combineReducers({
-  auth,
-  user,
-  document,
-  collection,
+  login,
+  _test_database // MOVE STORE TO SERVER
 });
 
 export default rootReducer;

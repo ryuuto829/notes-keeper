@@ -3,12 +3,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
-import configureStore from "./store/configureStore";
+import store from "./store/store";
 
 import Theme from "./components/Theme";
 import Routes from "./routes";
 
-const store = configureStore();
 const element = document.getElementById("notes-keeper-app");
 
 ReactDOM.render(

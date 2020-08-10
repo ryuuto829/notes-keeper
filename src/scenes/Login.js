@@ -5,15 +5,13 @@ import { useHistory, useLocation, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signInWithGoogle } from "../server/firebase"; // ToDo: move to redux
 import {
-  selectSignSuccess,
-  selectSubmitted,
+  loginRequest,
+  selectLoggedIn,
   selectErrorMessage,
-  signIn,
-  signUp
-} from "../store/modules/auth";
+  selectLoading
+} from "../store/modules/login";
 import validateForm from "../utils/validation";
 import { type InputText } from "../types";
-import { updateUserData } from "../store/modules/user";
 
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -48,8 +46,8 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const isCreate = useLocation().pathname === "/register";
-  const isSignSuccess = useSelector(selectSignSuccess);
-  const isSubmitted = useSelector(selectSubmitted);
+  const isSignSuccess = useSelector(selectLoggedIn);
+  const isSubmitted = useSelector(selectLoading);
   const errorNotice = useSelector(selectErrorMessage);
 
   const [inputs, setInputs] = useState(() => initializeState(isCreate));
@@ -73,9 +71,9 @@ const Login = () => {
 
     setErrorMessages(null);
     if (isCreate) {
-      dispatch(signUp(inputs));
+      dispatch(loginRequest(inputs));
     } else {
-      dispatch(signIn(inputs));
+      dispatch(loginRequest(inputs));
     }
   };
 

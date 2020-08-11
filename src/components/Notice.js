@@ -1,6 +1,6 @@
 // @flow
-import React from "react";
-import styled from "styled-components";
+import * as React from "react";
+import styled, { type StyledComponent } from "styled-components";
 
 import ErrorOutline from "../shared/icons/ErrorOutline";
 import Flex from "./Flex";
@@ -17,7 +17,7 @@ const Notice = ({ children, className }: Props) => (
   </NoticeWrapper>
 );
 
-const NoticeWrapper = styled(Flex)`
+const NoticeWrapper: StyledComponent<Props, empty, *> = styled(Flex)`
   color: #f04747;
   border-radius: 6px;
   fill: #f04747;

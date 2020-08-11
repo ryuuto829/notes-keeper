@@ -1,4 +1,6 @@
+// @flow
 import { all, call, fork, put, take, takeEvery } from "redux-saga/effects";
+import type { Saga } from "redux-saga";
 import { eventChannel } from "redux-saga";
 import {
   loginRequest,
@@ -60,7 +62,7 @@ function* loginStatusWatcher() {
   }
 }
 
-export default function* loginRootSaga() {
+export default function* loginRootSaga(): Saga<void> {
   // Auth state observer runs when app starts
   yield fork(loginStatusWatcher);
   yield all([

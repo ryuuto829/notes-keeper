@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import styled, { type ReactComponentStyled } from "styled-components";
+import styled, { type StyledComponent } from "styled-components";
 
 type JustifyValues =
   | "center"
@@ -31,7 +31,7 @@ const Flex = (props: Props) => {
   return <Container {...restProps}>{children}</Container>;
 };
 
-const Container = styled.div`
+const Container: StyledComponent<Props, empty, HTMLDivElement> = styled.div`
   display: flex;
   flex: ${({ auto }) => (auto ? "1 1 auto" : "initial")};
   flex-direction: ${({ column }) => (column ? "column" : "row")};

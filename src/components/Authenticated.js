@@ -1,12 +1,17 @@
-import React from "react";
-import styled from "styled-components";
+// @flow
+import * as React from "react";
+import styled, { type StyledComponent } from "styled-components";
 import { Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser, selectLoading } from "../store/modules/login";
 
 import LoaderBar from "./LoaderBar";
 
-const Authenticated = ({ children }) => {
+type Props = {
+  children: React.Node
+};
+
+const Authenticated = ({ children }: Props) => {
   const isAuthenticated = useSelector(selectUser);
   const isLoading = useSelector(selectLoading);
 
@@ -24,7 +29,7 @@ const Authenticated = ({ children }) => {
 };
 
 /** TODO: Dont repeat, create a new component */
-const Background = styled.div`
+const Background: StyledComponent<Props, empty, HTMLDivElement> = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

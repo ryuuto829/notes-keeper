@@ -1,4 +1,14 @@
+// @flow
 import { createSlice } from "@reduxjs/toolkit";
+
+type State = {
+  login: {
+    loading: boolean,
+    loggedIn: boolean,
+    user: ?{ ... },
+    errorMessage: ?string
+  }
+};
 
 export const loginSlice = createSlice({
   name: "login",
@@ -9,13 +19,13 @@ export const loginSlice = createSlice({
     errorMessage: null
   },
   reducers: {
-    loginRequest: (state, action) => {
+    loginRequest: (state: State, action) => {
       return {
         ...state,
         loading: true
       };
     },
-    loginSuccess: (state, action) => {
+    loginSuccess: (state: State, action) => {
       const { user } = action.payload;
 
       return {
@@ -26,7 +36,7 @@ export const loginSlice = createSlice({
         errorMessage: null
       };
     },
-    loginFailure: (state, action) => {
+    loginFailure: (state: State, action) => {
       const { error } = action.payload;
       console.log(error);
       return {
@@ -35,13 +45,13 @@ export const loginSlice = createSlice({
         errorMessage: error
       };
     },
-    logoutRequest: (state, action) => {
+    logoutRequest: (state: State, action) => {
       return {
         ...state,
         loading: true
       };
     },
-    logoutSuccess: (state, action) => {
+    logoutSuccess: (state: State, action) => {
       return {
         ...state,
         loading: false,
@@ -50,7 +60,7 @@ export const loginSlice = createSlice({
         errorMessage: null
       };
     },
-    logoutFailure: (state, action) => {
+    logoutFailure: (state: State, action) => {
       const { error } = action.payload;
       console.log(error);
       return {
@@ -62,10 +72,10 @@ export const loginSlice = createSlice({
   }
 });
 
-export const selectLoggedIn = state => state.login.loggedIn;
-export const selectErrorMessage = state => state.login.errorMessage;
-export const selectLoading = state => state.login.loading;
-export const selectUser = state => state.login.user;
+export const selectLoggedIn = (state: State) => state.login.loggedIn;
+export const selectErrorMessage = (state: State) => state.login.errorMessage;
+export const selectLoading = (state: State) => state.login.loading;
+export const selectUser = (state: State) => state.login.user;
 export const {
   loginRequest,
   loginSuccess,

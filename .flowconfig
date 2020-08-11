@@ -6,3 +6,6 @@
 
 [include]
 */src/.*
+
+[libs]
+./flow-typed

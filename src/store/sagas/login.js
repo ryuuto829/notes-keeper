@@ -1,7 +1,7 @@
 // @flow
 import { all, call, fork, put, take, takeEvery } from "redux-saga/effects";
-import type { Saga } from "redux-saga";
 import { eventChannel } from "redux-saga";
+import { auth, signInWithEmail, logout } from "../../server/firebase";
 import {
   loginRequest,
   loginSuccess,
@@ -10,7 +10,6 @@ import {
   logoutSuccess,
   logoutFailure
 } from "../modules/login";
-import { auth, signInWithEmail, logout } from "../../server/firebase";
 
 // Get auth state observer
 const getAuthChannel = () => {
@@ -26,7 +25,7 @@ function* loginSaga(action) {
 
   try {
     yield signInWithEmail(email, password);
-    yield console.log("login success");
+    yield console.log("[loginSaga] login success");
     // Successful login will trigger the loginStatusWatcher
   } catch (error) {
     yield console.log(error);
@@ -37,7 +36,7 @@ function* loginSaga(action) {
 function* logoutSaga() {
   try {
     yield logout();
-    yield console.log("logout success");
+    yield console.log("[logoutSaga] logout success");
     // Successful logout will trigger the loginStatusWatcher
   } catch (error) {
     yield console.log(error);
@@ -46,23 +45,23 @@ function* logoutSaga() {
 }
 
 function* loginStatusWatcher() {
-  yield console.log("wathcer added");
+  yield console.log("[loginStatusWatcher] wathcer added");
   const channel = yield call(getAuthChannel);
 
   while (true) {
     const { user } = yield take(channel);
 
     if (user) {
-      yield console.log("login success");
+      yield console.log("[loginStatusWatcher] login success");
       yield put(loginSuccess({ user: user }));
     } else {
-      yield console.log("logout success");
+      yield console.log("[loginStatusWatcher] logout success");
       yield put(logoutSuccess());
     }
   }
 }
 
-export default function* loginRootSaga(): Saga<void> {
+export default function* loginRootSaga() {
   // Auth state observer runs when app starts
   yield fork(loginStatusWatcher);
   yield all([

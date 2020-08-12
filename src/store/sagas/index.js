@@ -1,13 +1,11 @@
 // @flow
 import { fork, all } from "redux-saga/effects";
-import type { Saga } from "redux-saga";
 
 import login from "./login";
 
-export default function* rootSaga(): Saga<void> {
+export default function* rootSaga() {
   yield all([
     fork(login)
-    // fork(messaging),
-    // fork(storage),
+    // fork other rootSaga's
   ]);
 }

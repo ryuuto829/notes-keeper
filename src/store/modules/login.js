@@ -19,17 +19,8 @@ export const loginSlice = createSlice({
     errorMessage: null
   },
   reducers: {
-    updateUserProfile: (state: State, action) => {
-      const { displayName } = action.payload;
-
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          displayName: displayName
-        }
-      };
-    },
+    // updateUserProfile gets latest user profile
+    updateUserProfile: (state: State, action) => state,
     loginRequest: (state: State, action) => {
       return {
         ...state,

@@ -46,10 +46,8 @@ function* registerSaga(action) {
 
   try {
     yield call(createUser, email, password);
-    yield all([
-      // put(updateUserProfile({ displayName: username })),
-      updateUsername(username)
-    ]);
+    yield call(updateUsername, username);
+    yield put(updateUserProfile());
     yield console.log("[registerSaga] register success");
     // Successful login will trigger the loginStatusWatcher
   } catch (error) {

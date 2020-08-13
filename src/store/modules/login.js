@@ -19,7 +19,24 @@ export const loginSlice = createSlice({
     errorMessage: null
   },
   reducers: {
+    updateUserProfile: (state: State, action) => {
+      const { displayName } = action.payload;
+
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          displayName: displayName
+        }
+      };
+    },
     loginRequest: (state: State, action) => {
+      return {
+        ...state,
+        loading: true
+      };
+    },
+    registerRequest: (state: State, action) => {
       return {
         ...state,
         loading: true
@@ -78,10 +95,12 @@ export const selectLoading = (state: State) => state.login.loading;
 export const selectUser = (state: State) => state.login.user;
 export const {
   loginRequest,
+  registerRequest,
   loginSuccess,
   loginFailure,
   logoutRequest,
   logoutSuccess,
-  logoutFailure
+  logoutFailure,
+  updateUserProfile
 } = loginSlice.actions;
 export default loginSlice.reducer;

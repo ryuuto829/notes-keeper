@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { signInWithGoogle } from "../server/firebase"; // ToDo: move to redux
 import {
   loginRequest,
+  registerRequest,
   selectLoggedIn,
   selectErrorMessage,
   selectLoading
@@ -71,7 +72,7 @@ const Login = () => {
 
     setErrorMessages(null);
     if (isCreate) {
-      dispatch(loginRequest(inputs));
+      dispatch(registerRequest(inputs));
     } else {
       dispatch(loginRequest(inputs));
     }

@@ -14,6 +14,7 @@ import {
 import validateForm from "../utils/validation";
 import { type InputText } from "../types";
 
+import PageTitle from "../components/PageTitle";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import TextButton from "../components/TextButton";
@@ -123,6 +124,7 @@ const Login = () => {
     return (
       <Background align="center" justify="center">
         <Logo />
+        <PageTitle title="Register an account" />
         <AuthBox align="center" justify="center" key="register">
           <CenteringWrapper>
             <HeaderPrimary>Create an account</HeaderPrimary>
@@ -153,6 +155,7 @@ const Login = () => {
   return (
     <Background align="center" justify="center">
       <Logo />
+      <PageTitle title="Login" />
       <AuthBox align="center" justify="center" key="login">
         <CenteringWrapper>
           <HeaderPrimary>Sign in</HeaderPrimary>

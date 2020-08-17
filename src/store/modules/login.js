@@ -24,13 +24,15 @@ export const loginSlice = createSlice({
     loginRequest: (state: State, action) => {
       return {
         ...state,
-        loading: true
+        loading: true,
+        errorMessage: null
       };
     },
     registerRequest: (state: State, action) => {
       return {
         ...state,
-        loading: true
+        loading: true,
+        errorMessage: null
       };
     },
     loginSuccess: (state: State, action) => {

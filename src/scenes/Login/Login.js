@@ -3,32 +3,32 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory, useLocation, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signInWithGoogle } from "../server/firebase"; // ToDo: move to redux
+import { signInWithGoogle } from "../../server/firebase"; // ToDo: move to redux
 import {
   loginRequest,
   registerRequest,
   selectLoggedIn,
   selectErrorMessage,
   selectLoading
-} from "../store/modules/login";
-import validateForm from "../utils/validation";
-import { type InputText } from "../types";
+} from "../../store/modules/login";
+import validateForm from "../../utils/validation";
+import { type InputText } from "../../types";
 
-import PageTitle from "../components/PageTitle";
-import Input from "../components/Input";
-import Button from "../components/Button";
-import TextButton from "../components/TextButton";
-import Branding from "../components/Branding";
-import GoogleLogo from "../shared/icons/GoogleLogo";
-import Divider from "../components/Divider";
-import Spinner from "../components/Spinner";
-import Notice from "../components/Notice";
-import Flex from "../components/Flex";
+import Notices from "./Notices";
+import PageTitle from "../../components/PageTitle";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
+import TextButton from "../../components/TextButton";
+import Branding from "../../components/Branding";
+import GoogleLogo from "../../shared/icons/GoogleLogo";
+import Divider from "../../components/Divider";
+import Spinner from "../../components/Spinner";
+import Flex from "../../components/Flex";
 import {
   growFromCenter,
   moveFromTop,
   animateGradientBackground
-} from "../shared/styles/animations";
+} from "../../shared/styles/animations";
 
 // const INITIAL_LOGIN_STATE_TEST_MODE = {
 //   email: "test@example.com",
@@ -56,6 +56,8 @@ const Login = () => {
   const [errorMessages, setErrorMessages] = useState(null);
   const [showNotice, setShowNotice] = useState(false);
 
+  const hasAuthError = (errorNotice && showNotice) || null;
+
   if (isSignSuccess) return <Redirect to="/home" />;
 
   const onChangeInputHandler = (e: SyntheticInputEvent<HTMLInputElement>) => {
@@ -63,14 +65,14 @@ const Login = () => {
     setInputs({ ...inputs, [name]: value });
   };
 
-  const submitFormHandler = (e: SyntheticInputEvent<HTMLInputElement>) => {
+  const submitFormHandler = (e: SyntheticEvent<>) => {
     e.preventDefault();
-    setShowNotice(true);
 
     const errors = validateForm(inputs);
 
     if (errors) return setErrorMessages(errors);
 
+    setShowNotice(true);
     setErrorMessages(null);
     if (isCreate) {
       dispatch(registerRequest(inputs));
@@ -94,7 +96,8 @@ const Login = () => {
       label="EMAIL"
       errorMessages={errorMessages && errorMessages.email}
       value={inputs.email}
-      onChange={onChangeInputHandler}
+      onChangeHandler={onChangeInputHandler}
+      autoComplete="off"
     />
   );
 
@@ -105,7 +108,8 @@ const Login = () => {
       label="USERNAME"
       errorMessages={errorMessages && errorMessages.username}
       value={inputs.username}
-      onChange={onChangeInputHandler}
+      onChangeHandler={onChangeInputHandler}
+      autoComplete="off"
     />
   );
 
@@ -116,15 +120,15 @@ const Login = () => {
       label="PASSWORD"
       errorMessages={errorMessages && errorMessages.password}
       value={inputs.password}
-      onChange={onChangeInputHandler}
+      onChangeHandler={onChangeInputHandler}
     />
   );
 
   if (isCreate) {
     return (
       <Background align="center" justify="center">
+        <PageTitle title="Create an account" />
         <Logo />
-        <PageTitle title="Register an account" />
         <AuthBox align="center" justify="center" key="register">
           <CenteringWrapper>
             <HeaderPrimary>Create an account</HeaderPrimary>
@@ -132,9 +136,7 @@ const Login = () => {
               {emailInputField}
               {usernameInputField}
               {passwordInputField}
-              {errorNotice && showNotice ? (
-                <NoticeAlert>{errorNotice}</NoticeAlert>
-              ) : null}
+              {hasAuthError && <Notices notice={errorNotice} />}
               {isSubmitted ? (
                 <Button icon={<Spinner />} />
               ) : (
@@ -154,8 +156,8 @@ const Login = () => {
 
   return (
     <Background align="center" justify="center">
-      <Logo />
       <PageTitle title="Login" />
+      <Logo />
       <AuthBox align="center" justify="center" key="login">
         <CenteringWrapper>
           <HeaderPrimary>Sign in</HeaderPrimary>
@@ -169,9 +171,7 @@ const Login = () => {
           <FormContainer onSubmit={submitFormHandler}>
             {emailInputField}
             {passwordInputField}
-            {errorNotice && showNotice ? (
-              <NoticeAlert>{errorNotice}</NoticeAlert>
-            ) : null}
+            {hasAuthError && <Notices notice={errorNotice} />}
             {isSubmitted ? (
               <Button icon={<Spinner />} />
             ) : (
@@ -279,9 +279,9 @@ const NeedAccountText = styled.span`
   color: rgb(114, 118, 125);
 `;
 
-const NoticeAlert = styled(Notice)`
-  margin-bottom: 20px;
-  transition: all 2s ease-in;
-`;
+// const NoticeAlert = styled(Notice)`
+//   margin-bottom: 20px;
+//   transition: all 2s ease-in;
+// `;
 
 export default Login;

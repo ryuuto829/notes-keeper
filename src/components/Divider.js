@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+// @flow
+import styled from "styled-components";
 
 const Divider = styled.hr`
   line-height: 1rem;
@@ -11,7 +12,7 @@ const Divider = styled.hr`
   font-size: 14px;
 
   &:before {
-    content: '';
+    content: "";
     background: ${props => props.theme.mainBackground};
     position: absolute;
     left: 0;
@@ -21,10 +22,10 @@ const Divider = styled.hr`
   }
 
   &:after {
-    content: 'or';
+    content: "or";
     position: relative;
     display: inline-block;
-    padding: 0 .5rem;
+    padding: 0 0.5rem;
     line-height: 1.5rem;
     color: ${props => props.theme.headerSecondary};
     background-color: ${props => props.theme.primary};

@@ -27,8 +27,12 @@ type Props = {
 };
 
 const Flex = (props: Props) => {
-  const { children, ...restProps } = props;
-  return <Container {...restProps}>{children}</Container>;
+  const { children, className, ...restProps } = props;
+  return (
+    <Container {...restProps} className={className}>
+      {children}
+    </Container>
+  );
 };
 
 const Container: StyledComponent<Props, empty, HTMLDivElement> = styled.div`
@@ -37,7 +41,7 @@ const Container: StyledComponent<Props, empty, HTMLDivElement> = styled.div`
   flex-direction: ${({ column }) => (column ? "column" : "row")};
   align-items: ${({ align }) => align};
   justify-content: ${({ justify }) => justify};
-  flex-shrink: ${({ shrink }) => (shrink ? 1 : "initial")};
+  flex-shrink: ${({ shrink }) => (shrink ? "1" : "0")};
   min-height: 0;
   min-width: 0;
 `;

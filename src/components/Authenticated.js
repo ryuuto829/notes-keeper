@@ -1,10 +1,11 @@
 // @flow
 import * as React from "react";
-import styled, { type StyledComponent } from "styled-components";
+import styled from "styled-components";
 import { Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser, selectLoading } from "../store/modules/login";
 
+import Flex from "./Flex";
 import LoaderBar from "./LoaderBar";
 
 type Props = {
@@ -17,7 +18,7 @@ const Authenticated = ({ children }: Props) => {
 
   if (isLoading) {
     return (
-      <Background>
+      <Background align="center" justify="center">
         <LoaderBar />
       </Background>
     );
@@ -28,11 +29,7 @@ const Authenticated = ({ children }: Props) => {
   return <Redirect to="/login" />;
 };
 
-/** TODO: Dont repeat, create a new component */
-const Background: StyledComponent<Props, empty, HTMLDivElement> = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const Background = styled(Flex)`
   background-color: ${props => props.theme.mainBackground};
   position: absolute;
   left: 0;

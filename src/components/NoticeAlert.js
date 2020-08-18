@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import styled, { type StyledComponent } from "styled-components";
+import styled from "styled-components";
 
 import ErrorOutline from "../shared/icons/ErrorOutline";
 import Flex from "./Flex";
@@ -10,16 +10,17 @@ type Props = {
   className: ?string
 };
 
-const Notice = ({ children, className }: Props) => (
-  <NoticeWrapper align="center" className={className}>
-    <ErrorOutline size={24} />
+const NoticeAlert = ({ children, className }: Props) => (
+  <NoticeWrapper align="center" justify="space-between" className={className}>
+    <Flex align="center">
+      <ErrorOutline size={22} />
+    </Flex>
     <Label>{children}</Label>
   </NoticeWrapper>
 );
 
-const NoticeWrapper: StyledComponent<Props, empty, *> = styled(Flex)`
+const NoticeWrapper = styled(Flex)`
   color: #f04747;
-  border-radius: 6px;
   fill: #f04747;
 `;
 
@@ -31,6 +32,7 @@ const Label = styled.p`
   margin: 0;
   margin-left: 6px;
   text-align: left;
+  white-space: pre-wrap;
 `;
 
-export default Notice;
+export default NoticeAlert;

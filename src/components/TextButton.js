@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+// @flow
+import styled from "styled-components";
 
 const TextButton = styled.button`
   display: inline-block;

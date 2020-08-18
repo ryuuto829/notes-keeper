@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+// @flow
+import styled from "styled-components";
 
 const Spinner = styled.div`
   font-size: 10px;
@@ -11,7 +12,8 @@ const Spinner = styled.div`
   transform: translateZ(0);
   animation: loading 1.1s infinite linear;
 
-  &, &:after {
+  &,
+  &:after {
     border-radius: 50%;
     width: 1.5rem;
     height: 1.5rem;

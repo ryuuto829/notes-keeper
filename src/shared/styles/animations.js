@@ -34,3 +34,21 @@ export const animateGradientBackground = keyframes`
     background-position: 0% 50%;
   }
 `;
+
+export const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1; 
+  }
+`;
+
+export const loadingBar = keyframes`
+  from {
+    margin-left: -100%; z-index:100;
+  }
+  to {
+    margin-left: 100%; 
+  }
+`;

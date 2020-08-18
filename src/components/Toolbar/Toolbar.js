@@ -1,13 +1,11 @@
-import React from 'react';
-import styled from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
+import React from "react";
+import styled from "styled-components";
 
-import LeftArrowIcon from '../../shared/icons/LeftArrow';
-import IconButton from './components/IconButton';
-import Flex from '../../components/Flex';
+import LeftArrowIcon from "../../shared/icons/LeftArrow";
+import IconButton from "./components/IconButton";
+import Flex from "../../components/Flex";
 
 const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }) => {
-  const dispatch = useDispatch();
   // const shortcuted = useSelector(selectShorcuted);
   // const { id } = useSelector(selectDocumentById);
 
@@ -16,14 +14,16 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }) => {
       {isLocked ? null : <HoverArea onMouseLeave={hideSidebar} />}
       <ToolbarWrapper
         isLocked={isLocked}
-        align='center'
-        justify={isLocked ? 'flex-end' : 'space-between'} >
-        {isLocked ?
-          null :
+        align="center"
+        justify={isLocked ? "flex-end" : "space-between"}
+      >
+        {isLocked ? null : (
           <RightArrowButton
             icon={<LeftArrowIcon />}
             onClick={toggleLock}
-            onMouseEnter={showSidebar} />}
+            onMouseEnter={showSidebar}
+          />
+        )}
         <Flex>
           {/* <Button
             onClick={() => dispatch(updateShortcut({ id: id }))}>
@@ -32,7 +32,7 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }) => {
           <Button>Menu</Button>
         </Flex>
       </ToolbarWrapper>
-    </Wrapper >
+    </Wrapper>
   );
 };
 
@@ -41,7 +41,7 @@ const Wrapper = styled.div`
   position: fixed;
   width: 100%;
   padding: 0 20px;
-  margin-left: ${props => props.isLocked ? '232px' : '0'};
+  margin-left: ${props => (props.isLocked ? "232px" : "0")};
   background-color: #36393f;
   color: white;
   /* transition: all 200ms ease-in 0s; */
@@ -50,7 +50,7 @@ const Wrapper = styled.div`
 
 const ToolbarWrapper = styled(Flex)`
   height: 100%;
-  ${props => props.isLocked ? 'width: calc(100% - 232px)' : null};
+  ${props => (props.isLocked ? "width: calc(100% - 232px)" : null)};
 `;
 
 const RightArrowButton = styled(IconButton)`

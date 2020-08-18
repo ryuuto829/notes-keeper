@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory, useLocation, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signInWithGoogle } from "../../server/firebase"; // ToDo: move to redux
 import {
   loginRequest,
   registerRequest,
@@ -14,14 +13,14 @@ import {
 import validateForm from "../../utils/validation";
 import { type InputText } from "../../types";
 
+import Scrollable from "../../components/Scrollable";
+import Services from "./Services";
 import Notices from "./Notices";
 import PageTitle from "../../components/PageTitle";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import TextButton from "../../components/TextButton";
 import Branding from "../../components/Branding";
-import GoogleLogo from "../../shared/icons/GoogleLogo";
-import Divider from "../../components/Divider";
 import Spinner from "../../components/Spinner";
 import Flex from "../../components/Flex";
 import {
@@ -30,16 +29,14 @@ import {
   animateGradientBackground
 } from "../../shared/styles/animations";
 
-// const INITIAL_LOGIN_STATE_TEST_MODE = {
-//   email: "test@example.com",
-//   password: "test123example"
-// };
-
-// Different shapes of input state for Login and Register forms
-// is necessary for shaping payload to validate
+// Different shapes of input state is necessary
+// for shaping payload to validate and dispatch
 const initializeState = (isCreate: boolean): InputText => {
-  const state = { email: "", password: "" };
-  if (isCreate) return { ...state, username: "" };
+  const state = {
+    email: JSON.parse(process.env.REACT_APP_TEST_EMAIL_INPUT_TEXT) || "",
+    password: JSON.parse(process.env.REACT_APP_TEST_PASSWORD_INPUT_TEXT) || ""
+  };
+  if (isCreate) return { email: "", username: "", password: "" };
   return state;
 };
 
@@ -69,11 +66,11 @@ const Login = () => {
     e.preventDefault();
 
     const errors = validateForm(inputs);
-
     if (errors) return setErrorMessages(errors);
 
     setShowNotice(true);
     setErrorMessages(null);
+
     if (isCreate) {
       dispatch(registerRequest(inputs));
     } else {
@@ -90,7 +87,7 @@ const Login = () => {
   };
 
   const emailInputField = (
-    <InputField
+    <Input
       name="email"
       type="email"
       label="EMAIL"
@@ -102,7 +99,7 @@ const Login = () => {
   );
 
   const usernameInputField = (
-    <InputField
+    <Input
       name="username"
       type="text"
       label="USERNAME"
@@ -114,7 +111,7 @@ const Login = () => {
   );
 
   const passwordInputField = (
-    <InputField
+    <Input
       name="password"
       type="password"
       label="PASSWORD"
@@ -126,69 +123,72 @@ const Login = () => {
 
   if (isCreate) {
     return (
-      <Background align="center" justify="center">
-        <PageTitle title="Create an account" />
-        <Logo />
-        <AuthBox align="center" justify="center" key="register">
-          <CenteringWrapper>
-            <HeaderPrimary>Create an account</HeaderPrimary>
-            <FormContainer onSubmit={submitFormHandler}>
-              {emailInputField}
-              {usernameInputField}
-              {passwordInputField}
-              {hasAuthError && <Notices notice={errorNotice} />}
-              {isSubmitted ? (
-                <Button icon={<Spinner />} />
-              ) : (
-                <Button>Continue</Button>
-              )}
-            </FormContainer>
-            <RedirectButtonWrapper>
-              <TextButton onClick={clickRedirectHandler}>
-                Already have an account ?
-              </TextButton>
-            </RedirectButtonWrapper>
-          </CenteringWrapper>
-        </AuthBox>
+      <Background>
+        <Scrollable>
+          <Wrapper align="center" justify="center">
+            <PageTitle title="Create an account" />
+            <Logo />
+            <AuthBox align="center" justify="center" key="register">
+              <CenteringWrapper>
+                <HeaderPrimary>Create an account</HeaderPrimary>
+                <FormContainer onSubmit={submitFormHandler}>
+                  {emailInputField}
+                  {usernameInputField}
+                  {passwordInputField}
+                  {hasAuthError && <Notices notice={errorNotice} />}
+                  {isSubmitted ? (
+                    <Button icon={<Spinner />} />
+                  ) : (
+                    <Button>Continue</Button>
+                  )}
+                </FormContainer>
+                <RedirectButtonWrapper>
+                  <TextButton onClick={clickRedirectHandler}>
+                    Already have an account ?
+                  </TextButton>
+                </RedirectButtonWrapper>
+              </CenteringWrapper>
+            </AuthBox>
+          </Wrapper>
+        </Scrollable>
       </Background>
     );
   }
 
   return (
-    <Background align="center" justify="center">
-      <PageTitle title="Login" />
-      <Logo />
-      <AuthBox align="center" justify="center" key="login">
-        <CenteringWrapper>
-          <HeaderPrimary>Sign in</HeaderPrimary>
-          <HeaderSecondary>with your Google account</HeaderSecondary>
-          <GoogleSignInWrapper>
-            <Button icon={<GoogleLogo size={16} />} clicked={signInWithGoogle}>
-              Google
-            </Button>
-          </GoogleSignInWrapper>
-          <Divider />
-          <FormContainer onSubmit={submitFormHandler}>
-            {emailInputField}
-            {passwordInputField}
-            {hasAuthError && <Notices notice={errorNotice} />}
-            {isSubmitted ? (
-              <Button icon={<Spinner />} />
-            ) : (
-              <Button>Login</Button>
-            )}
-          </FormContainer>
-          <RedirectButtonWrapper>
-            <NeedAccountText>Need an account ?</NeedAccountText>
-            <TextButton onClick={clickRedirectHandler}>Register</TextButton>
-          </RedirectButtonWrapper>
-        </CenteringWrapper>
-      </AuthBox>
+    <Background>
+      <Scrollable>
+        <Wrapper align="center" justify="center">
+          <PageTitle title="Login" />
+          <Logo />
+          <AuthBox align="center" justify="center" key="login">
+            <CenteringWrapper>
+              <HeaderPrimary>Sign in</HeaderPrimary>
+              <HeaderSecondary>with your Google account</HeaderSecondary>
+              <Services />
+              <FormContainer onSubmit={submitFormHandler}>
+                {emailInputField}
+                {passwordInputField}
+                {hasAuthError && <Notices notice={errorNotice} />}
+                {isSubmitted ? (
+                  <Button icon={<Spinner />} disabled />
+                ) : (
+                  <Button>Login</Button>
+                )}
+              </FormContainer>
+              <RedirectButtonWrapper>
+                <NeedAccountText>Need an account ?</NeedAccountText>
+                <TextButton onClick={clickRedirectHandler}>Register</TextButton>
+              </RedirectButtonWrapper>
+            </CenteringWrapper>
+          </AuthBox>
+        </Wrapper>
+      </Scrollable>
     </Background>
   );
 };
 
-const Background = styled(Flex)`
+const Background = styled.div`
   position: absolute;
   left: 0;
   right: 0;
@@ -201,18 +201,26 @@ const Background = styled(Flex)`
   background: linear-gradient(-45deg, #363237, #2d4262, #73605b, #d09683);
   background-size: 400% 400%;
   animation: ${animateGradientBackground} 15s ease infinite;
+
+  @media (max-width: 480px) {
+    background: ${props => props.theme.primary};
+    animation: none;
+  }
+`;
+
+const Wrapper = styled(Flex)`
+  height: 100%;
+  min-height: 550px;
 `;
 
 const Logo = styled(Branding)`
-  position: absolute;
-  top: 20px;
-  animation: ${moveFromTop} 0.3s ease-out;
-
-  @media (min-width: 480px) {
-    top: 24px;
-  }
+  position: fixed;
+  top: 24px;
+  opacity: 0;
 
   @media (min-width: 915px) {
+    animation: ${moveFromTop} 0.3s ease-out;
+    opacity: 1;
     left: 20px;
   }
 `;
@@ -230,7 +238,8 @@ const AuthBox = styled(Flex)`
     height: 100%;
     padding: 30px 16px;
     min-height: 520px;
-    margin-top: 0;
+    margin: 0;
+    animation: none;
   }
 `;
 
@@ -241,6 +250,10 @@ const CenteringWrapper = styled.div`
 
 const FormContainer = styled.form`
   margin-top: 8px;
+
+  & input {
+    margin-bottom: 20px;
+  }
 `;
 
 const HeaderPrimary = styled.h1`
@@ -255,13 +268,10 @@ const HeaderPrimary = styled.h1`
 const HeaderSecondary = styled.h2`
   font-weight: 400;
   margin: 0;
+  margin-bottom: 20px;
   color: ${props => props.theme.headerSecondary};
   font-size: 14px;
   line-height: 16px;
-`;
-
-const InputField = styled(Input)`
-  margin-bottom: 20px;
 `;
 
 const RedirectButtonWrapper = styled.div`
@@ -269,19 +279,10 @@ const RedirectButtonWrapper = styled.div`
   font-size: 13px;
 `;
 
-const GoogleSignInWrapper = styled.div`
-  margin-top: 20px;
-`;
-
 const NeedAccountText = styled.span`
   line-height: 16px;
   text-align: left;
   color: rgb(114, 118, 125);
 `;
-
-// const NoticeAlert = styled(Notice)`
-//   margin-bottom: 20px;
-//   transition: all 2s ease-in;
-// `;
 
 export default Login;

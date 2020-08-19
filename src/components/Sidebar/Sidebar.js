@@ -1,15 +1,25 @@
+// @flow
 import React from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../store/modules/login";
 
+import Shortcuts from "./Shortcuts";
+import Header from "./components/Header";
 import SidebarLink from "./components/SidebarLink";
 import Branding from "../../components/Branding";
+import Flex from "../../components/Flex";
 import EventNoteIcon from "../../shared/icons/EventNote";
 import TableIcon from "../../shared/icons/Table";
 import SettingsIcon from "../../shared/icons/Settings";
 
-import Header from "./components/Header";
-import Flex from "../../components/Flex";
-import Scrollable from "../../components/Scrollable";
+type Props = {
+  isLocked: boolean,
+  toggleLock: () => void,
+  showedSidebar: boolean,
+  hideSidebar: () => void,
+  showSidebar: () => void
+};
 
 const Sidebar = ({
   isLocked,
@@ -17,45 +27,39 @@ const Sidebar = ({
   showedSidebar,
   hideSidebar,
   showSidebar
-}) => {
-  const userName = "userName"; // TODO: GET FROM THE STORE
+}: Props) => {
+  const user = useSelector(selectUser);
 
   return (
-    <React.Fragment>
+    <>
       {!isLocked ? (
         <HoverArea onMouseEnter={showSidebar} onMouseLeave={hideSidebar} />
       ) : null}
       <SidebarContainer column showSidebar={showedSidebar} isLocked={isLocked}>
         <Header
           isLocked={isLocked}
-          userName={userName}
+          userName={user ? user.displayName || "" : "userName"}
           toggleLock={toggleLock}
         />
         <SectionContainer>
-          <SidebarLink to="/home" icon={<EventNoteIcon />}>
-            DAILY NOTES
-          </SidebarLink>
-          <SidebarLink to="/collection" icon={<TableIcon />}>
-            ALL PAGES
-          </SidebarLink>
+          <SidebarLink
+            to="/home"
+            icon={<EventNoteIcon size={20} />}
+            label="DAILY NOTES"
+          />
+          <SidebarLink
+            to="/collection"
+            icon={<TableIcon size={20} />}
+            label="ALL PAGES"
+          />
         </SectionContainer>
-        <SectionTitle>SHORTCUTS</SectionTitle>
-        <Scrollable>
-          <ScrollableWrapper>
-            {/* Render user pages */}
-            {/* {shortcuts.map(id => (
-              <SidebarLink
-                key={id}
-                to={documents[id].url}>{documents[id].title}</SidebarLink>
-            ))} */}
-          </ScrollableWrapper>
-        </Scrollable>
+        <Shortcuts />
         <SettingsSection justify="space-between" align="center">
           <Branding size={24} />
-          <SidebarLink to="/settings" icon={<SettingsIcon />} />
+          <SidebarLink to="/settings" icon={<SettingsIcon size={20} />} />
         </SettingsSection>
       </SidebarContainer>
-    </React.Fragment>
+    </>
   );
 };
 
@@ -91,30 +95,16 @@ const HoverArea = styled.div`
   z-index: 102;
 `;
 
-const SectionTitle = styled.div`
-  font-size: 12px;
-  line-height: 16px;
-  padding: 0 14px;
-  margin: 0;
-  margin-bottom: 12px;
-  flex: 1 0;
-  color: #8e9297;
-`;
-
-const ScrollableWrapper = styled.div`
-  padding: 0 8px;
-`;
-
 const SectionContainer = styled.nav`
   padding: 16px 8px;
 `;
 
 const SettingsSection = styled(Flex)`
-  flex: 1 0 auto;
   height: 52px;
   padding: 0 16px;
   background-color: #292b2f;
   margin-top: 12px;
+  font-size: 13px;
 `;
 
 export default Sidebar;

@@ -1,32 +1,47 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
+// @flow
+import * as React from "react";
+import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
-const SidebarLink = ({ to, icon, children }) => {
+import Flex from "../../Flex";
+
+type Props = {
+  to: string,
+  label: string,
+  icon?: React.Element<*>,
+  children?: React.Node,
+  className?: string
+};
+
+const SidebarLink = ({ to, icon, children, label, className }: Props) => {
   const hasIcon = icon !== undefined;
-  const hasChildren = children !== undefined;
+  const hasChildren = label !== undefined && label !== "";
 
   return (
-    <StyledNavLink to={to} >
-      {hasIcon ? icon : null}
-      {hasChildren ? <Label hasIcon={hasIcon}>{children}</Label> : null}
-    </StyledNavLink >
+    <StyledNavLink to={to}>
+      <LinkWrapper
+        className={className}
+        hasChildren={hasChildren}
+        align="center"
+        justify={hasChildren ? "flex-start" : "center"}
+      >
+        {hasIcon ? icon : null}
+        {hasChildren ? <Label hasIcon={hasIcon}>{label}</Label> : null}
+      </LinkWrapper>
+    </StyledNavLink>
   );
 };
 
-const StyledNavLink = styled(NavLink)`
+const LinkWrapper = styled(Flex)`
+  width: ${props => (props.hasChildren ? "100%" : "32px")};
   height: 32px;
-  padding: 0 6px;
   border-radius: 4px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   color: #8e9297;
   fill: #8e9297;
-  cursor: pointer;
   transition: all 100ms ease-in;
-  text-decoration: none;
+  padding: ${props => (props.hasChildren ? "0 6px;" : "0")};
+  cursor: pointer;
+  box-sizing: border-box;
 
   &:hover {
     background-color: rgb(79 84 92 / 32%);
@@ -35,19 +50,17 @@ const StyledNavLink = styled(NavLink)`
   }
 `;
 
-const Label = styled.span`
-  ${props => props.hasIcon ? 'margin-left: 6px' : null};
-  font-size: 14px;
-  overflow:hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+const StyledNavLink = styled(NavLink)`
+  text-decoration: none;
 `;
 
-SidebarLink.propTypes = {
-  /** Path to the route, ex. '/home', '/login' */
-  to: PropTypes.string.isRequired,
-  icon: PropTypes.element,
-  children: PropTypes.node,
-};
+const Label = styled.span`
+  ${props => (props.hasIcon ? "margin-left: 6px" : null)};
+  font-size: 14px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 178px;
+`;
 
 export default SidebarLink;

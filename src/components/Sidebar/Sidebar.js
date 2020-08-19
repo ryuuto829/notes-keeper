@@ -84,6 +84,18 @@ const SidebarContainer = styled(Flex)`
   &:hover {
     left: ${props => (props.isLocked ? "inherit" : "0")};
   }
+
+  /* Auto hiding sidebar for mobile devices or small screens. In this case
+  * HOVER WOULDN'T WORK, and 'isLocked' will serve as a toogle button  */
+  @media (max-width: 600px) {
+    left: ${props => (props.isLocked ? "0" : "-232px")};
+    top: 0;
+    bottom: 0;
+
+    &:hover {
+      left: ${props => (props.isLocked ? "inherit" : "-232px")};
+    }
+  }
 `;
 
 const HoverArea = styled.div`

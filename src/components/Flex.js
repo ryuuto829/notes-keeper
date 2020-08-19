@@ -23,13 +23,14 @@ type Props = {
   align?: AlignValues,
   justify?: JustifyValues,
   auto?: ?boolean,
-  className?: string
+  className?: string,
+  ...
 };
 
 const Flex = (props: Props) => {
-  const { children, className, ...restProps } = props;
+  const { children, className, ...rest } = props;
   return (
-    <Container {...restProps} className={className}>
+    <Container {...rest} className={className}>
       {children}
     </Container>
   );

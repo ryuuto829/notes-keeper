@@ -1,11 +1,12 @@
 // @flow
 import { createSlice } from "@reduxjs/toolkit";
+import type { UserStore } from "../../types/UserStore";
 
 type State = {
   login: {
     loading: boolean,
     loggedIn: boolean,
-    user: ?{ ... },
+    user: ?UserStore,
     errorMessage: ?string
   }
 };

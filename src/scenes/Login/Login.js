@@ -216,6 +216,7 @@ const Logo = styled(Branding)`
   position: fixed;
   top: 24px;
   opacity: 0;
+  font-size: 20px;
 
   @media (min-width: 915px) {
     animation: ${moveFromTop} 0.3s ease-out;

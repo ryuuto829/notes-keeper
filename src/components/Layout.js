@@ -3,7 +3,7 @@ import * as React from "react";
 import { useState } from "react";
 import styled from "styled-components";
 
-import Sidebar from "./Sidebar/Sidebar";
+import Sidebar from "./Sidebar";
 import Toolbar from "./Toolbar/Toolbar";
 import Background from "./Background";
 
@@ -47,6 +47,11 @@ const MainWrapper = styled.div`
   padding: 0 20px;
   background-color: #36393f;
   color: white;
+
+  /* On small screen sidebar wouldn't push document, but slide on top of it */
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
 
 export default Layout;

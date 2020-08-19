@@ -5,16 +5,17 @@ import styled from "styled-components";
 type Props = {
   bgColor?: string,
   children?: React.Node,
+  className?: string,
   ...
 };
 
-const Background = ({ bgColor, children, ...rest }: Props) => (
-  <BackgroundW {...rest} bgColor={bgColor}>
+const Background = ({ bgColor, children, className, ...rest }: Props) => (
+  <Wrapper {...rest} className={className} bgColor={bgColor}>
     {children}
-  </BackgroundW>
+  </Wrapper>
 );
 
-const BackgroundW = styled.div`
+const Wrapper = styled.div`
   position: absolute;
   left: 0;
   right: 0;

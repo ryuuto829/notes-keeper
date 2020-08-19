@@ -1,11 +1,10 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logoutRequest } from "../store/modules/login";
 
 const Document = () => {
   const { id } = useParams();
-  // const pages = useSelector(selectDocumentById);
   const dispatch = useDispatch();
 
   return (

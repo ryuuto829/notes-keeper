@@ -1,3 +1,4 @@
+// @flow
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
@@ -6,32 +7,46 @@ import config from "./firebaseConfig";
 firebase.initializeApp(config);
 
 // Firebase APIs
-export const auth = firebase.auth();
-export const database = firebase.database();
+
+const auth = firebase.auth();
+const database = firebase.database();
 
 // Social Sign In Method Provider
+
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 // AUTH API
 
-export const signInWithEmail = (email, password) =>
+const signInWithEmail = (email: string, password: string) =>
   auth.signInWithEmailAndPassword(email, password);
 
-export const signInWithGoogle = () => {
+const signInWithGoogle = () => {
   const provider = googleProvider.setCustomParameters({
     prompt: "select_account"
   });
-  auth.signInWithRedirect(provider);
+  auth.signInWithPopup(provider);
 };
 
-export const createUser = (email, password) => {
+const createUser = (email: string, password: string) => {
   return auth.createUserWithEmailAndPassword(email, password);
 };
 
-export const updateUsername = username => {
+const updateUsername = (username: string) => {
+  /* $FlowFixMe currentUser can be null so `updateProfile` property
+   * can be missing. In this case call it only when user is logginIn */
   return auth.currentUser.updateProfile({ displayName: username });
 };
 
-export const logout = () => auth.signOut();
+const logout = () => auth.signOut();
+
+export {
+  auth,
+  database,
+  signInWithEmail,
+  signInWithGoogle,
+  createUser,
+  updateUsername,
+  logout
+};
 
 export default firebase;

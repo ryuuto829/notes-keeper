@@ -14,9 +14,7 @@ const Authenticated = ({ children }: Props) => {
   const isAuthenticated = useSelector(selectUser);
   const isLoading = useSelector(selectLoading);
 
-  if (isLoading) {
-    return <FullscreenLoading />;
-  }
+  if (isLoading) return <FullscreenLoading />;
 
   if (isAuthenticated) return children;
 

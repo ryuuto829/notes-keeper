@@ -6,8 +6,8 @@ type Props = {
   name: string,
   label?: ?string,
   type: string,
-  value: string,
-  onChangeHandler: (e: SyntheticEvent<>) => void,
+  value: ?string,
+  onChangeHandler: (e: SyntheticInputEvent<HTMLInputElement>) => void,
   errorMessages?: ?string,
   className?: string,
   ...
@@ -36,7 +36,7 @@ const Input = (props: Props) => {
   );
 
   return (
-    <React.Fragment>
+    <>
       {hasLabel ? LabelBox : null}
       <InputField
         {...rest}
@@ -49,7 +49,7 @@ const Input = (props: Props) => {
         value={value}
         onChange={onChangeHandler}
       />
-    </React.Fragment>
+    </>
   );
 };
 

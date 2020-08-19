@@ -1,6 +1,12 @@
 // @flow
 import { type InputText } from "../types";
 
+type Error = {
+  email?: string,
+  password?: string,
+  username?: string
+};
+
 const formValidation = (text: string, type: string): ?string => {
   if (text === "") return "This field is required";
 
@@ -34,7 +40,7 @@ const formValidation = (text: string, type: string): ?string => {
   }
 };
 
-const validateForm = (payload: InputText): ?InputText => {
+const validateForm = (payload: InputText): ?Error => {
   const errors = {};
 
   Object.keys(payload).forEach((type: string) => {

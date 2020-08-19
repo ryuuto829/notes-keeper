@@ -23,6 +23,7 @@ import TextButton from "../../components/TextButton";
 import Branding from "../../components/Branding";
 import Spinner from "../../components/Spinner";
 import Flex from "../../components/Flex";
+import Background from "../../components/Background";
 import {
   growFromCenter,
   moveFromTop,
@@ -32,11 +33,16 @@ import {
 // Different shapes of input state is necessary
 // for shaping payload to validate and dispatch
 const initializeState = (isCreate: boolean): InputText => {
-  const state = {
-    email: JSON.parse(process.env.REACT_APP_TEST_EMAIL_INPUT_TEXT) || "",
-    password: JSON.parse(process.env.REACT_APP_TEST_PASSWORD_INPUT_TEXT) || ""
-  };
-  if (isCreate) return { email: "", username: "", password: "" };
+  const state = { email: "", password: "" };
+
+  if (process.env.NODE_ENV === "development") {
+    state.email = JSON.parse(process.env.REACT_APP_TEST_EMAIL_INPUT_TEXT || "");
+    state.password = JSON.parse(
+      process.env.REACT_APP_TEST_PASSWORD_INPUT_TEXT || ""
+    );
+  }
+
+  if (isCreate) return { ...state, username: "" };
   return state;
 };
 
@@ -58,7 +64,7 @@ const Login = () => {
   if (isSignSuccess) return <Redirect to="/home" />;
 
   const onChangeInputHandler = (e: SyntheticInputEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value } = e.currentTarget;
     setInputs({ ...inputs, [name]: value });
   };
 
@@ -123,7 +129,7 @@ const Login = () => {
 
   if (isCreate) {
     return (
-      <Background>
+      <AnimatedBackground>
         <Scrollable>
           <Wrapper align="center" justify="center">
             <PageTitle title="Create an account" />
@@ -151,12 +157,12 @@ const Login = () => {
             </AuthBox>
           </Wrapper>
         </Scrollable>
-      </Background>
+      </AnimatedBackground>
     );
   }
 
   return (
-    <Background>
+    <AnimatedBackground>
       <Scrollable>
         <Wrapper align="center" justify="center">
           <PageTitle title="Login" />
@@ -184,21 +190,14 @@ const Login = () => {
           </AuthBox>
         </Wrapper>
       </Scrollable>
-    </Background>
+    </AnimatedBackground>
   );
 };
 
-const Background = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  background-color: ${props => props.theme.mainBackground};
-  background: linear-gradient(-45deg, #363237, #2d4262, #73605b, #d09683);
+const AnimatedBackground = styled(Background)`
+  /* Other gradient variant */
+  /* background: linear-gradient(-45deg, #363237, #2d4262, #73605b, #d09683); */
+  background: linear-gradient(-45deg, #28313b, #7e7e7e, #485461);
   background-size: 400% 400%;
   animation: ${animateGradientBackground} 15s ease infinite;
 

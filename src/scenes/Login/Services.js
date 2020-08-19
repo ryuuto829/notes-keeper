@@ -3,8 +3,8 @@ import * as React from "react";
 import { signInWithGoogle } from "../../server/firebase";
 
 import Button from "../../components/Button";
-import GoogleLogo from "../../shared/icons/GoogleLogo";
 import Divider from "../../components/Divider";
+import GoogleLogo from "../../shared/icons/GoogleLogo";
 
 const Services = () => (
   <>

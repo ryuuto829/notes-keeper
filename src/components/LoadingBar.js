@@ -1,6 +1,7 @@
 // @flow
 import * as React from "react";
 import styled from "styled-components";
+
 import { loadingBar } from "../shared/styles/animations";
 
 const LoadingBar = () => (

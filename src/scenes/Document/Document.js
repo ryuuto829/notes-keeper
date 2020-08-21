@@ -5,21 +5,34 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutRequest } from "../../store/modules/login"; // DELETE LATER
 import {
-  selectDocumentTitle,
   selectDocumentChildren,
   selectDocumentCollection
 } from "../../store/modules/document";
 
 import Content from "./Content";
+import Header from "./Header";
 
 const Document = () => {
   // const { id } = useParams();
   const dispatch = useDispatch();
-  const title = useSelector(selectDocumentTitle);
   const content = useSelector(selectDocumentChildren);
   const collection = useSelector(selectDocumentCollection);
 
+  // old render
   const renderList = list => {
+    return list.map(id => {
+      const { content, children } = collection[id];
+      return (
+        <Container key={id}>
+          <Content text={content} id={id} />
+          {children && renderList(children)}
+        </Container>
+      );
+    });
+  };
+
+  // new render
+  const renderLlistByLevels = list => {
     return list.map(id => {
       const { content, children } = collection[id];
       return (
@@ -33,7 +46,7 @@ const Document = () => {
 
   return (
     <main>
-      <h1>{title}</h1>
+      <Header id={collection.id} />
       <div>{renderList(content)}</div>
       {/*  */}
       <hr />
@@ -44,6 +57,7 @@ const Document = () => {
 
 const Container = styled.div`
   margin-left: 40px;
+  font-size: 14px;
 `;
 
 export default Document;

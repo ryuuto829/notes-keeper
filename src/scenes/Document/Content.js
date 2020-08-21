@@ -1,23 +1,22 @@
 // @flow
-import React, { useState } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  setEditable,
+  selectDocumentEditable
+} from "../../store/modules/document";
 import Editor from "./Editor";
 
 const Content = ({ text, id }) => {
-  const [showEditor, setShowEditor] = useState(false);
-  const [inputText, setInputText] = useState(text);
+  const dispatch = useDispatch();
+  const isEditable = useSelector(selectDocumentEditable) === id;
 
-  if (showEditor) {
-    return (
-      <Editor
-        id={id}
-        text={inputText}
-        setText={setInputText}
-        closeEditor={setShowEditor}
-      />
-    );
+  if (isEditable) {
+    return <Editor id={id} defaultText={text} />;
   }
 
-  return <span onClick={() => setShowEditor(!showEditor)}>{inputText}</span>;
+  return <span onClick={() => dispatch(setEditable({ id: id }))}>{text}</span>;
 };
 
 export default Content;

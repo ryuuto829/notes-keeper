@@ -1,45 +1,72 @@
 // @flow
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
 
-import { updateContent, addItem } from "../../store/modules/document";
+import { updateContent, addItem, addChild } from "../../store/modules/document";
 
-const Editor = ({ text, setText, closeEditor, id }) => {
+const Editor = ({ defaultText, id, className }) => {
   const dispatch = useDispatch();
   const editorRef = useRef();
 
-  useEffect(() => {
-    const onPressEnterHandler = e => {
+  const [inputText, setInputText] = useState(defaultText);
+
+  const onPressEnterHandler = useCallback(
+    e => {
+      const currentCursorPostion = e.target.selectionStart;
+      const inputLength = inputText.length;
+      const isBlockEnd = inputLength === currentCursorPostion;
+
       // On 'Enter' save changes, close editor, add new item below
       if (e.keyCode === 13) {
-        closeEditor(false);
-        dispatch(updateContent({ id: id, text: text }));
-        dispatch(addItem({ parentId: id }));
+        //
+        if (isBlockEnd) {
+          dispatch(updateContent({ id: id, text: inputText }));
+          dispatch(addChild({ currentId: id }));
+          console.log("equal");
+        } else {
+          dispatch(updateContent({ id: id, text: inputText }));
+          // dispatch(addItem({ parentId: id }));
+          console.log("not-equal");
+        }
       }
 
-      // on 'Esc' save changes and close editor
+      // On 'Esc' save changes and close editor
       if (e.keyCode === 27) {
-        closeEditor(false);
-        dispatch(updateContent({ id: id, text: text }));
+        dispatch(updateContent({ id: id, text: inputText }));
       }
-    };
 
+      // On 'Tab' raise item up
+      if (e.keyCode === 9) {
+        //
+      }
+    },
+
+    // Array of dependencies shoud be empty to setup global listeners
+    // on useEffect only once to avoid re-redndering useEffect
+    // on every keystroke, eslint thinks differently.
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [inputText]
+  );
+
+  useEffect(() => {
     // Global event listeners
-
     document.addEventListener("keydown", onPressEnterHandler, false);
 
     return () => {
       document.removeEventListener("keydown", onPressEnterHandler, false);
     };
-  }, [closeEditor, dispatch, id, text]);
+  }, [onPressEnterHandler]);
 
   return (
     <TextField
+      autoFocus
       ref={editorRef}
-      value={text}
-      onChange={e => setText(e.currentTarget.value)}
+      className={className}
+      value={inputText}
+      onChange={e => setInputText(e.currentTarget.value)}
     ></TextField>
   );
 };
@@ -49,6 +76,7 @@ const TextField = styled(TextareaAutosize)`
   overflow: hidden;
   border: 0;
   padding: 0;
+  line-height: 20px;
 `;
 
 export default Editor;

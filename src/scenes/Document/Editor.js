@@ -4,13 +4,13 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
 
-import { updateContent, addItem, addChild } from "../../store/modules/document";
+// import { updateContent, addItem, addChild } from "../../store/modules/document";
 
-const Editor = ({ defaultText, id, className }) => {
+const Editor = ({ text, id, className, parentId, hasChildren }) => {
   const dispatch = useDispatch();
   const editorRef = useRef();
 
-  const [inputText, setInputText] = useState(defaultText);
+  const [inputText, setInputText] = useState(text);
 
   const onPressEnterHandler = useCallback(
     e => {
@@ -22,11 +22,12 @@ const Editor = ({ defaultText, id, className }) => {
       if (e.keyCode === 13) {
         //
         if (isBlockEnd) {
-          dispatch(updateContent({ id: id, text: inputText }));
-          dispatch(addChild({ currentId: id }));
+          // dispatch(updateContent({ id: id, text: inputText }));
+          dispatch();
+          // addChild({ id: id, parentId: parentId, hasChildren: hasChildren })
           console.log("equal");
         } else {
-          dispatch(updateContent({ id: id, text: inputText }));
+          // dispatch(updateContent({ id: id, text: inputText }));
           // dispatch(addItem({ parentId: id }));
           console.log("not-equal");
         }
@@ -34,7 +35,7 @@ const Editor = ({ defaultText, id, className }) => {
 
       // On 'Esc' save changes and close editor
       if (e.keyCode === 27) {
-        dispatch(updateContent({ id: id, text: inputText }));
+        // dispatch(updateContent({ id: id, text: inputText }));
       }
 
       // On 'Tab' raise item up
@@ -62,12 +63,12 @@ const Editor = ({ defaultText, id, className }) => {
 
   return (
     <TextField
-      autoFocus
       ref={editorRef}
+      autoFocus
       className={className}
       value={inputText}
       onChange={e => setInputText(e.currentTarget.value)}
-    ></TextField>
+    />
   );
 };
 

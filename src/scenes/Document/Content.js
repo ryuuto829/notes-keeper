@@ -8,12 +8,13 @@ import {
 } from "../../store/modules/document";
 import Editor from "./Editor";
 
-const Content = ({ text, id }) => {
+const Content = props => {
+  const { text, id } = props;
   const dispatch = useDispatch();
   const isEditable = useSelector(selectDocumentEditable) === id;
 
   if (isEditable) {
-    return <Editor id={id} defaultText={text} />;
+    return <Editor {...props} />;
   }
 
   return <span onClick={() => dispatch(setEditable({ id: id }))}>{text}</span>;

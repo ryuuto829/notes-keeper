@@ -18,27 +18,18 @@ const Document = () => {
   const content = useSelector(selectDocumentChildren);
   const collection = useSelector(selectDocumentCollection);
 
-  // old render
-  const renderList = list => {
+  const renderList = (list, parentId = null) => {
     return list.map(id => {
       const { content, children } = collection[id];
       return (
         <Container key={id}>
-          <Content text={content} id={id} />
-          {children && renderList(children)}
-        </Container>
-      );
-    });
-  };
-
-  // new render
-  const renderLlistByLevels = list => {
-    return list.map(id => {
-      const { content, children } = collection[id];
-      return (
-        <Container key={id}>
-          <Content text={content} id={id} />
-          {children && renderList(children)}
+          <Content
+            text={content}
+            id={id}
+            parentId={parentId}
+            hasChildren={!!children}
+          />
+          {children && renderList(children, id)}
         </Container>
       );
     });

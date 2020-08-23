@@ -3,6 +3,14 @@ import React, { useRef, useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
+import {
+  removeEditable,
+  addItem,
+  moveUp,
+  moveDown,
+  mergeItem,
+  splitItem
+} from "../../store/modules/document";
 
 // import { updateContent, addItem, addChild } from "../../store/modules/document";
 
@@ -20,27 +28,54 @@ const Editor = ({ text, id, className, parentId, hasChildren }) => {
 
       // On 'Enter' save changes, close editor, add new item below
       if (e.keyCode === 13) {
-        //
-        if (isBlockEnd) {
-          // dispatch(updateContent({ id: id, text: inputText }));
-          dispatch();
-          // addChild({ id: id, parentId: parentId, hasChildren: hasChildren })
-          console.log("equal");
+        if (inputLength !== 0) {
+          // current item is not empty -> create new item
+          if (isBlockEnd) {
+            dispatch(
+              addItem({
+                currentId: id
+              })
+            );
+          } else {
+            dispatch(
+              splitItem({
+                currentId: id,
+                splitAt: currentCursorPostion
+              })
+            );
+          }
         } else {
-          // dispatch(updateContent({ id: id, text: inputText }));
-          // dispatch(addItem({ parentId: id }));
-          console.log("not-equal");
+          // currrent item is empty -> change its position
+          dispatch(
+            moveUp({
+              currentId: id
+            })
+          );
         }
       }
 
       // On 'Esc' save changes and close editor
       if (e.keyCode === 27) {
-        // dispatch(updateContent({ id: id, text: inputText }));
+        dispatch(removeEditable({ id: id, text: inputText }));
+      }
+
+      // On 'Backspace'
+      if (e.keyCode === 8) {
+        if (currentCursorPostion === 0) {
+          dispatch(mergeItem({ currentId: id }));
+        }
       }
 
       // On 'Tab' raise item up
       if (e.keyCode === 9) {
-        //
+        // Prevent losing focus
+        e.preventDefault();
+
+        dispatch(
+          moveDown({
+            currentId: id
+          })
+        );
       }
     },
 
@@ -63,8 +98,8 @@ const Editor = ({ text, id, className, parentId, hasChildren }) => {
 
   return (
     <TextField
-      ref={editorRef}
       autoFocus
+      ref={editorRef}
       className={className}
       value={inputText}
       onChange={e => setInputText(e.currentTarget.value)}

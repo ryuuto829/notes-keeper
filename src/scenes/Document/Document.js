@@ -38,7 +38,7 @@ const Document = () => {
   return (
     <main>
       <Header id={collection.id} />
-      <div>{renderList(content)}</div>
+      <div>{renderList(collection["id1"].children)}</div>
       {/*  */}
       <hr />
       <button onClick={() => dispatch(logoutRequest())}>Log out</button>

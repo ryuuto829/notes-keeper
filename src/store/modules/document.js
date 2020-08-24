@@ -1,69 +1,19 @@
 // @flow
 import { createSlice } from "@reduxjs/toolkit";
-import { v1 as uuidv4 } from "uuid";
+import {
+  createArrayCopy,
+  addChildAfter,
+  addChildBefore,
+  removeChild
+} from "../../utils/document";
+import { DOCUMENT_DATA } from "./_test_database"; // initial state, DELETE LATER
 
 export const documentSlice = createSlice({
   name: "document",
-  initialState: {
-    documentId: "id1",
-    editable: null,
-    title: "Current approaches to knowledge management",
-    isShortcuted: false,
-    createdAt: "",
-    updatedAt: "",
-    archivedAt: "",
-    children: ["id2", "id3"],
-    collection: {
-      id1: {
-        children: ["id2", "id3"],
-        level: 0
-      },
-      id2: {
-        content:
-          "- Many technologies for organizing knowledge outside of the brain have arisen in response to these limitations. Physical books and journals proliferated after the invention of the Gutenberg Press, and have since been partially supplanted by word processors, websites, blogs, forums, wikis, and software applications.",
-        children: ["id4", "id5"],
-        parent: "id1",
-        nextNode: "id4",
-        level: 1
-      },
-      id3: {
-        content:
-          "- While we are presented with a plethora of choices for organizing knowledge, almost every technology follows the same basic ‘file cabinet’ format.",
-        children: null,
-        parent: "id1",
-        nextNode: null,
-        level: 1
-      },
-      id4: {
-        content:
-          "- To access the information, the user must remember where they stored the file, what they tagged it with, or use a search function to locate it.",
-        children: null,
-        parent: "id2",
-        nextNode: "id5",
-        level: 2
-      },
-      id5: {
-        content:
-          "- To access the information, the user must remember where they stored the file, what they tagged it with, or use a search function to locate it.",
-        children: ["id6"],
-        parent: "id2",
-        nextNode: "id6",
-        level: 2
-      },
-      id6: {
-        content:
-          "- To access the information, the user must remember where they stored the file, what they tagged it with, or use a search function to locate it.",
-        children: null,
-        parent: "id5",
-        nextNode: "id3",
-        level: 3
-      }
-    }
-  },
+  initialState: DOCUMENT_DATA,
   reducers: {
     splitItem: (state, action) => {
-      const { currentId, splitAt } = action.payload;
-      const newItemId = uuidv4();
+      const { currentId, splitAt, newItemId } = action.payload;
       const parentId = state.collection[currentId].parent;
 
       const remainContent = state.collection[currentId].content.substring(
@@ -104,26 +54,16 @@ export const documentSlice = createSlice({
     },
     mergeItem: (state, action) => {
       const { currentId } = action.payload;
-
       const parentId = state.collection[currentId].parent;
+      const parentChildren = state.collection[parentId].children;
 
       // if its first child and has own children -> do nothing
-      if (
-        state.collection[parentId].children[0] === currentId &&
-        state.collection[currentId].children
-      ) {
+      if (parentChildren[0] === currentId && parentChildren) {
         return state;
       }
 
-      if (state.collection[parentId].children[0] === currentId) {
-        let removeChild = [...state.collection[parentId].children];
-        removeChild.splice(
-          state.collection[parentId].children.indexOf(currentId),
-          1
-        );
-        if (removeChild.length === 0) {
-          removeChild = null;
-        }
+      if (parentChildren[0] === currentId) {
+        const removedChild = removeChild(parentChildren, currentId);
 
         return {
           ...state,
@@ -134,7 +74,8 @@ export const documentSlice = createSlice({
               content:
                 state.collection[parentId].content +
                 state.collection[currentId].content,
-              children: removeChild
+              // children: removeChild
+              children: removedChild
             }
           }
         };
@@ -144,8 +85,8 @@ export const documentSlice = createSlice({
         state.collection[parentId].children.indexOf(currentId) - 1;
       const prevSibling = state.collection[parentId].children[prevSiblingIndex];
 
-      const removeChild = [...state.collection[parentId].children];
-      removeChild.splice(
+      const removedChild = [...state.collection[parentId].children];
+      removedChild.splice(
         state.collection[parentId].children.indexOf(currentId),
         1
       );
@@ -168,7 +109,7 @@ export const documentSlice = createSlice({
             ...state.collection,
             [parentId]: {
               ...state.collection[parentId],
-              children: removeChild
+              children: removedChild
             },
             [prevNode]: {
               ...state.collection[prevNode],
@@ -193,36 +134,29 @@ export const documentSlice = createSlice({
           },
           [parentId]: {
             ...state.collection[parentId],
-            children: removeChild
+            children: removedChild
           }
         }
       };
     },
     moveDown: (state, action) => {
       const { currentId } = action.payload;
-
       const parentId = state.collection[currentId].parent;
+      const parentChildren = state.collection[parentId].children;
 
       // If 'Tab' on first child -> nothing happens
-      if (state.collection[parentId].children[0] === currentId) return state;
+      if (parentChildren[0] === currentId) return state;
 
-      const prevSiblingIndex =
-        state.collection[parentId].children.indexOf(currentId) - 1;
-      const prevSibling = state.collection[parentId].children[prevSiblingIndex];
+      // Find id of the previous sibling
+      const prevSiblingIndex = parentChildren.indexOf(currentId) - 1;
+      const prevSibling = parentChildren[prevSiblingIndex];
 
-      const removeChild = [...state.collection[parentId].children];
-      removeChild.splice(
-        state.collection[parentId].children.indexOf(currentId),
-        1
+      const removedChild = removeChild(parentChildren, currentId);
+
+      const addedChild = createArrayCopy(
+        state.collection[prevSibling].children
       );
-
-      let addChild;
-      if (state.collection[prevSibling].children) {
-        addChild = [...state.collection[prevSibling].children];
-        addChild.push(currentId);
-      } else {
-        addChild = [currentId];
-      }
+      if (addedChild) addedChild.push(currentId);
 
       return {
         ...state,
@@ -231,17 +165,18 @@ export const documentSlice = createSlice({
           // 1. Add new parent
           [currentId]: {
             ...state.collection[currentId],
+            level: state.collection[prevSibling].level + 1,
             parent: prevSibling
           },
           // 2. Add child to sibling
           [prevSibling]: {
             ...state.collection[prevSibling],
-            children: addChild
+            children: addedChild || [currentId]
           },
           // 3. Delete child from parent
           [parentId]: {
             ...state.collection[parentId],
-            children: removeChild
+            children: removedChild
           }
         }
       };
@@ -251,16 +186,14 @@ export const documentSlice = createSlice({
       const parentId = state.collection[currentId].parent;
       const sharedId = state.collection[parentId].parent;
 
-      const removeChild = [...state.collection[parentId].children];
-      removeChild.splice(
-        state.collection[parentId].children.indexOf(currentId),
-        1
+      const removedChild = removeChild(
+        state.collection[parentId].children,
+        currentId
       );
 
-      const addChild = [...state.collection[sharedId].children];
-      addChild.splice(
-        state.collection[sharedId].children.indexOf(parentId) + 1,
-        0,
+      const addedChild = addChildAfter(
+        state.collection[sharedId].children,
+        parentId,
         currentId
       );
 
@@ -272,30 +205,31 @@ export const documentSlice = createSlice({
           // 1. Delete child from the parent
           [parentId]: {
             ...state.collection[parentId],
-            children: removeChild
+            children: removedChild
           },
           // 2. Add to shared parent children
           [sharedId]: {
             ...state.collection[sharedId],
-            children: addChild
+            children: addedChild
           },
-          // 3. change parent of current
+          // 3. Change parent of current
           [currentId]: {
             ...state.collection[currentId],
+            level: state.collection[sharedId].level + 1,
             parent: sharedId
           }
         }
       };
     },
     addItem: (state, action) => {
-      const { currentId } = action.payload;
+      const { currentId, newItemId } = action.payload;
+      const { children, level, parent } = state.collection[currentId];
       const hasChildren = state.collection[currentId].children !== null;
-      const newItemId = uuidv4();
 
+      // if current item has children then add new item as first child
       if (hasChildren) {
-        // Add children
-        const addChild = [...state.collection[currentId].children];
-        addChild.unshift(newItemId);
+        const addedChild = createArrayCopy(children);
+        addedChild.unshift(newItemId);
 
         return {
           ...state,
@@ -304,28 +238,24 @@ export const documentSlice = createSlice({
             ...state.collection,
             // 1. Create new item
             [newItemId]: {
-              content: "---",
+              content: "",
               children: null,
               parent: currentId,
-              level: state.collection[currentId].level + 1
+              level: level + 1
             },
-            // 2. Add new children to parent
+            // 2. Add new child to parent
             [currentId]: {
               ...state.collection[currentId],
-              children: addChild
+              children: addedChild
             }
           }
         };
       }
 
-      const addChild = [
-        ...state.collection[state.collection[currentId].parent].children
-      ];
-      addChild.splice(
-        state.collection[state.collection[currentId].parent].children.indexOf(
-          currentId
-        ) + 1,
-        0,
+      // If current item has no children then add sibling after it
+      const addedChild = addChildAfter(
+        state.collection[parent].children,
+        currentId,
         newItemId
       );
 
@@ -336,15 +266,29 @@ export const documentSlice = createSlice({
           ...state.collection,
           // 1. Create new item
           [newItemId]: {
-            content: "---",
+            content: "",
             children: null,
-            parent: state.collection[currentId].parent,
-            level: state.collection[currentId].level
+            parent: parent,
+            level: level
           },
-          // 2. Add new children to parent of current
-          [state.collection[currentId].parent]: {
-            ...state.collection[state.collection[currentId].parent],
-            children: addChild
+          // 2. Add new child to parent of current
+          [parent]: {
+            ...state.collection[parent],
+            children: addedChild
+          }
+        }
+      };
+    },
+    updateContent: (state, action) => {
+      const { currentId, text } = action.payload;
+
+      return {
+        ...state,
+        collection: {
+          ...state.collection,
+          [currentId]: {
+            ...state.collection[currentId],
+            content: text
           }
         }
       };
@@ -367,7 +311,6 @@ export const documentSlice = createSlice({
 });
 
 export const selectDocumentTitle = state => state.document.title;
-export const selectDocumentChildren = state => state.document.children;
 export const selectDocumentCollection = state => state.document.collection;
 export const selectDocumentEditable = state => state.document.editable;
 
@@ -380,7 +323,6 @@ export const {
   splitItem,
   updateContent,
   addItem,
-  updateTitle,
-  addChild
+  updateTitle
 } = documentSlice.actions;
 export default documentSlice.reducer;

@@ -1,11 +1,14 @@
 import React from "react";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { logoutRequest } from "../../store/modules/login"; // DELETE LATER
 
 import LeftArrowIcon from "../../shared/icons/LeftArrow";
 import IconButton from "./components/IconButton";
 import Flex from "../../components/Flex";
 
 const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }) => {
+  const dispatch = useDispatch();
   // const shortcuted = useSelector(selectShorcuted);
   // const { id } = useSelector(selectDocumentById);
 
@@ -25,6 +28,7 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }) => {
           />
         )}
         <Flex>
+          <button onClick={() => dispatch(logoutRequest())}>Log out</button>
           {/* <Button
             onClick={() => dispatch(updateShortcut({ id: id }))}>
             {shortcuted ? 'Remove from shortcuts' : 'Add to shortcut'}

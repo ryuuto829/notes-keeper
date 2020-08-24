@@ -17,7 +17,19 @@ const Content = props => {
     return <Editor {...props} />;
   }
 
-  return <span onClick={() => dispatch(setEditable({ id: id }))}>{text}</span>;
+  return (
+    <span
+      style={{
+        verticalAlign: "bottom",
+        lineHeight: "1.3",
+        display: "block",
+        minHeight: "20px"
+      }}
+      onClick={() => dispatch(setEditable({ id: id }))}
+    >
+      {text}
+    </span>
+  );
 };
 
 export default Content;

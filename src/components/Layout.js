@@ -47,6 +47,7 @@ const MainWrapper = styled.div`
   padding: 0 20px;
   background-color: #36393f;
   color: white;
+  height: calc(100% - 45px);
 
   /* On small screen sidebar wouldn't push document, but slide on top of it */
   @media (max-width: 600px) {

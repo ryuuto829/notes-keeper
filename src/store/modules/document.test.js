@@ -5,7 +5,8 @@ import document, {
   addItem,
   moveUp,
   moveDown,
-  mergeItem
+  mergeItem,
+  splitItem
 } from "./document";
 
 describe("document reducer", () => {
@@ -253,7 +254,7 @@ describe("document reducer", () => {
     ).toEqual(initialState);
   });
 
-  test("should merge child with parent and append children from it", () => {
+  test("should merge two siblings and append children from it", () => {
     expect(
       document(
         {
@@ -297,6 +298,130 @@ describe("document reducer", () => {
           parent: "id3",
           children: ["id7"],
           level: 3
+        }
+      }
+    });
+  });
+
+  test("should merge sibling with last node of sibling's children", () => {
+    expect(
+      document(
+        {
+          collection: {
+            id2: {
+              children: ["id3", "id4"],
+              level: 1
+            },
+            id3: {
+              children: ["id8", "id9", "id10"],
+              parent: "id2",
+              level: 2
+            },
+            id10: {
+              children: null,
+              content: "Some text"
+            },
+            id4: {
+              content: " Another text",
+              children: ["id6"],
+              parent: "id2",
+              level: 2
+            }
+          }
+        },
+        { type: mergeItem.type, payload: { currentId: "id4" } }
+      )
+    ).toEqual({
+      editable: "id10",
+      collection: {
+        id2: {
+          children: ["id3"],
+          level: 1
+        },
+        id3: {
+          children: ["id8", "id9", "id10"],
+          parent: "id2",
+          level: 2
+        },
+        id10: {
+          children: null,
+          content: "Some text Another text"
+        }
+      }
+    });
+  });
+
+  test("should merge first child without own children with parent", () => {
+    expect(
+      document(
+        {
+          collection: {
+            id2: {
+              content: "Parent text",
+              children: ["id4", "id3", "id5"],
+              level: 1
+            },
+            id4: {
+              content: " Child text",
+              children: null,
+              parent: "id2",
+              level: 2
+            }
+          }
+        },
+        { type: mergeItem.type, payload: { currentId: "id4" } }
+      )
+    ).toEqual({
+      editable: "id2",
+      collection: {
+        id2: {
+          content: "Parent text Child text",
+          children: ["id3", "id5"],
+          level: 1
+        }
+      }
+    });
+  });
+
+  test("should merge first child without own children with parent", () => {
+    expect(
+      document(
+        {
+          collection: {
+            id1: {
+              children: ["id2", "id3"],
+              level: 0
+            },
+            id2: {
+              content: "Some long text that need to be splited",
+              children: ["id4", "id8", "id9"],
+              parent: "id1",
+              level: 1
+            }
+          }
+        },
+        {
+          type: splitItem.type,
+          payload: { currentId: "id2", splitAt: 11, newItemId: "id10" }
+        }
+      )
+    ).toEqual({
+      collection: {
+        id1: {
+          children: ["id10", "id2", "id3"],
+          level: 0
+        },
+        id10: {
+          content: "Some long t",
+          children: null,
+          parent: "id1",
+          level: 1
+        },
+        id2: {
+          content: "ext that need to be splited",
+          children: ["id4", "id8", "id9"],
+          parent: "id1",
+          level: 1
         }
       }
     });

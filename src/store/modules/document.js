@@ -4,7 +4,10 @@ import {
   createArrayCopy,
   addChildAfter,
   addChildBefore,
-  removeChild
+  removeChild,
+  getLastNode,
+  changeParent,
+  removeFromCollection
 } from "../../utils/document";
 import { DOCUMENT_DATA } from "./_test_database"; // initial state, DELETE LATER
 
@@ -24,10 +27,9 @@ export const documentSlice = createSlice({
         splitAt
       );
 
-      const addChild = [...state.collection[parentId].children];
-      addChild.splice(
-        state.collection[parentId].children.indexOf(currentId),
-        0,
+      const addedChild = addChildBefore(
+        state.collection[parentId].children,
+        currentId,
         newItemId
       );
 
@@ -37,7 +39,7 @@ export const documentSlice = createSlice({
           ...state.collection,
           [parentId]: {
             ...state.collection[parentId],
-            children: addChild
+            children: addedChild
           },
           [newItemId]: {
             content: newContent,
@@ -57,24 +59,30 @@ export const documentSlice = createSlice({
       const parentId = state.collection[currentId].parent;
       const parentChildren = state.collection[parentId].children;
 
-      // if its first child and has own children -> do nothing
-      if (parentChildren[0] === currentId && parentChildren) {
+      // If its first child and has own children then do nothing
+      if (
+        parentChildren[0] === currentId &&
+        state.collection[currentId].children
+      ) {
         return state;
       }
 
+      const updatedState = removeFromCollection(state, currentId);
+
+      // If first child has no children then merge with parent
       if (parentChildren[0] === currentId) {
         const removedChild = removeChild(parentChildren, currentId);
 
         return {
           ...state,
+          editable: parentId,
           collection: {
-            ...state.collection,
+            ...updatedState,
             [parentId]: {
               ...state.collection[parentId],
               content:
                 state.collection[parentId].content +
                 state.collection[currentId].content,
-              // children: removeChild
               children: removedChild
             }
           }
@@ -85,28 +93,20 @@ export const documentSlice = createSlice({
         state.collection[parentId].children.indexOf(currentId) - 1;
       const prevSibling = state.collection[parentId].children[prevSiblingIndex];
 
-      const removedChild = [...state.collection[parentId].children];
-      removedChild.splice(
-        state.collection[parentId].children.indexOf(currentId),
-        1
+      const removedChild = removeChild(
+        state.collection[parentId].children,
+        currentId
       );
 
+      // Merge with last node of previous sibling's children
       if (state.collection[prevSibling].children) {
-        const getLastNode = id => {
-          if (state.collection[id].children !== null) {
-            const index = state.collection[id].children.length - 1;
-            return getLastNode(state.collection[id].children[index]);
-          }
-          return id;
-        };
-
-        const prevNode = getLastNode(prevSibling);
+        const prevNode = getLastNode(state, prevSibling);
 
         return {
           ...state,
           editable: prevNode,
           collection: {
-            ...state.collection,
+            ...updatedState,
             [parentId]: {
               ...state.collection[parentId],
               children: removedChild
@@ -121,10 +121,17 @@ export const documentSlice = createSlice({
         };
       }
 
+      // Merge with previous sibling
+      const updatedChildren = changeParent(
+        state,
+        state.collection[currentId].children,
+        prevSibling
+      );
+
       return {
         ...state,
         collection: {
-          ...state.collection,
+          ...updatedState,
           [prevSibling]: {
             ...state.collection[prevSibling],
             content:
@@ -135,7 +142,8 @@ export const documentSlice = createSlice({
           [parentId]: {
             ...state.collection[parentId],
             children: removedChild
-          }
+          },
+          ...updatedChildren
         }
       };
     },
@@ -224,12 +232,11 @@ export const documentSlice = createSlice({
     addItem: (state, action) => {
       const { currentId, newItemId } = action.payload;
       const { children, level, parent } = state.collection[currentId];
-      const hasChildren = state.collection[currentId].children !== null;
 
       // if current item has children then add new item as first child
-      if (hasChildren) {
+      if (children !== null) {
         const addedChild = createArrayCopy(children);
-        addedChild.unshift(newItemId);
+        if (addedChild) addedChild.unshift(newItemId);
 
         return {
           ...state,

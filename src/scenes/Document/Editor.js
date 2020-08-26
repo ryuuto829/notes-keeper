@@ -14,11 +14,37 @@ import {
 } from "../../store/modules/document";
 import { v1 as uuidv4 } from "uuid";
 
-const Editor = ({ text, id, className, hasChildren, level }) => {
+const Editor = ({
+  text,
+  id,
+  className,
+  hasChildren,
+  level,
+  cursorPosition
+}) => {
   const dispatch = useDispatch();
-  const editorRef = useRef();
+  const editorRef = useRef(null);
+  const updatedText = useRef();
 
   const [inputText, setInputText] = useState(text);
+
+  // Store the latest version of the store 'inputText'
+  useEffect(
+    () => () => {
+      updatedText.current = inputText;
+    },
+    [inputText]
+  );
+
+  // On component unmount we save changes in content to the store,
+  // we can not dispatch 'inputTex', because it'll send the old (initial) state,
+  // that's why we use 'useRef' to get access to the latest state value
+  useEffect(() => {
+    return () => {
+      dispatch(updateContent({ currentId: id, text: updatedText.current }));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onPressEnterHandler = useCallback(
     e => {
@@ -31,16 +57,11 @@ const Editor = ({ text, id, className, hasChildren, level }) => {
       if (e.keyCode === 13) {
         e.preventDefault();
         if (inputLength !== 0) {
-          dispatch(updateContent({ currentId: id, text: inputText }));
           // current item is not empty -> create new item
           if (isBlockEnd) {
-            dispatch(
-              addItem({
-                currentId: id,
-                newItemId: uuidv4()
-              })
-            );
+            dispatch(addItem({ currentId: id, newItemId: uuidv4() }));
           } else {
+            dispatch(updateContent({ currentId: id, text: inputText }));
             dispatch(
               splitItem({
                 currentId: id,
@@ -62,7 +83,6 @@ const Editor = ({ text, id, className, hasChildren, level }) => {
 
       // On 'Esc' save changes and close editor
       if (e.keyCode === 27) {
-        dispatch(updateContent({ currentId: id, text: inputText }));
         dispatch(removeEditable());
       }
 
@@ -78,44 +98,38 @@ const Editor = ({ text, id, className, hasChildren, level }) => {
       if (e.keyCode === 9) {
         // Prevent losing focus
         e.preventDefault();
-        dispatch(updateContent({ currentId: id, text: inputText }));
 
-        dispatch(
-          moveDown({
-            currentId: id
-          })
-        );
+        dispatch(moveDown({ currentId: id }));
       }
     },
-
-    // Array of dependencies shoud be empty to setup global listeners
-    // on useEffect only once to avoid re-redndering useEffect
-    // on every keystroke, eslint thinks differently.
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [inputText]
   );
 
   useEffect(() => {
-    // Global event listeners
+    // Setup global event listeners
     document.addEventListener("keydown", onPressEnterHandler, false);
 
     return () => {
       document.removeEventListener("keydown", onPressEnterHandler, false);
     };
-  }, [onPressEnterHandler]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Receive cursor position as a prop, then set focus on textarea
+  // and move cursor to given position
+  useEffect(() => {
+    editorRef.current.focus();
+    editorRef.current.selectionStart = cursorPosition;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <TextField
-      autoFocus
       ref={editorRef}
       className={className}
       value={inputText}
       onChange={e => setInputText(e.currentTarget.value)}
-      onBlur={() => {
-        dispatch(updateContent({ currentId: id, text: inputText }));
-        dispatch(removeEditable());
-      }}
     />
   );
 };

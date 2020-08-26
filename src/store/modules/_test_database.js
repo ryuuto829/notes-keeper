@@ -13,7 +13,7 @@ export const DOCUMENT_DATA = {
     },
     id2: {
       content:
-        "- Many technologies for organizing knowledge outside of the brain have arisen in response to these limitations. Physical books and journals proliferated after the invention of the Gutenberg Press, and have since been partially supplanted by word processors, websites, blogs, forums, wikis, and software applications.",
+        "- Many technologies for organizing knowledge outside of the brain have arisen in response to these limitations. [[Physical books]] and journals proliferated after the invention of the Gutenberg Press, and have since been partially supplanted by word processors, websites, blogs, forums, wikis, and software applications.",
       children: ["id4", "id5"],
       parent: "id1",
       nextNode: "id4",
@@ -45,7 +45,7 @@ export const DOCUMENT_DATA = {
     },
     id6: {
       content:
-        "- To access the information, the user must remember where they stored the file, what they tagged it with, or use a search function to locate it.",
+        "- To access the information, the [[user]] must remember where they stored the file, what they tagged it with, or use a search function to locate it.",
       children: null,
       parent: "id5",
       nextNode: "id3",

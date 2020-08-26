@@ -1,6 +1,9 @@
 // @flow
-// Thanks to author of this post https://stackoverflow.com/a/48812529
-export const getSelectionOffsetRelativeTo = (parentElement, currentNode) => {
+export const getSelectionOffsetRelativeTo = (
+  // $FlowIssue no type for window object
+  parentElement: any,
+  currentNode: any
+): number => {
   let offset = 0,
     prevSibling,
     nodeContent;
@@ -18,6 +21,15 @@ export const getSelectionOffsetRelativeTo = (parentElement, currentNode) => {
 
   while ((prevSibling = (prevSibling || currentNode).previousSibling)) {
     nodeContent = prevSibling.innerText || prevSibling.nodeValue || "";
+
+    if (prevSibling.nodeName === "STRONG") {
+      offset += 4;
+    }
+
+    if (prevSibling.nodeName === "EM") {
+      offset += 2;
+    }
+
     offset += nodeContent.length;
   }
 

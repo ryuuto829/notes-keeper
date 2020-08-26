@@ -1,5 +1,6 @@
 // @flow
 import React, { useState, useRef } from "react";
+import ReactMarkdown from "react-markdown/with-html";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
@@ -7,6 +8,7 @@ import {
   selectDocumentEditable
 } from "../../store/modules/document";
 import { getSelectionOffsetRelativeTo } from "../../utils/cursorPersistent";
+import styled from "styled-components";
 
 import Editor from "./Editor";
 
@@ -17,7 +19,27 @@ const REGEX = /\[\[.*?\]\]/g;
 const highlightPattern = (text, pattern) => {
   const splitText = text.split(pattern);
 
-  if (splitText.length <= 1) return text;
+  if (splitText.length <= 1) {
+    return (
+      <ReactMarkdown
+        source={text}
+        unwrapDisallowed={true}
+        allowedTypes={[
+          "paragraph",
+          "image",
+          "strong",
+          "blockquote",
+          "link",
+          "emphasis",
+          "text"
+        ]}
+        renderers={{
+          paragraph: React.Fragment,
+          image: props => <StyledImage {...props} />
+        }}
+      />
+    );
+  }
 
   const matches = text.match(pattern);
 
@@ -26,7 +48,13 @@ const highlightPattern = (text, pattern) => {
       matches[index]
         ? [
             ...arr,
-            element,
+            <ReactMarkdown
+              key={index + "first"}
+              source={element}
+              renderers={{
+                paragraph: React.Fragment
+              }}
+            />,
             <React.Fragment key={index}>
               <span style={{ color: "yellow" }}>[[</span>
               <Link to="/">
@@ -35,7 +63,14 @@ const highlightPattern = (text, pattern) => {
               <span style={{ color: "yellow" }}>]]</span>
             </React.Fragment>
           ]
-        : [...arr, element],
+        : [
+            ...arr,
+            <ReactMarkdown
+              key={index + "last"}
+              source={element}
+              renderers={{ paragraph: React.Fragment }}
+            />
+          ],
     []
   );
 };
@@ -53,33 +88,34 @@ const Content = props => {
     return <Editor {...props} cursorPosition={cursorPosition} />;
   }
 
-  const onClickHandler = () => {
+  const onClickHandler = e => {
     // Remember cursor position to set focus on textarea
-    const position = getSelectionOffsetRelativeTo(parentWrapper.current);
-    setCursorPosition(position);
+    if (e.target.nodeName !== "IMG") {
+      const position = getSelectionOffsetRelativeTo(parentWrapper.current);
+      setCursorPosition(position);
+    }
 
     dispatch(setEditable({ id: id }));
   };
 
   return (
-    <>
-      {/* We need additional parent wrapper for receiving global <div>
-      cursor position instead of local <span> */}
-      <div ref={parentWrapper}>
-        <span
-          style={{
-            verticalAlign: "bottom",
-            lineHeight: "1.3",
-            display: "block",
-            minHeight: "20px"
-          }}
-          onClick={onClickHandler}
-        >
-          {highlightPattern(text, REGEX)}
-        </span>
-      </div>
-    </>
+    <div
+      ref={parentWrapper}
+      onClick={onClickHandler}
+      style={{
+        verticalAlign: "bottom",
+        lineHeight: "1.3",
+        display: "block",
+        minHeight: "20px"
+      }}
+    >
+      {text && highlightPattern(text, REGEX)}
+    </div>
   );
 };
+
+const StyledImage = styled.img`
+  max-width: 100%;
+`;
 
 export default Content;

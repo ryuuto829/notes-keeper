@@ -130,6 +130,7 @@ export const documentSlice = createSlice({
 
       return {
         ...state,
+        editable: prevSibling,
         collection: {
           ...updatedState,
           [prevSibling]: {

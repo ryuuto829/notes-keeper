@@ -12,7 +12,7 @@ import {
   splitItem,
   updateContent
 } from "../../store/modules/document";
-import { v1 as uuidv4 } from "uuid";
+import shortId from "../../utils/shortID";
 
 const Editor = ({
   text,
@@ -24,56 +24,42 @@ const Editor = ({
 }) => {
   const dispatch = useDispatch();
   const editorRef = useRef(null);
-  const updatedText = useRef();
 
   const [inputText, setInputText] = useState(text);
-
-  // Store the latest version of the store 'inputText'
-  useEffect(
-    () => () => {
-      updatedText.current = inputText;
-    },
-    [inputText]
-  );
-
-  // On component unmount we save changes in content to the store,
-  // we can not dispatch 'inputTex', because it'll send the old (initial) state,
-  // that's why we use 'useRef' to get access to the latest state value
-  useEffect(() => {
-    return () => {
-      dispatch(updateContent({ currentId: id, text: updatedText.current }));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const onPressEnterHandler = useCallback(
     e => {
       const currentCursorPostion = e.target.selectionStart;
       const currentCursorEnd = e.target.selectionEnd;
       const inputLength = inputText.length;
-      const isBlockEnd = inputLength === currentCursorPostion;
+      const isBlockEnd = inputLength === currentCursorEnd;
+      const isBlockStart = currentCursorPostion === 0 && currentCursorEnd === 0;
 
-      // On 'Enter' save changes, close editor, add new item below
+      // On 'Enter'
       if (e.keyCode === 13) {
         e.preventDefault();
+
         if (inputLength !== 0) {
+          dispatch(updateContent({ currentId: id, text: inputText }));
+
           // current item is not empty -> create new item
           if (isBlockEnd) {
-            dispatch(addItem({ currentId: id, newItemId: uuidv4() }));
+            dispatch(addItem({ currentId: id, newItemId: shortId() }));
           } else {
-            dispatch(updateContent({ currentId: id, text: inputText }));
             dispatch(
               splitItem({
                 currentId: id,
-                newItemId: uuidv4(),
+                newItemId: shortId(),
                 splitAt: currentCursorPostion
               })
             );
+
             setInputText(
               inputText.substring(currentCursorPostion, inputText.length)
             );
           }
         } else {
+          dispatch(updateContent({ currentId: id, text: inputText }));
           // currrent item is empty -> change its position
           if (level > 1) {
             dispatch(moveUp({ currentId: id }));
@@ -81,24 +67,24 @@ const Editor = ({
         }
       }
 
-      // On 'Esc' save changes and close editor
+      // On 'Esc'
       if (e.keyCode === 27) {
+        dispatch(updateContent({ currentId: id, text: inputText }));
         dispatch(removeEditable());
       }
 
       // On 'Backspace'
       if (e.keyCode === 8) {
-        if (currentCursorPostion === 0 && currentCursorEnd === 0) {
+        if (isBlockStart) {
           dispatch(updateContent({ currentId: id, text: inputText }));
           dispatch(mergeItem({ currentId: id }));
         }
       }
 
-      // On 'Tab' raise item up
+      // On 'Tab'
       if (e.keyCode === 9) {
-        // Prevent losing focus
         e.preventDefault();
-
+        dispatch(updateContent({ currentId: id, text: inputText }));
         dispatch(moveDown({ currentId: id }));
       }
     },
@@ -114,7 +100,7 @@ const Editor = ({
       document.removeEventListener("keydown", onPressEnterHandler, false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onPressEnterHandler]);
 
   // Receive cursor position as a prop, then set focus on textarea
   // and move cursor to given position

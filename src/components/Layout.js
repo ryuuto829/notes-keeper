@@ -40,14 +40,28 @@ const Layout = ({ children }: Props) => {
 
 const MainWrapper = styled.div`
   position: fixed;
-  top: 45px;
+  top: 48px;
   right: 0px;
   transition: all 200ms ease-in 0s;
   width: ${props => (props.isLocked ? "calc(100vw - 232px)" : "100%")};
   padding: 0 20px;
   background-color: #36393f;
-  color: white;
+  color: #dcddde;
   height: calc(100% - 45px);
+
+  &:before {
+    content: "";
+    position: absolute;
+    display: block;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    box-shadow: 0 1px 0 rgba(4, 4, 5, 0.2), 0 1.5px 0 rgba(6, 6, 7, 0.05),
+      0 2px 0 rgba(4, 4, 5, 0.05);
+    z-index: 1;
+    pointer-events: none;
+  }
 
   /* On small screen sidebar wouldn't push document, but slide on top of it */
   @media (max-width: 600px) {

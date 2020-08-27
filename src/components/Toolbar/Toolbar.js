@@ -41,7 +41,7 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }) => {
 };
 
 const Wrapper = styled.div`
-  height: 45px;
+  height: 48px;
   position: fixed;
   width: 100%;
   padding: 0 20px;

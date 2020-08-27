@@ -1,22 +1,22 @@
 // @flow
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { selectDocumentTitle, updateTitle } from "../../store/modules/document";
+import { useSelector } from "react-redux";
+import { selectDocumentTitle } from "../../store/modules/document";
 
 import Editor from "./Editor";
 
 const Header = ({ id }) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const title = useSelector(selectDocumentTitle);
   const [titleEditable, setTitleEditable] = useState(false);
   const [inputText, setInputText] = useState(title);
 
-  const submitInputHandler = e => {
-    e.preventDefault();
-    setTitleEditable(false);
-    dispatch(updateTitle({ title: inputText }));
-  };
+  // const submitInputHandler = e => {
+  //   e.preventDefault();
+  //   setTitleEditable(false);
+  //   dispatch(updateTitle({ title: inputText }));
+  // };
 
   if (titleEditable) {
     // return (
@@ -40,9 +40,9 @@ const Title = styled.h1`
   font-size: 26px;
 `;
 
-const TextField = styled.input`
-  border: 0;
-  outline: 0;
-`;
+// const TextField = styled.input`
+//   border: 0;
+//   outline: 0;
+// `;
 
 export default Header;

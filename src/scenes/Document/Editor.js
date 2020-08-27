@@ -14,6 +14,15 @@ import {
 } from "../../store/modules/document";
 import shortId from "../../utils/shortID";
 
+type Props = {
+  text: string,
+  id: string,
+  className?: string,
+  hasChildren: boolean,
+  level: string,
+  cursorPosition: number
+};
+
 const Editor = ({
   text,
   id,
@@ -21,7 +30,7 @@ const Editor = ({
   hasChildren,
   level,
   cursorPosition
-}) => {
+}: Props) => {
   const dispatch = useDispatch();
   const editorRef = useRef(null);
 
@@ -116,24 +125,31 @@ const Editor = ({
       className={className}
       value={inputText}
       onChange={e => setInputText(e.currentTarget.value)}
+      onBlur={() => {
+        dispatch(updateContent({ currentId: id, text: inputText }));
+        dispatch(removeEditable());
+      }}
     />
   );
 };
 
 const TextField = styled(TextareaAutosize)`
-  width: 100%;
   overflow: hidden;
   border: 0;
   outline: 0;
-  padding: 0;
   margin: 0;
-  line-height: 20px;
   font: inherit;
-  background-color: grey;
+  background-color: initial;
   color: inherit;
   resize: none;
-  line-height: 1.3;
+  display: block;
   vertical-align: bottom;
+  line-height: 1.5em;
+  min-height: 20px;
+  width: 100%;
+  padding: 4px 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 `;
 
 export default Editor;

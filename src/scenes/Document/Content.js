@@ -1,81 +1,22 @@
 // @flow
 import React, { useState, useRef } from "react";
-import ReactMarkdown from "react-markdown/with-html";
+import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import {
   setEditable,
   selectDocumentEditable
 } from "../../store/modules/document";
 import { getSelectionOffsetRelativeTo } from "../../utils/cursorPersistent";
-import styled from "styled-components";
 
 import Editor from "./Editor";
+import Contents from "./components/Contents";
 
-// Select text like [[Text]]
-const REGEX = /\[\[.*?\]\]/g;
-
-// Replace [[Text]] with link for 'Text' page
-const highlightPattern = (text, pattern) => {
-  const splitText = text.split(pattern);
-
-  if (splitText.length <= 1) {
-    return (
-      <ReactMarkdown
-        source={text}
-        unwrapDisallowed={true}
-        allowedTypes={[
-          "paragraph",
-          "image",
-          "strong",
-          "blockquote",
-          "link",
-          "emphasis",
-          "text"
-        ]}
-        renderers={{
-          paragraph: React.Fragment,
-          image: props => <StyledImage {...props} />
-        }}
-      />
-    );
-  }
-
-  const matches = text.match(pattern);
-
-  return splitText.reduce(
-    (arr, element, index) =>
-      matches[index]
-        ? [
-            ...arr,
-            <ReactMarkdown
-              key={index + "first"}
-              source={element}
-              renderers={{
-                paragraph: React.Fragment
-              }}
-            />,
-            <React.Fragment key={index}>
-              <span style={{ color: "yellow" }}>[[</span>
-              <Link to="/">
-                {matches[index].replace("[[", "").replace("]]", "")}
-              </Link>
-              <span style={{ color: "yellow" }}>]]</span>
-            </React.Fragment>
-          ]
-        : [
-            ...arr,
-            <ReactMarkdown
-              key={index + "last"}
-              source={element}
-              renderers={{ paragraph: React.Fragment }}
-            />
-          ],
-    []
-  );
+type Props = {
+  text: string,
+  id: string
 };
 
-const Content = props => {
+const Content = (props: Props) => {
   const { text, id } = props;
 
   const dispatch = useDispatch();
@@ -99,23 +40,24 @@ const Content = props => {
   };
 
   return (
-    <div
-      ref={parentWrapper}
-      onClick={onClickHandler}
-      style={{
-        verticalAlign: "bottom",
-        lineHeight: "1.3",
-        display: "block",
-        minHeight: "20px"
-      }}
-    >
-      {text && highlightPattern(text, REGEX)}
-    </div>
+    <>
+      {/* We need additional wrapper to get global cursor position */}
+      <Container ref={parentWrapper} onClick={onClickHandler}>
+        {text && <Contents text={text} />}
+      </Container>
+    </>
   );
 };
 
-const StyledImage = styled.img`
-  max-width: 100%;
+const Container = styled.div`
+  display: block;
+  vertical-align: bottom;
+  line-height: 1.5em;
+  min-height: 20px;
+  width: 100%;
+  padding: 4px 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 `;
 
 export default Content;

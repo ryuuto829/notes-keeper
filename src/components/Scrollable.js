@@ -24,8 +24,7 @@ const Wrapper = styled.div`
   overscroll-behavior: none;
 
   &::-webkit-scrollbar {
-    width: 5px;
-    width: ${props => (props.size === "large" ? "12px" : "5px")};
+    width: ${props => (props.size === "large" ? "10px" : "5px")};
   }
 
   &::-webkit-scrollbar-thumb {
@@ -62,6 +61,12 @@ const Wrapper = styled.div`
             ? "rgba(0, 0, 0, 0.2)"
             : "background-color: #3a3a3a"};
       }
+    }
+  }
+
+  @media (max-width: 600px) {
+    &::-webkit-scrollbar {
+      width: ${props => (props.size === "large" ? "8px" : "5px")};
     }
   }
 `;

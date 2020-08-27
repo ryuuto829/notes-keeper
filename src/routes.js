@@ -7,6 +7,8 @@ import Layout from "./components/Layout";
 import Login from "./scenes/Login";
 import Document from "./scenes/Document";
 
+const Empty = () => <div>Empty</div>; // DELETE LATER
+
 const Routes = () => (
   <Switch>
     <Route exact path="/">
@@ -16,7 +18,7 @@ const Routes = () => (
     <Route exact path="/register" component={Login} />
     <Authenticated>
       <Layout>
-        <Route exact path="/home" component={Document} />
+        <Route exact path="/home" component={Empty} />
         <Route exact path="/page/:id" component={Document} />
       </Layout>
     </Authenticated>

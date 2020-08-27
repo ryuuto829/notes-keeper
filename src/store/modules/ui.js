@@ -1,4 +1,3 @@
-// @flow
 import { createSlice } from "@reduxjs/toolkit";
 
 // Generate fake dataset

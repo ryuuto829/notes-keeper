@@ -1,35 +1,25 @@
 // @flow
 import React from "react";
 import styled from "styled-components";
-// import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  selectDocumentChildren,
-  selectDocumentCollection
-} from "../../store/modules/document";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectDocumentCollection } from "../../store/modules/document";
 
-import Content from "./Content";
+import ListItem from "./ListItem";
 import Header from "./Header";
 import Scrollable from "../../components/Scrollable";
 
 const Document = () => {
-  // const { id } = useParams();
-  // const dispatch = useDispatch();
+  const { id } = useParams();
   const collection = useSelector(selectDocumentCollection);
 
-  const renderList = list => {
+  const renderList = (list: Array<string>) => {
     return list.map(id => {
       const { content, children, level } = collection[id];
       return (
-        <Container key={id}>
-          <Content
-            text={content}
-            id={id}
-            level={level}
-            hasChildren={!!children}
-          />
+        <ListItem key={id} id={id} level={level} content={content}>
           {children && renderList(children, id)}
-        </Container>
+        </ListItem>
       );
     });
   };
@@ -38,20 +28,19 @@ const Document = () => {
     <Scrollable>
       <Wrapper>
         <Header id={collection.id} />
-        <div>{renderList(collection["id1"].children)}</div>
+        {renderList(collection[id].children)}
       </Wrapper>
     </Scrollable>
   );
 };
 
-const Container = styled.div`
-  margin-left: 40px;
-  font-size: 14px;
-  min-height: 20px;
-`;
-
 const Wrapper = styled.main`
   padding: 0 20px;
+  padding-bottom: 120px;
+
+  @media (max-width: 600px) {
+    padding: 0 10px;
+  }
 `;
 
 export default Document;

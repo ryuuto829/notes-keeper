@@ -2,7 +2,7 @@
 import * as React from "react";
 import styled from "styled-components";
 
-import Flex from "../../components/Flex";
+import Flex from "../../../components/Flex";
 
 type Props = {
   clicked: () => void,

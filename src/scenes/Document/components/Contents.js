@@ -21,6 +21,7 @@ const Contents = ({ text }: Props) => {
 
   return splitText.reduce(
     (arr, element, index) =>
+      // $FlowFixMe
       matches[index]
         ? [
             ...arr,

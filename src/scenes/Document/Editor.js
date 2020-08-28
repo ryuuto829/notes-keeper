@@ -17,28 +17,22 @@ import shortId from "../../utils/shortID";
 type Props = {
   text: string,
   id: string,
-  className?: string,
-  hasChildren: boolean,
-  level: string,
-  cursorPosition: number
+  hasChildren?: boolean,
+  level?: number,
+  cursorPosition?: number
 };
 
-const Editor = ({
-  text,
-  id,
-  className,
-  hasChildren,
-  level,
-  cursorPosition
-}: Props) => {
+const Editor = ({ text, id, hasChildren, level, cursorPosition }: Props) => {
   const dispatch = useDispatch();
-  const editorRef = useRef(null);
+  const editorRef = useRef();
 
   const [inputText, setInputText] = useState(text);
 
   const onPressEnterHandler = useCallback(
-    e => {
+    (e: KeyboardEvent) => {
+      // $FlowFixMe listeners add native event, but not synthetic
       const currentCursorPostion = e.target.selectionStart;
+      // $FlowFixMe listeners add native event, but not synthetic
       const currentCursorEnd = e.target.selectionEnd;
       const inputLength = inputText.length;
       const isBlockEnd = inputLength === currentCursorEnd;
@@ -70,7 +64,7 @@ const Editor = ({
         } else {
           dispatch(updateContent({ currentId: id, text: inputText }));
           // currrent item is empty -> change its position
-          if (level > 1) {
+          if (level && level > 1) {
             dispatch(moveUp({ currentId: id }));
           }
         }
@@ -103,6 +97,7 @@ const Editor = ({
 
   useEffect(() => {
     // Setup global event listeners
+    // $FlowFixMe listeners add native event, but not synthetic
     document.addEventListener("keydown", onPressEnterHandler, false);
 
     return () => {
@@ -114,15 +109,17 @@ const Editor = ({
   // Receive cursor position as a prop, then set focus on textarea
   // and move cursor to given position
   useEffect(() => {
-    editorRef.current.focus();
-    editorRef.current.selectionStart = cursorPosition;
+    if (editorRef.current) {
+      editorRef.current.focus();
+      editorRef.current.selectionStart = cursorPosition;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [editorRef]);
 
   return (
     <TextField
+      // $FlowFixMe
       ref={editorRef}
-      className={className}
       value={inputText}
       onChange={e => setInputText(e.currentTarget.value)}
       onBlur={() => {

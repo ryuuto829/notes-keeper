@@ -10,12 +10,17 @@ import {
   removeFromCollection
 } from "../../utils/document";
 import { DOCUMENT_DATA } from "./_test_database"; // initial state, DELETE LATER
+import type { DocumentStore } from '../../types/DocumentStore';
+
+type State = {
+  document: DocumentStore
+};
 
 export const documentSlice = createSlice({
   name: "document",
   initialState: DOCUMENT_DATA,
   reducers: {
-    splitItem: (state, action) => {
+    splitItem: (state: DocumentStore, action) => {
       const { currentId, splitAt, newItemId } = action.payload;
       const parentId = state.collection[currentId].parent;
 
@@ -54,7 +59,7 @@ export const documentSlice = createSlice({
         }
       };
     },
-    mergeItem: (state, action) => {
+    mergeItem: (state: DocumentStore, action) => {
       const { currentId } = action.payload;
       const parentId = state.collection[currentId].parent;
       const parentChildren = state.collection[parentId].children;
@@ -148,7 +153,7 @@ export const documentSlice = createSlice({
         }
       };
     },
-    moveDown: (state, action) => {
+    moveDown: (state: DocumentStore, action) => {
       const { currentId } = action.payload;
       const parentId = state.collection[currentId].parent;
       const parentChildren = state.collection[parentId].children;
@@ -190,7 +195,7 @@ export const documentSlice = createSlice({
         }
       };
     },
-    moveUp: (state, action) => {
+    moveUp: (state: DocumentStore, action) => {
       const { currentId } = action.payload;
       const parentId = state.collection[currentId].parent;
       const sharedId = state.collection[parentId].parent;
@@ -230,7 +235,7 @@ export const documentSlice = createSlice({
         }
       };
     },
-    addItem: (state, action) => {
+    addItem: (state: DocumentStore, action) => {
       const { currentId, newItemId } = action.payload;
       const { children, level, parent } = state.collection[currentId];
 
@@ -287,7 +292,7 @@ export const documentSlice = createSlice({
         }
       };
     },
-    updateContent: (state, action) => {
+    updateContent: (state: DocumentStore, action) => {
       const { currentId, text } = action.payload;
 
       return {
@@ -301,7 +306,7 @@ export const documentSlice = createSlice({
         }
       };
     },
-    setEditable: (state, action) => {
+    setEditable: (state: DocumentStore, action) => {
       const { id } = action.payload;
 
       return {
@@ -318,9 +323,10 @@ export const documentSlice = createSlice({
   }
 });
 
-export const selectDocumentTitle = state => state.document.title;
-export const selectDocumentCollection = state => state.document.collection;
-export const selectDocumentEditable = state => state.document.editable;
+export const selectDocumentTitle = (state: State) => state.document.title;
+export const selectDocumentCollection = (state: State) => state.document.collection;
+export const selectDocumentEditable = (state: State) => state.document.editable;
+export const selectDocumentId = (state: State) => state.document.documentId;
 
 export const {
   setEditable,

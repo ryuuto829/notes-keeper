@@ -7,7 +7,7 @@ import Flex from "../../Flex";
 
 type Props = {
   to: string,
-  label: string,
+  label?: string,
   icon?: React.Element<*>,
   children?: React.Node,
   className?: string

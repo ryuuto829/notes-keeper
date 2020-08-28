@@ -4,8 +4,8 @@ import { useState } from "react";
 import styled from "styled-components";
 
 import Controls from "./Controls";
-import Content from "./Content";
-import Flex from "../../components/Flex";
+import Content from "../Content";
+import Flex from "../../../components/Flex";
 
 type Props = {
   id: string,

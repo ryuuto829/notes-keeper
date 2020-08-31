@@ -27,7 +27,8 @@ import Background from "../../components/Background";
 import {
   growFromCenter,
   moveFromTop,
-  animateGradientBackground
+  animateGradientBackground,
+  zoomIn
 } from "../../shared/styles/animations";
 
 // Different shapes of input state is necessary
@@ -143,9 +144,11 @@ const Login = () => {
                   {passwordInputField}
                   {hasAuthError && <Notices notice={errorNotice} />}
                   {isSubmitted ? (
-                    <Button icon={<Spinner />} />
+                    <StyledButton large fullWidth icon={<Spinner />} />
                   ) : (
-                    <Button>Continue</Button>
+                    <StyledButton large fullWidth>
+                      Continue
+                    </StyledButton>
                   )}
                 </FormContainer>
                 <RedirectButtonWrapper>
@@ -177,9 +180,11 @@ const Login = () => {
                 {passwordInputField}
                 {hasAuthError && <Notices notice={errorNotice} />}
                 {isSubmitted ? (
-                  <Button icon={<Spinner />} disabled />
+                  <StyledButton large fullWidth icon={<Spinner />} disabled />
                 ) : (
-                  <Button>Login</Button>
+                  <StyledButton large fullWidth>
+                    Login
+                  </StyledButton>
                 )}
               </FormContainer>
               <RedirectButtonWrapper>
@@ -239,7 +244,8 @@ const AuthBox = styled(Flex)`
     padding: 30px 16px;
     min-height: 520px;
     margin: 0;
-    animation: none;
+    box-shadow: none;
+    animation: ${zoomIn} 0.3s ease-out;
   }
 `;
 
@@ -283,6 +289,11 @@ const NeedAccountText = styled.span`
   line-height: 16px;
   text-align: left;
   color: rgb(114, 118, 125);
+  margin-right: 4px;
+`;
+
+const StyledButton = styled(Button)`
+  margin-bottom: 8px;
 `;
 
 export default Login;

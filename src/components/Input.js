@@ -22,6 +22,7 @@ const Input = (props: Props) => {
     onChangeHandler,
     errorMessages,
     className,
+    required,
     ...rest
   } = props;
 
@@ -31,6 +32,7 @@ const Input = (props: Props) => {
   const LabelBox = (
     <Label isValid={isValid} htmlFor={label}>
       {label}
+      {required ? <RequiredMark>*</RequiredMark> : null}
       <InvalidMessage isValid={isValid}>{errorMessages || null}</InvalidMessage>
     </Label>
   );
@@ -100,6 +102,11 @@ const InputField = styled.input`
   &:hover:not(:focus) {
     border-color: ${props => (props.isValid ? "#040405" : props.theme.danger)};
   }
+`;
+
+const RequiredMark = styled.span`
+  color: #f04747;
+  padding-left: 4px;
 `;
 
 export default Input;

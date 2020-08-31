@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 const TextButton = styled.button`
   display: inline-block;
-  margin-left: 4px;
   color: #7289da;
   font-size: inherit;
   padding: 0;

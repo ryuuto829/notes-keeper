@@ -67,6 +67,10 @@ const HoverArea = styled.div`
   left: 0;
   width: 232px;
   height: 100%;
+
+  @media (max-width: 600px) {
+    width: 0;
+  }
 `;
 
 const Button = styled.button`

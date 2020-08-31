@@ -28,7 +28,7 @@ const Editor = ({ text, id, hasChildren, level, cursorPosition }: Props) => {
 
   const [inputText, setInputText] = useState(text);
 
-  const onPressEnterHandler = useCallback(
+  const onPressHandler = useCallback(
     (e: KeyboardEvent) => {
       // $FlowFixMe listeners add native event, but not synthetic
       const currentCursorPostion = e.target.selectionStart;
@@ -98,13 +98,13 @@ const Editor = ({ text, id, hasChildren, level, cursorPosition }: Props) => {
   useEffect(() => {
     // Setup global event listeners
     // $FlowFixMe listeners add native event, but not synthetic
-    document.addEventListener("keydown", onPressEnterHandler, false);
+    document.addEventListener("keydown", onPressHandler, false);
 
     return () => {
-      document.removeEventListener("keydown", onPressEnterHandler, false);
+      document.removeEventListener("keydown", onPressHandler, false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onPressEnterHandler]);
+  }, [onPressHandler]);
 
   // Receive cursor position as a prop, then set focus on textarea
   // and move cursor to given position

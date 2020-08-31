@@ -105,6 +105,10 @@ const HoverArea = styled.div`
   width: 20px;
   height: 100%;
   z-index: 102;
+
+  @media (max-width: 600px) {
+    width: 0;
+  }
 `;
 
 const SectionContainer = styled.nav`

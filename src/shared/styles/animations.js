@@ -52,3 +52,25 @@ export const loadingBar = keyframes`
     margin-left: 100%; 
   }
 `;
+
+export const zoomOut = keyframes`
+  from {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+`;
+
+export const zoomIn = keyframes`
+  from {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+`;

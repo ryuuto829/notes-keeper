@@ -1,5 +1,6 @@
 // @flow
-import * as React from "react";
+import React from "react";
+import styled from "styled-components";
 import { signInWithGoogle } from "../../server/firebase";
 
 import Button from "../../components/Button";
@@ -8,15 +9,21 @@ import GoogleLogo from "../../shared/icons/GoogleLogo";
 
 const Services = () => (
   <>
-    <Button
+    <StyledButton
+      large
+      fullWidth
       variant="secondary"
       icon={<GoogleLogo size={24} />}
       clicked={signInWithGoogle}
     >
       Sign in with Google
-    </Button>
+    </StyledButton>
     <Divider />
   </>
 );
+
+const StyledButton = styled(Button)`
+  margin-bottom: 8px;
+`;
 
 export default Services;

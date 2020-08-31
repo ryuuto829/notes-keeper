@@ -6,7 +6,9 @@ import {
   signInWithEmail,
   createUser,
   updateUsername,
-  logout
+  logout,
+  reAuthentication,
+  deleteAccount
 } from "../../server/firebase";
 import {
   loginRequest,
@@ -16,7 +18,9 @@ import {
   logoutRequest,
   logoutSuccess,
   logoutFailure,
-  updateUserProfile
+  updateUserProfile,
+  deleteUserRequest,
+  deleteUserFailure
 } from "../modules/login";
 
 // Get auth state observer
@@ -67,6 +71,25 @@ function* logoutSaga() {
   }
 }
 
+function* deleteUserSaga(action) {
+  const { password } = action.payload;
+  const ERROR_MESSAGE = `Sorry, it looks like that your account can't be deleted at this moment or you pass wrong password, please try again.`;
+
+  const error = yield call([auth.currentUser, reAuthentication], password);
+
+  if (error) {
+    yield put(deleteUserFailure({ error: ERROR_MESSAGE }));
+  } else {
+    const error = yield call([auth.currentUser, deleteAccount]);
+
+    if (error) {
+      yield put(deleteUserFailure({ error: ERROR_MESSAGE }));
+    } else {
+      yield logout();
+    }
+  }
+}
+
 function* loginStatusWatcher() {
   yield console.log("[loginStatusWatcher] wathcer added");
   const channel = yield call(getAuthChannel);
@@ -90,6 +113,7 @@ export default function* loginRootSaga(): Saga<void> {
   yield all([
     takeEvery(loginRequest, loginSaga),
     takeEvery(registerRequest, registerSaga),
-    takeEvery(logoutRequest, logoutSaga)
+    takeEvery(logoutRequest, logoutSaga),
+    takeEvery(deleteUserRequest, deleteUserSaga)
   ]);
 }

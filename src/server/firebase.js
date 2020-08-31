@@ -39,6 +39,34 @@ const updateUsername = (username: string) => {
 
 const logout = () => auth.signOut();
 
+const deleteAccount = () => {
+  let hasError = null;
+
+  auth.currentUser
+    .delete()
+    .then()
+    .catch(error => (hasError = error));
+
+  return hasError;
+};
+
+const reAuthentication = async (password: string) => {
+  const user = auth.currentUser;
+  let hasError = false;
+
+  const credential = firebase.auth.EmailAuthProvider.credential(
+    user.email,
+    password
+  );
+
+  await user
+    .reauthenticateWithCredential(credential)
+    .then()
+    .catch(error => (hasError = true));
+
+  return hasError;
+};
+
 export {
   auth,
   database,
@@ -46,7 +74,9 @@ export {
   signInWithGoogle,
   createUser,
   updateUsername,
-  logout
+  logout,
+  deleteAccount,
+  reAuthentication
 };
 
 export default firebase;

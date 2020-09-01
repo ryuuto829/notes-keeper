@@ -48,6 +48,7 @@ const MainWrapper = styled.div`
   background-color: #36393f;
   color: #dcddde;
   height: calc(100% - 45px);
+  animation: none;
 
   &:before {
     content: "";

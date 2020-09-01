@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser, deleteUserRequest } from "../../store/modules/login";
+import { deleteUserRequest } from "../../store/modules/settings";
+import { selectUser } from "../../store/modules/login";
 
 import TextButton from "../../components/TextButton";
 import Button from "../../components/Button";

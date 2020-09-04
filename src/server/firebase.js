@@ -71,6 +71,19 @@ const reAuthentication = async (password: string) => {
   return hasError;
 };
 
+const changeDisplayName = name => {
+  let hasError = false;
+
+  auth.currentUser
+    .updateProfile({
+      displayName: name
+    })
+    .then()
+    .catch(error => (hasError = true));
+
+  return hasError;
+};
+
 export {
   auth,
   database,
@@ -80,7 +93,8 @@ export {
   updateUsername,
   logout,
   deleteAccount,
-  reAuthentication
+  reAuthentication,
+  changeDisplayName
 };
 
 export default firebase;

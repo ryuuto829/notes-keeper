@@ -35,7 +35,30 @@ export const settingsSlice = createSlice({
       };
     },
     deleteUserSuccess: (state: State, action) => {
-      console.log("[deleteUser] failure");
+      console.log("[deleteUser] success");
+      return {
+        ...state,
+        loading: false
+      };
+    },
+    updateUserRequest: (state: State, action) => {
+      console.log("[updateUser] request");
+      return {
+        ...state,
+        loading: true
+      };
+    },
+    updateUserFailure: (state: State, action) => {
+      const { error } = action.payload;
+      console.log("[updateUser] failure");
+      return {
+        ...state,
+        loading: false,
+        error: error
+      };
+    },
+    updateUserSuccess: (state: State, action) => {
+      console.log("[updateUser] success");
       return {
         ...state,
         loading: false
@@ -47,6 +70,9 @@ export const settingsSlice = createSlice({
 export const {
   deleteUserRequest,
   deleteUserFailure,
-  deleteUserSuccess
+  deleteUserSuccess,
+  updateUserRequest,
+  updateUserFailure,
+  updateUserSuccess
 } = settingsSlice.actions;
 export default settingsSlice.reducer;

@@ -2,7 +2,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteUserRequest } from "../../store/modules/settings";
+import {
+  deleteUserRequest,
+  updateUserRequest
+} from "../../store/modules/settings";
 import { selectUser } from "../../store/modules/login";
 
 import TextButton from "../../components/TextButton";
@@ -26,6 +29,14 @@ const Settings = () => {
   const onChangeInputHandler = (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
     setInputs({ ...inputs, [name]: value });
+  };
+
+  const onSaveUserHandler = () => {
+    if (inputs.username !== displayName) {
+      dispatch(
+        updateUserRequest({ password: inputs.password, name: inputs.username })
+      );
+    }
   };
 
   if (editable) {
@@ -96,7 +107,11 @@ const Settings = () => {
             >
               Cancel
             </Button>
-            <Button bgColor="#43b581" hoverColor="#3ca374">
+            <Button
+              bgColor="#43b581"
+              hoverColor="#3ca374"
+              clicked={onSaveUserHandler}
+            >
               Save
             </Button>
           </RightButtonGroup>

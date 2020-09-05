@@ -32,10 +32,29 @@ const Settings = () => {
   };
 
   const onSaveUserHandler = () => {
-    if (inputs.username !== displayName) {
+    if (inputs.username !== displayName && inputs.email !== email) {
       dispatch(
-        updateUserRequest({ password: inputs.password, name: inputs.username })
+        updateUserRequest({
+          password: inputs.password,
+          name: inputs.username,
+          email: inputs.email
+        })
       );
+    } else {
+      if (inputs.username !== displayName) {
+        dispatch(
+          updateUserRequest({
+            password: inputs.password,
+            name: inputs.username
+          })
+        );
+      }
+
+      if (inputs.email !== email) {
+        dispatch(
+          updateUserRequest({ password: inputs.password, email: inputs.email })
+        );
+      }
     }
   };
 

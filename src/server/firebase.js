@@ -84,6 +84,15 @@ const changeDisplayName = name => {
   return hasError;
 };
 
+const changeEmail = email => {
+  let hasError = false;
+  auth.currentUser
+    .updateEmail(email)
+    .then()
+    .catch(error => (hasError = true));
+  return hasError;
+};
+
 export {
   auth,
   database,
@@ -94,7 +103,8 @@ export {
   logout,
   deleteAccount,
   reAuthentication,
-  changeDisplayName
+  changeDisplayName,
+  changeEmail
 };
 
 export default firebase;

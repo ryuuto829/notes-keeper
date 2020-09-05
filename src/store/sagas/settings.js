@@ -5,7 +5,8 @@ import {
   auth,
   reAuthentication,
   deleteAccount,
-  changeDisplayName
+  changeDisplayName,
+  changeEmail
 } from "../../server/firebase";
 import {
   deleteUserRequest,
@@ -44,7 +45,22 @@ function* updateUserSaga(action) {
   if (error) {
     yield put(updateUserFailure({ error: ERROR_MESSAGE }));
   } else {
-    const error = yield call([auth.currentUser, changeDisplayName], name);
+    let error = false;
+    if (name) {
+      const changeNameError = yield call(
+        [auth.currentUser, changeDisplayName],
+        name
+      );
+      if (changeNameError) error = true;
+    }
+
+    if (email) {
+      const changeEmailError = yield call(
+        [auth.currentUser, changeEmail],
+        email
+      );
+      if (changeEmailError) error = true;
+    }
 
     if (error) {
       yield put(updateUserFailure({ error: ERROR_MESSAGE }));

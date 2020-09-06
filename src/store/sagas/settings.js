@@ -2,9 +2,9 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import { type Saga } from "redux-saga";
 import {
+  firebase,
   auth,
   reAuthentication,
-  deleteAccount,
   changeDisplayName,
   changeEmail
 } from "../../server/firebase";
@@ -15,24 +15,18 @@ import {
   updateUserFailure,
   updateUserSuccess
 } from "../modules/settings";
-import { logoutRequest } from "../modules/login";
 
-function* deleteUserSaga(action) {
+export function* deleteUserSaga(action) {
   const { password } = action.payload;
-  const ERROR_MESSAGE = `some error`;
+  const user = auth.currentUser;
 
-  const error = yield call([auth.currentUser, reAuthentication], password);
-
-  if (error) {
-    yield put(deleteUserFailure({ error: ERROR_MESSAGE }));
-  } else {
-    const error = yield call([auth.currentUser, deleteAccount]);
-
-    if (error) {
-      yield put(deleteUserFailure({ error: ERROR_MESSAGE }));
-    } else {
-      yield put(logoutRequest());
-    }
+  try {
+    yield user.reauthenticateWithCredential(
+      firebase.auth.EmailAuthProvider.credential(user.email, password + "d")
+    );
+    yield user.delete();
+  } catch (error) {
+    yield put(deleteUserFailure({ error: "error" }));
   }
 }
 

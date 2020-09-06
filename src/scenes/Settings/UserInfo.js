@@ -17,7 +17,7 @@ import Flex from "../../components/Flex";
 const Settings = () => {
   const dispatch = useDispatch();
   const { displayName, email } = useSelector(selectUser);
-  const [editable, setEditable] = useState(true); // CHANGE TO FALSE
+  const [editable, setEditable] = useState(false);
   const [inputs, setInputs] = useState({
     username: displayName,
     email: email,
@@ -25,10 +25,22 @@ const Settings = () => {
   });
   const [changePassword, setChangePassword] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
+  const [errorMessages, setErrorMessages] = useState(null);
 
   const onChangeInputHandler = (e: SyntheticInputEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
     setInputs({ ...inputs, [name]: value });
+  };
+
+  const onDeleteUserHandler = () => {
+    const currentPassword = inputs.password;
+
+    if (currentPassword === "") {
+      return setErrorMessages({ password: "This field is required" });
+    }
+
+    setErrorMessages(null);
+    dispatch(deleteUserRequest({ password: currentPassword }));
   };
 
   const onSaveUserHandler = () => {
@@ -67,6 +79,7 @@ const Settings = () => {
           type="text"
           label="USERNAME"
           autoComplete="off"
+          errorMessages={errorMessages && errorMessages.username}
           value={inputs.username}
           onChangeHandler={onChangeInputHandler}
         />
@@ -76,6 +89,7 @@ const Settings = () => {
           type="email"
           label="EMAIL"
           autoComplete="off"
+          errorMessages={errorMessages && errorMessages.email}
           value={inputs.email}
           onChangeHandler={onChangeInputHandler}
         />
@@ -85,6 +99,7 @@ const Settings = () => {
           type="password"
           label="CURRENT PASSWORD"
           autoComplete="off"
+          errorMessages={errorMessages && errorMessages.password}
           value={inputs.password}
           onChangeHandler={onChangeInputHandler}
         />
@@ -106,13 +121,7 @@ const Settings = () => {
         <StyledDivider />
         <Wrapper justify="space-between">
           <LeftButtonGroup>
-            <Button
-              color="#f04747"
-              outlined
-              clicked={() =>
-                dispatch(deleteUserRequest({ password: inputs.password }))
-              }
-            >
+            <Button color="#f04747" outlined clicked={onDeleteUserHandler}>
               Delete Account
             </Button>
           </LeftButtonGroup>

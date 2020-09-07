@@ -35,7 +35,7 @@ const Settings = () => {
   const onDeleteUserHandler = () => {
     const currentPassword = inputs.password;
 
-    if (currentPassword === "") {
+    if (!currentPassword) {
       return setErrorMessages({ password: "This field is required" });
     }
 
@@ -44,30 +44,28 @@ const Settings = () => {
   };
 
   const onSaveUserHandler = () => {
-    if (inputs.username !== displayName && inputs.email !== email) {
-      dispatch(
-        updateUserRequest({
-          password: inputs.password,
-          name: inputs.username,
-          email: inputs.email
-        })
-      );
-    } else {
-      if (inputs.username !== displayName) {
-        dispatch(
-          updateUserRequest({
-            password: inputs.password,
-            name: inputs.username
-          })
-        );
-      }
+    const currentEmail = inputs.email;
+    const currentUsername = inputs.username;
+    const currentPassword = inputs.password;
 
-      if (inputs.email !== email) {
-        dispatch(
-          updateUserRequest({ password: inputs.password, email: inputs.email })
-        );
-      }
+    if (!currentEmail || !currentUsername) {
+      const errors = {};
+      if (!currentEmail) errors.email = "This field is required";
+      if (!currentUsername) errors.username = "This field is required";
+      return setErrorMessages(errors);
     }
+
+    setErrorMessages(null);
+
+    if (currentUsername === displayName && currentEmail === email) return;
+
+    dispatch(
+      updateUserRequest({
+        password: currentPassword,
+        name: currentUsername !== displayName ? currentUsername : null,
+        email: currentEmail !== email ? currentEmail : null
+      })
+    );
   };
 
   if (editable) {

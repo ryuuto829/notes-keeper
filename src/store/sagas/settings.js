@@ -1,16 +1,11 @@
 // @flow
-import { all, call, put, takeEvery } from "redux-saga/effects";
+import { all, put, takeEvery } from "redux-saga/effects";
 import { type Saga } from "redux-saga";
-import {
-  firebase,
-  auth,
-  reAuthentication,
-  changeDisplayName,
-  changeEmail
-} from "../../server/firebase";
+import { firebase, auth } from "../../server/firebase";
 import {
   deleteUserRequest,
   deleteUserFailure,
+  deleteUserSuccess,
   updateUserRequest,
   updateUserFailure,
   updateUserSuccess
@@ -21,47 +16,55 @@ export function* deleteUserSaga(action) {
   const user = auth.currentUser;
 
   try {
+    // Reauthenticate user
     yield user.reauthenticateWithCredential(
-      firebase.auth.EmailAuthProvider.credential(user.email, password + "d")
+      firebase.auth.EmailAuthProvider.credential(user.email, password)
     );
+    // Delete user will triger auth watcher and then logout
     yield user.delete();
+    yield put(deleteUserSuccess());
   } catch (error) {
     yield put(deleteUserFailure({ error: "error" }));
   }
 }
 
-function* updateUserSaga(action) {
+export function* updateUserSaga(action) {
   const { password, name, email } = action.payload;
-  const ERROR_MESSAGE = `some error`;
+  const user = auth.currentUser;
 
-  const error = yield call([auth.currentUser, reAuthentication], password);
+  try {
+    // Reauthenticate user
+    yield user.reauthenticateWithCredential(
+      firebase.auth.EmailAuthProvider.credential(user.email, password)
+    );
+  } catch (error) {
+    yield put(updateUserFailure({ error: "error" }));
+    return;
+  }
 
-  if (error) {
-    yield put(updateUserFailure({ error: ERROR_MESSAGE }));
-  } else {
-    let error = false;
-    if (name) {
-      const changeNameError = yield call(
-        [auth.currentUser, changeDisplayName],
-        name
-      );
-      if (changeNameError) error = true;
-    }
-
-    if (email) {
-      const changeEmailError = yield call(
-        [auth.currentUser, changeEmail],
-        email
-      );
-      if (changeEmailError) error = true;
-    }
-
-    if (error) {
-      yield put(updateUserFailure({ error: ERROR_MESSAGE }));
-    } else {
-      yield put(updateUserSuccess());
+  if (name) {
+    try {
+      // Update display name when it's new
+      yield user.updateProfile({
+        displayName: name
+      });
+    } catch (error) {
+      yield put(updateUserFailure({ error: "error" }));
+      return;
     }
   }
+
+  if (email) {
+    try {
+      // Update email when it's new
+      yield user.updateEmail(email);
+    } catch (error) {
+      yield put(updateUserFailure({ error: "error" }));
+      return;
+    }
+  }
+
+  yield put(updateUserSuccess());
 }
 
 export default function* loginRootSaga(): Saga<void> {

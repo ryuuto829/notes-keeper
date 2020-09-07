@@ -39,72 +39,15 @@ const updateUsername = (username: string) => {
 
 const logout = () => auth.signOut();
 
-// Firebase throws exception instead of an error,
-// we can't check it on try / catch block in redux-saga
-// so we check if there's an error and return boolean
-const deleteAccount = () => {
-  let hasError = false;
-
-  auth.currentUser
-    .delete()
-    .then()
-    .catch(error => (hasError = true));
-
-  return hasError;
-};
-
-// Same situation as in deleteAccount()
-const reAuthentication = async (password: string) => {
-  const user = auth.currentUser;
-  let hasError = false;
-
-  const credential = firebase.auth.EmailAuthProvider.credential(
-    user.email,
-    password
-  );
-
-  await user
-    .reauthenticateWithCredential(credential)
-    .then()
-    .catch(error => (hasError = true));
-
-  return hasError;
-};
-
-const changeDisplayName = name => {
-  let hasError = false;
-
-  auth.currentUser
-    .updateProfile({
-      displayName: name
-    })
-    .then()
-    .catch(error => (hasError = true));
-
-  return hasError;
-};
-
-const changeEmail = email => {
-  let hasError = false;
-  auth.currentUser
-    .updateEmail(email)
-    .then()
-    .catch(error => (hasError = true));
-  return hasError;
-};
-
 export {
+  firebase,
   auth,
   database,
   signInWithEmail,
   signInWithGoogle,
   createUser,
   updateUsername,
-  logout,
-  deleteAccount,
-  reAuthentication,
-  changeDisplayName,
-  changeEmail
+  logout
 };
 
 export default firebase;

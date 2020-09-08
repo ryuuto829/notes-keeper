@@ -32,7 +32,8 @@ function* loginSaga(action) {
   const { email, password } = action.payload;
 
   try {
-    yield signInWithEmail(email, password);
+    // yield call(signInWithEmail, email, password);
+    yield call(auth.signInWithEmailAndPassword, email, password);
     yield console.log("[loginSaga] login success");
     // Successful login will trigger the loginStatusWatcher
   } catch (error) {

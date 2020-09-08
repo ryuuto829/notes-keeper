@@ -80,29 +80,6 @@ export const loginSlice = createSlice({
         errorMessage: error
       };
     }
-    // deleteUserRequest: (state: State, action) => {
-    //   console.log("[deleteUser] request");
-    //   return {
-    //     ...state,
-    //     loading: true
-    //   };
-    // },
-    // deleteUserFailure: (state: State, action) => {
-    //   const { error } = action.payload;
-    //   console.log("[deleteUser] failure");
-    //   return {
-    //     ...state,
-    //     loading: false,
-    //     errorMessage: error
-    //   };
-    // },
-    // deleteUserSuccess: (state: State, action) => {
-    //   console.log("[deleteUser] failure");
-    //   return {
-    //     ...state,
-    //     loading: false
-    //   };
-    // }
   }
 });
 
@@ -119,8 +96,5 @@ export const {
   logoutSuccess,
   logoutFailure,
   updateUserProfile
-  // deleteUserRequest,
-  // deleteUserFailure,
-  // deleteUserSuccess
 } = loginSlice.actions;
 export default loginSlice.reducer;

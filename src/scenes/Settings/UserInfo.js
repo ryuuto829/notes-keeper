@@ -57,13 +57,19 @@ const Settings = () => {
 
     setErrorMessages(null);
 
-    if (currentUsername === displayName && currentEmail === email) return;
+    if (
+      currentUsername === displayName &&
+      currentEmail === email &&
+      !changePassword
+    )
+      return;
 
     dispatch(
       updateUserRequest({
         password: currentPassword,
         name: currentUsername !== displayName ? currentUsername : null,
-        email: currentEmail !== email ? currentEmail : null
+        email: currentEmail !== email ? currentEmail : null,
+        newPassword: changePassword ? passwordInput : null
       })
     );
   };

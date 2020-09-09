@@ -3,7 +3,6 @@ import { all, call, fork, put, take, takeEvery } from "redux-saga/effects";
 import { eventChannel, type Saga } from "redux-saga";
 import {
   auth,
-  signInWithEmail,
   createUser,
   updateUsername,
   logout
@@ -28,12 +27,12 @@ const getAuthChannel = () => {
   return authChannel;
 };
 
-function* loginSaga(action) {
+export function* loginSaga(action) {
   const { email, password } = action.payload;
+  // const auth = auth;
 
   try {
-    // yield call(signInWithEmail, email, password);
-    yield call(auth.signInWithEmailAndPassword, email, password);
+    yield call([auth, auth.signInWithEmailAndPassword], email, password);
     yield console.log("[loginSaga] login success");
     // Successful login will trigger the loginStatusWatcher
   } catch (error) {

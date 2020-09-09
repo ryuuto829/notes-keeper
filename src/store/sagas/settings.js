@@ -29,7 +29,7 @@ export function* deleteUserSaga(action) {
 }
 
 export function* updateUserSaga(action) {
-  const { password, name, email } = action.payload;
+  const { password, name, email, newPassword } = action.payload;
   const user = auth.currentUser;
 
   try {
@@ -58,6 +58,16 @@ export function* updateUserSaga(action) {
     try {
       // Update email when it's new
       yield user.updateEmail(email);
+    } catch (error) {
+      yield put(updateUserFailure({ error: "error" }));
+      return;
+    }
+  }
+
+  if (newPassword) {
+    try {
+      // Update password
+      yield user.updatePassword(newPassword);
     } catch (error) {
       yield put(updateUserFailure({ error: "error" }));
       return;

@@ -1,9 +1,10 @@
 // @flow
-import * as React from "react";
+import React from "react";
 import styled from "styled-components";
 
-import LeftArrowIcon from "../../../shared/icons/LeftArrow";
+import LeftArrow from "../../../shared/icons/LeftArrow";
 import Flex from "../../../components/Flex";
+import Tooltip from "../../../components/Tooltip";
 
 type Props = {
   isLocked: boolean,
@@ -11,14 +12,27 @@ type Props = {
   userName: string
 };
 
-const Header = ({ isLocked, toggleLock, userName }: Props) => (
-  <HeaderContainer align="center" justify="space-between" onClick={toggleLock}>
-    <HeaderTitle>{userName}</HeaderTitle>
-    <Icon isLocked={isLocked}>
-      <LeftArrowIcon />
-    </Icon>
-  </HeaderContainer>
-);
+const Header = ({ isLocked, toggleLock, userName }: Props) => {
+  return (
+    <HeaderContainer
+      align="center"
+      justify="space-between"
+      onClick={toggleLock}
+    >
+      <HeaderTitle>{userName}</HeaderTitle>
+      <Tooltip
+        content={isLocked ? "Close sidebar" : "Lock sidebar open"}
+        placement="right"
+      >
+        <span>
+          <Icon isLocked={isLocked}>
+            <LeftArrow />
+          </Icon>
+        </span>
+      </Tooltip>
+    </HeaderContainer>
+  );
+};
 
 const HeaderContainer = styled(Flex)`
   height: 48px;

@@ -1,3 +1,4 @@
+// @flow
 import React from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
@@ -6,11 +7,19 @@ import { logoutRequest } from "../../store/modules/login"; // DELETE LATER
 import LeftArrowIcon from "../../shared/icons/LeftArrow";
 import IconButton from "./components/IconButton";
 import Flex from "../../components/Flex";
+import Button from "../../components/Button";
+import OpenMenu from "../../shared/icons/OpenMenu";
+import Tooltip from "../../components/Tooltip";
 
-const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }) => {
+type Props = {
+  isLocked: boolean,
+  showSidebar: () => void,
+  hideSidebar: () => void,
+  toggleLock: () => void
+};
+
+const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
   const dispatch = useDispatch();
-  // const shortcuted = useSelector(selectShorcuted);
-  // const { id } = useSelector(selectDocumentById);
 
   return (
     <Wrapper isLocked={isLocked}>
@@ -21,19 +30,28 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }) => {
         justify={isLocked ? "flex-end" : "space-between"}
       >
         {isLocked ? null : (
-          <RightArrowButton
-            icon={<LeftArrowIcon />}
-            onClick={toggleLock}
-            onMouseEnter={showSidebar}
-          />
+          <Tooltip content="Lock sidebar open" placement="bottom">
+            <span>
+              <RightArrowButton
+                icon={<LeftArrowIcon />}
+                onClick={toggleLock}
+                onMouseEnter={showSidebar}
+              />
+            </span>
+          </Tooltip>
         )}
         <Flex>
           <button onClick={() => dispatch(logoutRequest())}>Log out</button>
-          {/* <Button
-            onClick={() => dispatch(updateShortcut({ id: id }))}>
-            {shortcuted ? 'Remove from shortcuts' : 'Add to shortcut'}
-          </Button> */}
-          <Button>Menu</Button>
+          <Tooltip content="Style and more .." placement="bottom">
+            <Button
+              bgColor="transparent"
+              hoverColor="rgb(79 84 92 / 72%)"
+              color="#8e9297"
+              hoverTextColor="#dcddde"
+              padding="0 6px"
+              icon={<OpenMenu fill="currentColor" />}
+            />
+          </Tooltip>
         </Flex>
       </ToolbarWrapper>
     </Wrapper>
@@ -48,7 +66,6 @@ const Wrapper = styled.div`
   margin-left: ${props => (props.isLocked ? "232px" : "0")};
   background-color: #36393f;
   color: white;
-  /* transition: all 200ms ease-in 0s; */
   z-index: 101;
 `;
 
@@ -70,27 +87,6 @@ const HoverArea = styled.div`
 
   @media (max-width: 600px) {
     width: 0;
-  }
-`;
-
-const Button = styled.button`
-  height: 32px;
-  padding: 0 6px;
-  border-radius: 4px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  outline: 0;
-  border: 0;
-  color: #8e9297;
-  cursor: pointer;
-  transition: all 100ms ease-in;
-  background-color: transparent;
-  margin-left: 15px;
-
-  &:hover {
-    background-color: rgb(79 84 92 / 72%);
-    color: #dcddde;
   }
 `;
 

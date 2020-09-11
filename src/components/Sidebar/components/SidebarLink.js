@@ -10,15 +10,23 @@ type Props = {
   label?: string,
   icon?: React.Element<*>,
   children?: React.Node,
-  className?: string
+  className?: string,
+  innerRef?: React.ElementRef<any>
 };
 
-const SidebarLink = ({ to, icon, children, label, className }: Props) => {
+const SidebarLink = ({
+  to,
+  icon,
+  children,
+  label,
+  className,
+  innerRef
+}: Props) => {
   const hasIcon = icon !== undefined;
   const hasChildren = label !== undefined && label !== "";
 
   return (
-    <StyledNavLink to={to}>
+    <StyledNavLink ref={innerRef} to={to}>
       <LinkWrapper
         className={className}
         hasChildren={hasChildren}
@@ -63,4 +71,7 @@ const Label = styled.span`
   width: 178px;
 `;
 
-export default SidebarLink;
+// Give ref for tooltip component
+export default React.forwardRef<Props, typeof SidebarLink>((props, ref) => (
+  <SidebarLink {...props} innerRef={ref} />
+));

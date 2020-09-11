@@ -13,7 +13,13 @@ type Props = {
   className?: string,
   color?: string,
   bgColor?: string,
+  hoverTextColor?: string,
   hoverColor?: string,
+  padding?: string,
+  fullWidth?: boolean,
+  large?: boolean,
+  outlined?: boolean,
+  innerRef?: React.ElementRef<any>,
   ...
 };
 
@@ -28,7 +34,10 @@ const Button = ({
   color,
   bgColor,
   hoverColor,
+  hoverTextColor,
+  padding,
   outlined,
+  innerRef,
   ...rest
 }: Props) => {
   const hasIcon = icon !== undefined;
@@ -37,14 +46,17 @@ const Button = ({
   return (
     <RealButton
       {...rest}
+      ref={innerRef}
       className={className}
       outlined={outlined}
       color={color}
       bgColor={bgColor}
+      hoverTextColor={hoverTextColor}
       hoverColor={hoverColor}
       large={large}
       fullWidth={fullWidth}
       variant={variant}
+      padding={padding}
       onClick={clicked}
     >
       <Inner large={large} align="center" justify="center">
@@ -58,9 +70,9 @@ const Button = ({
 const RealButton = styled.button`
   line-height: 24px;
   border-radius: 3px;
-  padding: 2px 16px;
   outline: 0;
   border: none;
+  padding: ${props => (props.padding ? props.padding : "2px 16px")};
   display: ${props => (props.fullWidth ? "block" : "inline-block")};
   width: ${props => (props.fullWidth ? "100%" : "auto")};
   color: ${props => (props.variant === "primary" ? "#fff" : "#36393f")};
@@ -86,6 +98,8 @@ const RealButton = styled.button`
     ${props => (props.bgColor ? `background-color: ${props.bgColor}` : null)};
     ${props =>
       props.hoverColor ? `background-color: ${props.hoverColor}` : null};
+    ${props =>
+      props.hoverTextColor ? `color: ${props.hoverTextColor}` : null};
   }
 
   &:active {
@@ -111,4 +125,7 @@ const Inner = styled(Flex)`
   ${props => props.hasIcon && !props.hasText && "padding: 0 4px;"};
 `;
 
-export default Button;
+// Give ref for tooltip component
+export default React.forwardRef<Props, typeof Button>((props, ref) => (
+  <Button {...props} innerRef={ref} />
+));

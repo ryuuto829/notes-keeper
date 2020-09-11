@@ -12,6 +12,7 @@ import Flex from "../../components/Flex";
 import EventNoteIcon from "../../shared/icons/EventNote";
 import TableIcon from "../../shared/icons/Table";
 import SettingsIcon from "../../shared/icons/Settings";
+import Tooltip from "../../components/Tooltip";
 
 type Props = {
   isLocked: boolean,
@@ -47,16 +48,23 @@ const Sidebar = ({
             icon={<EventNoteIcon size={20} />}
             label="DAILY NOTES"
           />
-          <SidebarLink
-            to="/collection"
-            icon={<TableIcon size={20} />}
-            label="ALL PAGES"
-          />
+          <Tooltip
+            content="Search and quickly jump to a page"
+            placement="right"
+          >
+            <SidebarLink
+              to="/collection"
+              icon={<TableIcon size={20} />}
+              label="ALL PAGES"
+            />
+          </Tooltip>
         </SectionContainer>
         <Shortcuts />
         <SettingsSection justify="space-between" align="center">
           <Branding size={24} />
-          <SidebarLink to="/settings" icon={<SettingsIcon size={20} />} />
+          <Tooltip content="Settings" placement="top">
+            <SidebarLink to="/settings" icon={<SettingsIcon size={20} />} />
+          </Tooltip>
         </SettingsSection>
       </SidebarContainer>
     </>

@@ -11,13 +11,14 @@ import {
   updateUserSuccess
 } from "../modules/settings";
 
-export function* deleteUserSaga(action) {
+function* deleteUserSaga(action) {
   const { password } = action.payload;
   const user = auth.currentUser;
 
   try {
     // Reauthenticate user
     yield user.reauthenticateWithCredential(
+      // $FlowFixMe in case when there's no user, we trigger watcher to logout
       firebase.auth.EmailAuthProvider.credential(user.email, password)
     );
     // Delete user will triger auth watcher and then logout
@@ -28,13 +29,14 @@ export function* deleteUserSaga(action) {
   }
 }
 
-export function* updateUserSaga(action) {
+function* updateUserSaga(action) {
   const { password, name, email, newPassword } = action.payload;
   const user = auth.currentUser;
 
   try {
     // Reauthenticate user
     yield user.reauthenticateWithCredential(
+      // $FlowFixMe in case when there's no user, we trigger watcher to logout
       firebase.auth.EmailAuthProvider.credential(user.email, password)
     );
   } catch (error) {

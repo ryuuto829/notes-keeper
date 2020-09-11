@@ -14,8 +14,11 @@ import Input from "../../components/Input";
 import Divider from "../../components/Divider";
 import Flex from "../../components/Flex";
 
+const FIELD_IS_REQUIRED = "This field is required";
+
 const Settings = () => {
   const dispatch = useDispatch();
+  // $FlowFixMe there will always present user, if its not, then logout
   const { displayName, email } = useSelector(selectUser);
   const [editable, setEditable] = useState(false);
   const [inputs, setInputs] = useState({
@@ -36,7 +39,9 @@ const Settings = () => {
     const currentPassword = inputs.password;
 
     if (!currentPassword) {
-      return setErrorMessages({ password: "This field is required" });
+      // $FlowFixMe we set error messages like in the login form
+      setErrorMessages({ password: FIELD_IS_REQUIRED });
+      return;
     }
 
     setErrorMessages(null);
@@ -50,8 +55,8 @@ const Settings = () => {
 
     if (!currentEmail || !currentUsername) {
       const errors = {};
-      if (!currentEmail) errors.email = "This field is required";
-      if (!currentUsername) errors.username = "This field is required";
+      if (!currentEmail) errors.email = FIELD_IS_REQUIRED;
+      if (!currentUsername) errors.username = FIELD_IS_REQUIRED;
       return setErrorMessages(errors);
     }
 

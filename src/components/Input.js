@@ -10,6 +10,7 @@ type Props = {
   onChangeHandler: (e: SyntheticInputEvent<HTMLInputElement>) => void,
   errorMessages?: ?string,
   className?: string,
+  required?: boolean,
   ...
 };
 

@@ -13,7 +13,7 @@ type Props = {
 const ExitButton = ({ clicked }: Props) => (
   <Wrapper align="center" column onClick={clicked}>
     <Container align="center" justify="center">
-      <Close size="18" />
+      <Close size={18} />
     </Container>
     <BindText>ESC</BindText>
   </Wrapper>

@@ -7,6 +7,7 @@ import Layout from "./components/Layout";
 import Login from "./scenes/Login";
 import Document from "./scenes/Document";
 import Settings from "./scenes/Settings";
+import Collection from "./scenes/Collection";
 
 const Empty = () => <div>Empty</div>; // DELETE LATER
 
@@ -18,9 +19,10 @@ const Routes = () => (
     <Route exact path="/login" component={Login} />
     <Route exact path="/register" component={Login} />
     <Authenticated>
-      <Route exact path={["/home", "/page/:id"]}>
+      <Route exact path={["/home", "/collection", "/page/:id"]}>
         <Layout>
           <Route exact path="/home" component={Empty} />
+          <Route exact path="/collection" component={Collection} />
           <Route exact path="/page/:id" component={Document} />
         </Layout>
       </Route>

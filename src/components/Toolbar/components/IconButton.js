@@ -1,12 +1,13 @@
-import React from 'react';
-import styled from 'styled-components';
+// @flow
+import * as React from "react";
+import styled from "styled-components";
 
-const IconButton = ({ icon, ...restProps }) => {
-  return (
-    <Button {...restProps }>
-      {icon}
-    </Button>
-  );
+type Props = {
+  icon: React.Node
+};
+
+const IconButton = ({ icon, ...rest }: Props) => {
+  return <Button {...rest}>{icon}</Button>;
 };
 
 const Button = styled.button`

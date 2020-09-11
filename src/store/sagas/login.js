@@ -27,9 +27,8 @@ const getAuthChannel = () => {
   return authChannel;
 };
 
-export function* loginSaga(action) {
+function* loginSaga(action) {
   const { email, password } = action.payload;
-  // const auth = auth;
 
   try {
     yield call([auth, auth.signInWithEmailAndPassword], email, password);

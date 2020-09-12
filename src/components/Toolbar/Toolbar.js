@@ -1,14 +1,16 @@
 // @flow
 import React from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { logoutRequest } from "../../store/modules/login"; // DELETE LATER
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { selectShorcuts } from "../../store/modules/ui";
 
 import LeftArrowIcon from "../../shared/icons/LeftArrow";
 import IconButton from "./components/IconButton";
 import Flex from "../../components/Flex";
 import Button from "../../components/Button";
 import OpenMenu from "../../shared/icons/OpenMenu";
+import Done from "../../shared/icons/Done";
 import Tooltip from "../../components/Tooltip";
 
 type Props = {
@@ -19,7 +21,11 @@ type Props = {
 };
 
 const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
-  const dispatch = useDispatch();
+  const { id } = useParams();
+  const shortcutsList = useSelector(selectShorcuts);
+  // Show different controls when there's no id
+  const isDocument = id !== undefined;
+  const shortcuted = isDocument ? shortcutsList.includes(id) : false;
 
   return (
     <Wrapper isLocked={isLocked}>
@@ -40,8 +46,30 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
             </span>
           </Tooltip>
         )}
-        <Flex>
-          <button onClick={() => dispatch(logoutRequest())}>Log out</button>
+        <ButtonGroup>
+          {isDocument ? (
+            <Tooltip
+              content={
+                shortcuted
+                  ? "Remove this page from sidebar"
+                  : "Show this page on your sidebar"
+              }
+              placement="bottom"
+            >
+              <Button
+                bgColor="transparent"
+                hoverColor="rgb(79 84 92 / 72%)"
+                color="#8e9297"
+                hoverTextColor="#dcddde"
+                padding="0 6px"
+                icon={
+                  shortcuted ? <Done fill="currentColor" size={20} /> : null
+                }
+              >
+                Favorite
+              </Button>
+            </Tooltip>
+          ) : null}
           <Tooltip content="Style and more .." placement="bottom">
             <Button
               bgColor="transparent"
@@ -52,7 +80,7 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
               icon={<OpenMenu fill="currentColor" />}
             />
           </Tooltip>
-        </Flex>
+        </ButtonGroup>
       </ToolbarWrapper>
     </Wrapper>
   );
@@ -87,6 +115,12 @@ const HoverArea = styled.div`
 
   @media (max-width: 600px) {
     width: 0;
+  }
+`;
+
+const ButtonGroup = styled(Flex)`
+  & > button {
+    margin-left: 6px;
   }
 `;
 

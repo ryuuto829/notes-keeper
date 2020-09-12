@@ -1,18 +1,30 @@
 // @flow
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
+import {
+  selectError,
+  selectSuccess,
+  clearSnackbarMessage
+} from "../../store/modules/settings";
+import { logoutRequest } from "../../store/modules/login";
 
 import Background from "../../components/Background";
 import Scrollable from "../../components/Scrollable";
 import PageTitle from "../../components/PageTitle";
-
+import Button from "../../components/Button";
+import Snackbar from "../../components/Snackbar";
 import ExitButton from "./components/ExitButton";
+import Divider from "./components/Divider";
 import UserInfo from "./UserInfo";
 import { zoomOut } from "../../shared/styles/animations";
 
 const Settings = () => {
+  const dispatch = useDispatch();
   const [closed, setClosed] = useState(false);
+  const snackbarError = useSelector(selectError);
+  const snackbarSuccess = useSelector(selectSuccess);
 
   useEffect(() => {
     const onPressHandler = (e: KeyboardEvent) => {
@@ -36,10 +48,40 @@ const Settings = () => {
     <Background bgColor="#36393f">
       <Scrollable>
         <PageTitle title="Settings" />
+        {snackbarError ? (
+          <Snackbar
+            autoCloseIn={6000}
+            show={snackbarError}
+            content={snackbarError}
+            closed={() => dispatch(clearSnackbarMessage())}
+            danger
+          />
+        ) : null}
+        {snackbarSuccess ? (
+          <Snackbar
+            autoCloseIn={6000}
+            show={snackbarSuccess}
+            content={snackbarSuccess}
+            closed={() => dispatch(clearSnackbarMessage())}
+            success
+          />
+        ) : null}
         <ExitButton clicked={() => setClosed(true)} />
         <Wrapper>
           <Header>MY ACCOUNT</Header>
           <UserInfo />
+          <Divider />
+          <Header>LOGOUT</Header>
+          <Button
+            color="#f04747"
+            hoverColor="rgba(240, 71, 71, 0.1)"
+            hoverTextColor="#dcddde"
+            outlined
+            large
+            clicked={() => dispatch(logoutRequest())}
+          >
+            Log Out
+          </Button>
         </Wrapper>
       </Scrollable>
     </Background>

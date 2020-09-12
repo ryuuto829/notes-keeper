@@ -8,6 +8,7 @@ import Login from "./scenes/Login";
 import Document from "./scenes/Document";
 import Settings from "./scenes/Settings";
 import Collection from "./scenes/Collection";
+import Error404 from "./scenes/Error404";
 
 const Empty = () => <div>Empty</div>; // DELETE LATER
 
@@ -18,16 +19,17 @@ const Routes = () => (
     </Route>
     <Route exact path="/login" component={Login} />
     <Route exact path="/register" component={Login} />
-    <Authenticated>
-      <Route exact path={["/home", "/collection", "/page/:id"]}>
+    <Route exact path={["/home", "/collection", "/page/:id", "/settings"]}>
+      <Authenticated>
         <Layout>
           <Route exact path="/home" component={Empty} />
           <Route exact path="/collection" component={Collection} />
           <Route exact path="/page/:id" component={Document} />
         </Layout>
-      </Route>
-      <Route exact path="/settings" component={Settings} />
-    </Authenticated>
+        <Route exact path="/settings" component={Settings} />
+      </Authenticated>
+    </Route>
+    <Route component={Error404} />
   </Switch>
 );
 

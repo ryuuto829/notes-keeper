@@ -9,10 +9,11 @@ import {
   selectDocumentTitle
 } from "../../store/modules/document";
 
-import ListItem from "./components/ListItem";
-import Header from "./Header";
 import Scrollable from "../../components/Scrollable";
 import PageTitle from "../../components/PageTitle";
+import HelpPopover from "../../components/HelpPopover";
+import ListItem from "./components/ListItem";
+import Header from "./Header";
 import NotFound from "./components/NotFound";
 
 const Document = () => {
@@ -42,17 +43,17 @@ const Document = () => {
         <Header />
         {/* $FlowFixMe we sure that document always has an entry point */}
         {renderList(collection[id].children) || null}
+        <HelpPopover />
       </Wrapper>
     </Scrollable>
   );
 };
 
 const Wrapper = styled.main`
-  padding: 0 20px;
-  padding-bottom: 120px;
+  padding: 0 20px 120px 20px;
 
   @media (max-width: 600px) {
-    padding: 0 10px;
+    padding: 0 10px 120px 10px;
   }
 `;
 

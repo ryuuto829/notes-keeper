@@ -8,6 +8,7 @@ import {
 } from "../../store/modules/settings";
 import { selectUser } from "../../store/modules/login";
 
+import Tooltip from "../../components/Tooltip";
 import TextButton from "../../components/TextButton";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
@@ -68,6 +69,12 @@ const Settings = () => {
       !changePassword
     )
       return;
+
+    if (!currentPassword) {
+      // $FlowFixMe we set error messages like in the login form
+      setErrorMessages({ password: FIELD_IS_REQUIRED });
+      return;
+    }
 
     dispatch(
       updateUserRequest({
@@ -130,9 +137,14 @@ const Settings = () => {
         <StyledDivider />
         <Wrapper justify="space-between">
           <LeftButtonGroup>
-            <Button color="#f04747" outlined clicked={onDeleteUserHandler}>
-              Delete Account
-            </Button>
+            <Tooltip
+              content="Warning! It'll remove all your data and notes!"
+              placement="bottom"
+            >
+              <Button color="#f04747" outlined clicked={onDeleteUserHandler}>
+                Delete Account
+              </Button>
+            </Tooltip>
           </LeftButtonGroup>
           <RightButtonGroup>
             <Button
@@ -163,7 +175,12 @@ const Settings = () => {
       <Text>{displayName}</Text>
       <InputName>EMAIL</InputName>
       <Text>{email}</Text>
-      <Button clicked={() => setEditable(true)}>Edit</Button>
+      <Tooltip
+        content="Change your username, email or password"
+        placement="bottom"
+      >
+        <Button clicked={() => setEditable(true)}>Edit</Button>
+      </Tooltip>
     </UserInfoView>
   );
 };

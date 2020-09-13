@@ -1,6 +1,11 @@
 // @flow
 import React from "react";
+import styled from "styled-components";
 import { useTable, useSortBy } from "react-table";
+import { Link } from "react-router-dom";
+
+import LeftArrow from "../../shared/icons/LeftArrow";
+import StyledTable, { TableHeader } from "./components/StyledTable";
 
 const Table = ({ columns, data }) => {
   const {
@@ -12,7 +17,8 @@ const Table = ({ columns, data }) => {
   } = useTable(
     {
       columns,
-      data
+      data,
+      autoResetSortBy: false // We're not reseting sorting after changing data
     },
     useSortBy
   );
@@ -23,24 +29,39 @@ const Table = ({ columns, data }) => {
 
   return (
     <>
-      <table {...getTableProps()}>
+      <StyledTable {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                // Add the sorting props to control sorting. For this example
-                // we can add them into the header props
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                // Add the sorting props to control sorting
+                <TableHeader
+                  isSorted={column.isSorted}
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                >
                   {column.render("Header")}
                   {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? " 🔽"
-                        : " 🔼"
-                      : ""}
-                  </span>
-                </th>
+                  {column.id !== "selection" ? (
+                    <>
+                      <TopArrow
+                        fill={
+                          column.isSorted && column.isSortedDesc
+                            ? "#dcddde"
+                            : "#8e9297"
+                        }
+                        size={16}
+                      />
+                      <BottomArrow
+                        fill={
+                          column.isSorted && !column.isSortedDesc
+                            ? "#dcddde"
+                            : "#8e9297"
+                        }
+                        size={16}
+                      />
+                    </>
+                  ) : null}
+                </TableHeader>
               ))}
             </tr>
           ))}
@@ -52,16 +73,39 @@ const Table = ({ columns, data }) => {
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    <td {...cell.getCellProps()}>
+                      {cell.column.id === "title" ? (
+                        <StyledLink to="/">{cell.render("Cell")}</StyledLink>
+                      ) : (
+                        cell.render("Cell")
+                      )}
+                    </td>
                   );
                 })}
               </tr>
             );
           })}
         </tbody>
-      </table>
+      </StyledTable>
     </>
   );
 };
+
+const TopArrow = styled(LeftArrow)`
+  transform: rotate(90deg);
+`;
+const BottomArrow = styled(LeftArrow)`
+  transform: rotate(270deg);
+`;
+
+const StyledLink = styled(Link)`
+  display: inline-block;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  color: inherit;
+`;
 
 export default Table;

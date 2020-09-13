@@ -4,11 +4,12 @@ import styled from "styled-components";
 
 type Props = {
   isChecked: boolean,
-  onChecked: () => void
+  onChecked: () => void,
+  innerRef?: React.ElementRef<any>
 };
 
-const Checkbox = ({ isChecked, onChecked }: Props) => (
-  <Label>
+const Checkbox = ({ isChecked, onChecked, innerRef }: Props) => (
+  <Label ref={innerRef}>
     <HiddenInput type="checkbox" checked={isChecked} onChange={onChecked} />
     <Checkmark />
   </Label>
@@ -67,4 +68,7 @@ const Checkmark = styled.span`
   }
 `;
 
-export default Checkbox;
+// Give ref for tooltip component
+export default React.forwardRef<Props, typeof Checkbox>((props, ref) => (
+  <Checkbox {...props} innerRef={ref} />
+));

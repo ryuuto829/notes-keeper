@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectShorcuts } from "../../store/modules/ui";
+import { selectSelectAll } from "../../store/modules/collection";
 
 import LeftArrowIcon from "../../shared/icons/LeftArrow";
 import IconButton from "./components/IconButton";
@@ -11,6 +12,7 @@ import Flex from "../../components/Flex";
 import Button from "../../components/Button";
 import OpenMenu from "../../shared/icons/OpenMenu";
 import Done from "../../shared/icons/Done";
+import Delete from "../../shared/icons/Delete";
 import Tooltip from "../../components/Tooltip";
 
 type Props = {
@@ -23,6 +25,7 @@ type Props = {
 const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
   const { id } = useParams();
   const shortcutsList = useSelector(selectShorcuts);
+  const selectedAll = useSelector(selectSelectAll);
   // Show different controls when there's no id
   const isDocument = id !== undefined;
   const shortcuted = isDocument ? shortcutsList.includes(id) : false;
@@ -47,6 +50,22 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
           </Tooltip>
         )}
         <ButtonGroup>
+          {/* Controls for Collection */}
+          {selectedAll ? (
+            <Tooltip content="Delete selected pages" placement="bottom">
+              <Button
+                bgColor="transparent"
+                hoverColor="rgb(79 84 92 / 72%)"
+                color="#8e9297"
+                hoverTextColor="#dcddde"
+                padding="0 6px"
+                icon={<Delete fill="currentColor" size={20} />}
+              >
+                Delete
+              </Button>
+            </Tooltip>
+          ) : null}
+          {/* Controls for Document */}
           {isDocument ? (
             <Tooltip
               content={

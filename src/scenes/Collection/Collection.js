@@ -1,5 +1,6 @@
 // @flow
 import React from "react";
+import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectPages,
@@ -11,9 +12,11 @@ import {
   removeSelectedAll
 } from "../../store/modules/collection";
 
-import StyledTable from "./components/StyledTable";
 import Table from "./Table";
 import Checkbox from "./components/Checkbox";
+import PageTitle from "../../components/PageTitle";
+import Scrollable from "../../components/Scrollable";
+import Tooltip from "../../components/Tooltip";
 
 // Render a row
 const renderData = (
@@ -49,24 +52,29 @@ function Collection() {
   const pages = useSelector(selectPages);
   const selected = useSelector(selectSelectedPages);
   const selectedAll = useSelector(selectSelectAll);
-  const data = React.useMemo(() => renderData(pages, selected, dispatch), [
-    dispatch,
-    pages,
-    selected
-  ]);
+  const data = React.useMemo(
+    () => renderData(pages, selected, dispatch),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selected, pages]
+  );
 
   const columns = React.useMemo(
     () => [
       {
         Header: (
-          <Checkbox
-            isChecked={selectedAll}
-            onChecked={() =>
-              selectedAll
-                ? dispatch(removeSelectedAll())
-                : dispatch(addSelectedAll())
-            }
-          />
+          <Tooltip
+            content={selectedAll ? "Deselect All" : "Select All"}
+            placement="right"
+          >
+            <Checkbox
+              isChecked={selectedAll}
+              onChecked={() =>
+                selectedAll
+                  ? dispatch(removeSelectedAll())
+                  : dispatch(addSelectedAll())
+              }
+            />
+          </Tooltip>
         ),
         accessor: "selection",
         disableSortBy: true
@@ -88,14 +96,24 @@ function Collection() {
         accessor: "created"
       }
     ],
-    [dispatch, selectedAll]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedAll]
   );
 
   return (
-    <StyledTable>
-      <Table columns={columns} data={data} />
-    </StyledTable>
+    <Scrollable horizontal>
+      <Wrapper>
+        <PageTitle title="Collection" />
+        <Table columns={columns} data={data} />
+      </Wrapper>
+    </Scrollable>
   );
 }
+
+const Wrapper = styled.div`
+  padding: 20px 20px 120px 20px;
+  max-width: 1281px; /* DELETE LATER */
+  margin: 0 auto; /* DELETE LATER */
+`;
 
 export default Collection;

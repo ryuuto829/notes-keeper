@@ -10,7 +10,7 @@ import {
   removeFromCollection
 } from "../../utils/document";
 import { DOCUMENT_DATA } from "./_test_database"; // initial state, DELETE LATER
-import type { DocumentStore } from '../../types/DocumentStore';
+import type { DocumentStore } from "../../types/DocumentStore";
 
 type State = {
   document: DocumentStore
@@ -324,7 +324,8 @@ export const documentSlice = createSlice({
 });
 
 export const selectDocumentTitle = (state: State) => state.document.title;
-export const selectDocumentCollection = (state: State) => state.document.collection;
+export const selectDocumentCollection = (state: State) =>
+  state.document.collection;
 export const selectDocumentEditable = (state: State) => state.document.editable;
 export const selectDocumentId = (state: State) => state.document.documentId;
 

@@ -25,7 +25,11 @@ function* deleteUserSaga(action) {
     yield user.delete();
     yield put(deleteUserSuccess());
   } catch (error) {
-    yield put(deleteUserFailure({ error: "error" }));
+    yield put(
+      deleteUserFailure({
+        error: "Wrong password. Re-authentication has been failed"
+      })
+    );
   }
 }
 
@@ -40,7 +44,11 @@ function* updateUserSaga(action) {
       firebase.auth.EmailAuthProvider.credential(user.email, password)
     );
   } catch (error) {
-    yield put(updateUserFailure({ error: "error" }));
+    yield put(
+      updateUserFailure({
+        error: "Wrong password. Re-authentication has been failed."
+      })
+    );
     return;
   }
 
@@ -51,7 +59,9 @@ function* updateUserSaga(action) {
         displayName: name
       });
     } catch (error) {
-      yield put(updateUserFailure({ error: "error" }));
+      yield put(
+        updateUserFailure({ error: "Update username has been failed." })
+      );
       return;
     }
   }
@@ -61,7 +71,7 @@ function* updateUserSaga(action) {
       // Update email when it's new
       yield user.updateEmail(email);
     } catch (error) {
-      yield put(updateUserFailure({ error: "error" }));
+      yield put(updateUserFailure({ error: "Update email has been failed." }));
       return;
     }
   }
@@ -71,12 +81,16 @@ function* updateUserSaga(action) {
       // Update password
       yield user.updatePassword(newPassword);
     } catch (error) {
-      yield put(updateUserFailure({ error: "error" }));
+      yield put(
+        updateUserFailure({ error: "Update password has been failed" })
+      );
       return;
     }
   }
 
-  yield put(updateUserSuccess());
+  yield put(
+    updateUserSuccess({ text: "Your account has been successfully updated!" })
+  );
 }
 
 export default function* loginRootSaga(): Saga<void> {

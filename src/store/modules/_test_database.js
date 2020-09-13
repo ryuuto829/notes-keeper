@@ -55,4 +55,31 @@ export const DOCUMENT_DATA = {
   }
 };
 
+export const COLLECTION_DATA = {
+  pageId1: {
+    title: "Current approaches to knowledge management",
+    wordCount: "254",
+    updated: "01.02.2020",
+    created: "01.01.2020"
+  },
+  pageId2: {
+    title: "Second page",
+    wordCount: "25",
+    updated: "01.22.2020",
+    created: "01.01.2020"
+  },
+  pageId3: {
+    title: "Some title here",
+    wordCount: "4",
+    updated: "21.02.2020",
+    created: "01.31.2020"
+  },
+  pageId4: {
+    title: "Meh",
+    wordCount: "354",
+    updated: "01.06.2020",
+    created: "03.01.2020"
+  }
+};
+
 export default DOCUMENT_DATA;

@@ -3,6 +3,7 @@ import * as React from "react";
 import styled from "styled-components";
 
 type Props = {
+  horizontal?: boolean,
   size?: "large" | "small",
   className?: string,
   ...
@@ -20,8 +21,12 @@ const Wrapper = styled.div`
   bottom: 0;
   height: 100%;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: ${props => (props.horizontal ? "auto" : "hidden")};
   overscroll-behavior: none;
+
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
 
   &::-webkit-scrollbar {
     width: ${props => (props.size === "large" ? "10px" : "5px")};

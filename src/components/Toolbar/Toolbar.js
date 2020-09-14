@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectShorcuts } from "../../store/modules/ui";
 import { selectSelectAll } from "../../store/modules/collection";
+import { selectDocumentId } from "../../store/modules/document";
 
 import LeftArrowIcon from "../../shared/icons/LeftArrow";
 import IconButton from "./components/IconButton";
@@ -26,8 +27,9 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
   const { id } = useParams();
   const shortcutsList = useSelector(selectShorcuts);
   const selectedAll = useSelector(selectSelectAll);
+  const collection = useSelector(selectDocumentId);
   // Show different controls when there's no id
-  const isDocument = id !== undefined;
+  const isDocument = id !== undefined && collection === id;
   const shortcuted = isDocument ? shortcutsList.includes(id) : false;
 
   return (

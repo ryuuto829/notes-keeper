@@ -9,8 +9,9 @@ import Document from "./scenes/Document";
 import Settings from "./scenes/Settings";
 import Collection from "./scenes/Collection";
 import Error404 from "./scenes/Error404";
+import DocumentNew from "./scenes/DocumentNew"; // DELETE LATER
 
-const Empty = () => <div>Empty</div>; // DELETE LATER
+// const Empty = () => <div>Empty</div>; // DELETE LATER
 
 const Routes = () => (
   <Switch>
@@ -22,7 +23,7 @@ const Routes = () => (
     <Route exact path={["/home", "/collection", "/page/:id", "/settings"]}>
       <Authenticated>
         <Layout>
-          <Route exact path="/home" component={Empty} />
+          <Route exact path="/home" component={DocumentNew} />
           <Route exact path="/collection" component={Collection} />
           <Route exact path="/page/:id" component={Document} />
         </Layout>

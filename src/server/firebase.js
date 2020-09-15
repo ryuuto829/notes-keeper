@@ -1,7 +1,8 @@
 // @flow
 import * as firebase from "firebase/app";
 import "firebase/auth";
-import "firebase/database";
+import "firebase/firestore";
+// import "firebase/database";
 import config from "./firebaseConfig";
 
 firebase.initializeApp(config);
@@ -9,7 +10,21 @@ firebase.initializeApp(config);
 // Firebase APIs
 
 const auth = firebase.auth();
-const database = firebase.database();
+const database = firebase.firestore();
+
+// ENABLE OFFLINE
+database.enablePersistence().catch(function(err) {
+  console.error(err);
+});
+
+// DISABLE FIRESTORE
+firebase
+  .firestore()
+  .disableNetwork()
+  .then(function() {
+    // Do offline actions
+    // ...
+  });
 
 // Social Sign In Method Provider
 

@@ -11,7 +11,7 @@ import { createArrayCopy, removeChild } from "../../utils/document";
 export const collectionSlice = createSlice({
   name: "collection",
   initialState: {
-    pages: COLLECTION_DATA,
+    pages: null,
     selected: [],
     selectAll: false
   },

@@ -39,7 +39,7 @@ const DocumentNew = () => {
   };
 
   if (documentId) {
-    return <Redirect to={`/pages/${documentId}`} />;
+    return <Redirect to={`/page/${documentId}`} />;
   }
 
   return <button onClick={onAddNewDocumentHandler}>Create new Document</button>;

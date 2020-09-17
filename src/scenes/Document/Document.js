@@ -6,7 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   selectDocumentCollection,
   selectDocumentId,
-  selectDocumentTitle
+  selectDocumentTitle,
+  initiateDocument
 } from "../../store/modules/document";
 import { initializingSuccess, selectDocument } from "../../store/modules/ui";
 import { database } from "../../server/firebase";
@@ -18,6 +19,9 @@ import HelpPopover from "../../components/HelpPopover";
 import ListItem from "./components/ListItem";
 import Header from "./Header";
 import NotFound from "./components/NotFound";
+import LoadingBar from "../../components/LoadingBar";
+
+import shortID from "../../utils/shortID";
 
 const Document = () => {
   const dispatch = useDispatch();
@@ -25,17 +29,18 @@ const Document = () => {
   // const documentId = useSelector(selectDocumentId);
   // const title = useSelector(selectDocumentTitle);
   const title = null;
-  // const collection = useSelector(selectDocumentCollection);
-  const collection = null;
+  const collection = useSelector(selectDocumentCollection);
+  // const collection = null;
   const document = useSelector(selectDocument);
   const user = useSelector(selectUser);
 
+  const [loading, setLoading] = useState(true);
   const [currentDocument, setCurrentDocument] = useState(null);
 
   useEffect(() => {
     let unsubscribe;
     try {
-      // Fetch document from firestore
+      // Fetch document meta from firestore
       unsubscribe = database
         .collection("users")
         .doc(user.uid)
@@ -47,10 +52,17 @@ const Document = () => {
           console.log("Current data: ", userData);
 
           setCurrentDocument(userData);
+
+          dispatch(initiateDocument({ id: shortID() }));
           dispatch(initializingSuccess({ document: userData }));
+
+          setLoading(false);
+
+          // setLoading(false);
         });
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
 
     return () => unsubscribe();
@@ -58,6 +70,11 @@ const Document = () => {
   }, []);
 
   // if (id !== document.id) return <NotFound />;
+
+  // if (collection.initial.children) {
+  // }
+
+  if (loading) return <LoadingBar />;
 
   if (!currentDocument) {
     return <NotFound />;
@@ -81,7 +98,7 @@ const Document = () => {
         <PageTitle title={title || "No Title"} />
         <Header />
         {/* $FlowFixMe we sure that document always has an entry point */}
-        {collection ? renderList(collection[id].children) : null}
+        {renderList(collection.initial.children)}
         <HelpPopover />
       </Wrapper>
     </Scrollable>

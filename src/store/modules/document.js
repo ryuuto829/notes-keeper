@@ -18,7 +18,15 @@ type State = {
 
 export const documentSlice = createSlice({
   name: "document",
-  initialState: DOCUMENT_DATA,
+  initialState: {
+    editable: null,
+    collection: {
+      initial: {
+        children: null,
+        level: 0
+      }
+    }
+  },
   reducers: {
     splitItem: (state: DocumentStore, action) => {
       const { currentId, splitAt, newItemId } = action.payload;
@@ -319,6 +327,26 @@ export const documentSlice = createSlice({
         ...state,
         editable: null
       };
+    },
+    initiateDocument: (state, action) => {
+      const { id } = action.payload;
+
+      return {
+        ...state,
+        collection: {
+          ...state.collection,
+          initial: {
+            children: [id],
+            level: 0
+          },
+          [id]: {
+            content: "",
+            children: null,
+            parent: "initial",
+            level: 1
+          }
+        }
+      };
     }
   }
 });
@@ -338,6 +366,7 @@ export const {
   splitItem,
   updateContent,
   addItem,
-  updateTitle
+  updateTitle,
+  initiateDocument
 } = documentSlice.actions;
 export default documentSlice.reducer;

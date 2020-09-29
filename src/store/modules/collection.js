@@ -1,12 +1,6 @@
 // @flow
 import { createSlice } from "@reduxjs/toolkit";
-import { COLLECTION_DATA } from "./_test_database"; // DELETE LATER
 import { createArrayCopy, removeChild } from "../../utils/document";
-// import type { DocumentStore } from "../../types/DocumentStore";
-
-// type State = {
-//   document: DocumentStore
-// };
 
 export const collectionSlice = createSlice({
   name: "collection",
@@ -19,7 +13,7 @@ export const collectionSlice = createSlice({
     addSelection: (state, action) => {
       const { id } = action.payload;
 
-      // Add new item
+      // Add new id to selected
       const updatedSelected = createArrayCopy(state.selected);
       updatedSelected.push(id);
 
@@ -32,7 +26,7 @@ export const collectionSlice = createSlice({
     removeSelection: (state, action) => {
       const { id } = action.payload;
 
-      // Remove item
+      // Remove id from selected
       const updatedSelected = removeChild(state.selected, id) || [];
 
       return {
@@ -41,16 +35,22 @@ export const collectionSlice = createSlice({
         selectAll: updatedSelected.length > 0
       };
     },
-    addSelectedAll: (state, action) => {
+    addSelectedAll: (state, action) => ({
+      ...state,
+      selected: state.pages.map(page => page.id),
+      selectAll: true
+    }),
+    removeSelectedAll: (state, action) => ({
+      ...state,
+      selected: [],
+      selectAll: false
+    }),
+    updateList: (state, action) => {
+      const { list } = action.payload;
+
       return {
         ...state,
-        selected: Object.keys(state.pages),
-        selectAll: true
-      };
-    },
-    removeSelectedAll: (state, action) => {
-      return {
-        ...state,
+        pages: list,
         selected: [],
         selectAll: false
       };
@@ -66,6 +66,7 @@ export const {
   addSelection,
   removeSelection,
   addSelectedAll,
-  removeSelectedAll
+  removeSelectedAll,
+  updateList
 } = collectionSlice.actions;
 export default collectionSlice.reducer;

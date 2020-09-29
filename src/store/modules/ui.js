@@ -15,9 +15,12 @@ export const uiSlice = createSlice({
   name: "ui",
   initialState: {
     shortcutsById: null,
-    shortcuts: null,
+    shortcuts: [],
     initializing: false,
-    document: null
+    document: {
+      id: null,
+      title: null
+    }
   },
   reducers: {
     initializingRequest: (state, action) => {
@@ -35,8 +38,46 @@ export const uiSlice = createSlice({
         initializing: false,
         document: document
       };
+    },
+    addShortcut: (state, action) => {
+      const { id } = action.payload;
+      console.log("[addShortcut] ui");
+
+      // Add new id to selected
+      const updatedList = [...state.shortcuts];
+      updatedList.push(id);
+
+      const updatedFull = { ...state.shortcutsById };
+      updatedFull[id] = { url: "/", title: "asdas" };
+
+      return {
+        ...state,
+        shortcutsById: updatedFull,
+        shortcuts: updatedList
+      };
+    },
+    removeShortcut: (state, action) => {
+      const { id } = action.payload;
+      console.log("[addShortcut] ui");
+
+      // Remove id from selected
+      const updatedList = [...state.shortcuts];
+      updatedList.splice(id, 0);
+
+      return {
+        ...state,
+        shortcuts: updatedList
+      };
+    },
+    updateShortcuts: (state, action) => {
+      const { list } = action.payload;
+      console.log("[updateShortcuts] ui");
+
+      return {
+        ...state,
+        shortcuts: list
+      };
     }
-    //
   }
 });
 
@@ -44,5 +85,12 @@ export const selectShorcuts = state => state.ui.shortcuts;
 export const selectShorcutsById = state => state.ui.shortcutsById;
 export const selectInitializing = state => state.ui.initializing;
 export const selectDocument = state => state.ui.document;
-export const { initializingRequest, initializingSuccess } = uiSlice.actions;
+export const selectDocumentTitle = state => state.ui.document.title;
+export const {
+  initializingRequest,
+  initializingSuccess,
+  addShortcut,
+  removeShortcut,
+  updateShortcuts
+} = uiSlice.actions;
 export default uiSlice.reducer;

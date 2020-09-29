@@ -2,7 +2,6 @@
 import React from "react";
 import styled from "styled-components";
 import { useTable, useSortBy } from "react-table";
-import { Link } from "react-router-dom";
 
 import LeftArrow from "../../shared/icons/LeftArrow";
 import StyledTable, { TableHeader } from "./components/StyledTable";
@@ -75,7 +74,7 @@ const Table = ({ columns, data }) => {
                   return (
                     <td {...cell.getCellProps()}>
                       {cell.column.id === "title" ? (
-                        <StyledLink to="/">{cell.render("Cell")}</StyledLink>
+                        <>{cell.render("Cell")}</>
                       ) : (
                         cell.render("Cell")
                       )}
@@ -96,16 +95,6 @@ const TopArrow = styled(LeftArrow)`
 `;
 const BottomArrow = styled(LeftArrow)`
   transform: rotate(270deg);
-`;
-
-const StyledLink = styled(Link)`
-  display: inline-block;
-  text-decoration: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-  color: inherit;
 `;
 
 export default Table;

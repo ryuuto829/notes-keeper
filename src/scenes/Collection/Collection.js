@@ -1,5 +1,5 @@
 // @flow
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -9,40 +9,58 @@ import {
   addSelection,
   removeSelection,
   addSelectedAll,
-  removeSelectedAll
+  removeSelectedAll,
+  updateList
 } from "../../store/modules/collection";
+import { selectUser } from "../../store/modules/login";
+import { database } from "../../server/firebase";
+
+import { Link } from "react-router-dom";
 
 import Table from "./Table";
 import Checkbox from "./components/Checkbox";
 import PageTitle from "../../components/PageTitle";
 import Scrollable from "../../components/Scrollable";
+import NoDataFound from "./components/NoDataFound";
 import Tooltip from "../../components/Tooltip";
+import LoadingBar from "../../components/LoadingBar";
 
-// Render a row
+// Render a row in the table
 const renderData = (
   data: Object<any>,
   selected: Array<any>,
   dispatch
 ): Array<any> => {
-  return Object.keys(data).map(id => {
-    const { title, wordCount, updated, created } = data[id];
+  if (!data) return null;
+
+  // Add or remove id from selected pages
+  const onChangeHandler = (id: string, isChecked: boolean) => {
+    if (isChecked) {
+      dispatch(removeSelection({ id: id }));
+    } else {
+      dispatch(addSelection({ id: id }));
+    }
+  };
+
+  return data.map(page => {
+    const { id, title, wordCount, updatedAt, createdAt } = page;
     const isChecked = selected.includes(id);
 
-    // Add or remove id from selected pages
-    const onChangeHandler = () => {
-      if (isChecked) {
-        dispatch(removeSelection({ id: id }));
-        return;
-      }
-      dispatch(addSelection({ id: id }));
-    };
-
     return {
-      selection: <Checkbox isChecked={isChecked} onChecked={onChangeHandler} />,
-      title: title,
+      selection: (
+        <Checkbox
+          isChecked={isChecked}
+          onChecked={() => onChangeHandler(id, isChecked)}
+        />
+      ),
+      title: (
+        <StyledLink key={id} to={`page/${id}`}>
+          {title || "No Title"}
+        </StyledLink>
+      ),
       wordCount: wordCount,
-      updated: updated,
-      created: created
+      updated: new Date(updatedAt).toLocaleDateString("en-GB"),
+      created: new Date(createdAt).toLocaleDateString("en-GB")
     };
   });
 };
@@ -52,6 +70,39 @@ function Collection() {
   const pages = useSelector(selectPages);
   const selected = useSelector(selectSelectedPages);
   const selectedAll = useSelector(selectSelectAll);
+  const user = useSelector(selectUser);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const collectionData = [];
+
+      await database
+        .collection("users")
+        .doc(user.uid)
+        .collection("meta")
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            collectionData.push({ id: doc.id, ...doc.data() });
+          });
+        });
+
+      if (collectionData.length === 0) {
+        setLoading(false);
+      } else {
+        dispatch(updateList({ list: collectionData }));
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const data = React.useMemo(
     () => renderData(pages, selected, dispatch),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,6 +151,10 @@ function Collection() {
     [selectedAll]
   );
 
+  if (loading) return <LoadingBar />;
+
+  if (!data) return <NoDataFound />;
+
   return (
     <Scrollable horizontal>
       <Wrapper>
@@ -114,6 +169,16 @@ const Wrapper = styled.div`
   padding: 20px 20px 120px 20px;
   max-width: 1281px; /* DELETE LATER */
   margin: 0 auto; /* DELETE LATER */
+`;
+
+const StyledLink = styled(Link)`
+  display: inline-block;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  color: inherit;
 `;
 
 export default Collection;

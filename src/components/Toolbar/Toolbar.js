@@ -1,9 +1,13 @@
 // @flow
 import React from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { selectShorcuts } from "../../store/modules/ui";
+import {
+  selectShorcuts,
+  addShortcut,
+  removeShortcut
+} from "../../store/modules/ui";
 import { selectSelectAll } from "../../store/modules/collection";
 import { selectDocumentId } from "../../store/modules/document";
 
@@ -24,12 +28,15 @@ type Props = {
 };
 
 const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const shortcutsList = useSelector(selectShorcuts);
   const selectedAll = useSelector(selectSelectAll);
   const collection = useSelector(selectDocumentId);
   // Show different controls when there's no id
-  const isDocument = id !== undefined && collection === id;
+  // const isDocument = id !== undefined && collection === id;
+  const isDocument = id !== undefined;
+  console.log(id);
   const shortcuted = isDocument ? shortcutsList.includes(id) : false;
 
   return (
@@ -85,6 +92,17 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
                 padding="0 6px"
                 icon={
                   shortcuted ? <Done fill="currentColor" size={20} /> : null
+                }
+                clicked={() =>
+                  shortcuted
+                    ? dispatch(removeShortcut({ id: id }))
+                    : dispatch(
+                        addShortcut({
+                          id: id,
+                          url: `page/${id}`,
+                          title: "No Title"
+                        })
+                      )
                 }
               >
                 Favorite

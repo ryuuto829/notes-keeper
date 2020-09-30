@@ -3,14 +3,15 @@ import collection, {
   removeSelection,
   addSelectedAll,
   removeSelectedAll,
-  updateList
+  updateList,
+  deleteDocuments
 } from "./collection";
 
-const EXAMPLE_DATA = [
-  { id: "id0", title: "s", wordCount: 0, updated: "t", created: "t" },
-  { id: "id1", title: "s", wordCount: 0, updated: "t", created: "t" },
-  { id: "id2", title: "s", wordCount: 0, updated: "t", created: "t" }
-];
+const EXAMPLE_DATA = {
+  id0: { title: "s", wordCount: 0, updated: "t", created: "t" },
+  id1: { title: "s", wordCount: 0, updated: "t", created: "t" },
+  id2: { title: "s", wordCount: 0, updated: "t", created: "t" }
+};
 
 describe("collection reducer", () => {
   test("should add id to selected", () => {
@@ -74,6 +75,23 @@ describe("collection reducer", () => {
       )
     ).toEqual({
       pages: EXAMPLE_DATA,
+      selected: [],
+      selectAll: false
+    });
+  });
+
+  test("should remove list of selected documents", () => {
+    expect(
+      collection(
+        {
+          pages: EXAMPLE_DATA,
+          selected: ["id1", "id2"],
+          selectAll: false
+        },
+        { type: deleteDocuments.type }
+      )
+    ).toEqual({
+      pages: { id0: { title: "s", wordCount: 0, updated: "t", created: "t" } },
       selected: [],
       selectAll: false
     });

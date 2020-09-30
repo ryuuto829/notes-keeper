@@ -12,7 +12,7 @@ const LoadingBar = () => (
 
 const Container = styled.div`
   position: fixed;
-  top: 0;
+  top: 1;
   z-index: 9999;
   width: 100%;
   animation: ${loadingBar} 4s ease-in-out infinite;

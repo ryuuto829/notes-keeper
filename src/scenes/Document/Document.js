@@ -57,8 +57,6 @@ const Document = () => {
           dispatch(initializingSuccess({ document: userData }));
 
           setLoading(false);
-
-          // setLoading(false);
         });
     } catch (error) {
       console.log(error);

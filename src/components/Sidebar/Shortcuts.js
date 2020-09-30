@@ -35,17 +35,14 @@ const Shortcuts = () => {
           var source = doc.metadata.hasPendingWrites ? "Local" : "Server";
           console.log(source, " data: ", doc.data());
 
-          setTimeout(function() {
-            if (doc.data().shortcuts) {
-              dispatch(
-                updateShortcuts({
-                  list: [...doc.data().shortcuts].map(el => JSON.parse(el))
-                })
-              );
-            }
-            console.log("da");
-            setLoading(false);
-          }, 30000);
+          if (doc.data().shortcuts) {
+            dispatch(
+              updateShortcuts({
+                list: [...doc.data().shortcuts].map(el => JSON.parse(el))
+              })
+            );
+          }
+          setLoading(false);
         });
     };
 

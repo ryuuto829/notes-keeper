@@ -13,13 +13,15 @@ const DocumentNew = () => {
   const onAddNewDocumentHandler = async () => {
     const currentDate = Date.now();
 
+    // Default document meta data
     const DOCUMENT_DATA = {
+      title: "No Title",
       wordCount: 0,
       createdAt: currentDate,
       updatedAt: currentDate
     };
 
-    // Generate document meta with unique id
+    // Generate document meta with unique id from firestore
     const collectionRef = await database
       .collection("users")
       .doc(user.uid)
@@ -27,15 +29,16 @@ const DocumentNew = () => {
       .doc();
 
     // Set example title for new document
-    await collectionRef
+    collectionRef
       .set(DOCUMENT_DATA)
       .then(function(docRef) {
         console.log("Document written with ID: ", docRef);
-        setDocumentId(collectionRef.id);
       })
       .catch(function(error) {
         console.error("Error adding document: ", error);
       });
+
+    setDocumentId(collectionRef.id);
   };
 
   if (documentId) {

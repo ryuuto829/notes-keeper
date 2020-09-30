@@ -1,20 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Generate fake dataset
-const list = {};
-[...Array(15).keys()].forEach(num => {
-  list[`id${num}`] = {
-    title: `My ${num} Shortcut Page`,
-    url: `/page/id${num}`
-  };
-});
-
-const listById = [...Array(15).keys()].map(num => `id${num}`);
-
 export const uiSlice = createSlice({
   name: "ui",
   initialState: {
-    shortcutsById: null,
     shortcuts: [],
     initializing: false,
     document: {
@@ -24,7 +12,6 @@ export const uiSlice = createSlice({
   },
   reducers: {
     initializingRequest: (state, action) => {
-      console.log("[initializingRequest] ui");
       return {
         ...state,
         initializing: true
@@ -32,7 +19,7 @@ export const uiSlice = createSlice({
     },
     initializingSuccess: (state, action) => {
       const { document } = action.payload;
-      console.log("[initializingSuccess] ui");
+
       return {
         ...state,
         initializing: false,
@@ -40,29 +27,23 @@ export const uiSlice = createSlice({
       };
     },
     addShortcut: (state, action) => {
-      const { id } = action.payload;
-      console.log("[addShortcut] ui");
+      const { id, url, title } = action.payload;
 
-      // Add new id to selected
+      // Add id to selected
       const updatedList = [...state.shortcuts];
-      updatedList.push(id);
-
-      const updatedFull = { ...state.shortcutsById };
-      updatedFull[id] = { url: "/", title: "asdas" };
+      updatedList.push({ id: id, url: url, title: title });
 
       return {
         ...state,
-        shortcutsById: updatedFull,
         shortcuts: updatedList
       };
     },
     removeShortcut: (state, action) => {
       const { id } = action.payload;
-      console.log("[addShortcut] ui");
 
       // Remove id from selected
       const updatedList = [...state.shortcuts];
-      updatedList.splice(id, 0);
+      updatedList.splice(updatedList.indexOf(id), 1);
 
       return {
         ...state,
@@ -71,7 +52,6 @@ export const uiSlice = createSlice({
     },
     updateShortcuts: (state, action) => {
       const { list } = action.payload;
-      console.log("[updateShortcuts] ui");
 
       return {
         ...state,

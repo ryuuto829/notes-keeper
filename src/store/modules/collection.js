@@ -37,7 +37,7 @@ export const collectionSlice = createSlice({
     },
     addSelectedAll: (state, action) => ({
       ...state,
-      selected: state.pages.map(page => page.id),
+      selected: Object.keys(state.pages).map(id => id),
       selectAll: true
     }),
     removeSelectedAll: (state, action) => ({
@@ -54,6 +54,22 @@ export const collectionSlice = createSlice({
         selected: [],
         selectAll: false
       };
+    },
+    deleteDocuments: (state, action) => {
+      const updatedList = {};
+
+      Object.keys(state.pages).forEach(id => {
+        if (!state.selected.includes(id)) {
+          updatedList[id] = state.pages[id];
+        }
+      });
+
+      return {
+        ...state,
+        pages: updatedList,
+        selected: [],
+        selectAll: false
+      };
     }
   }
 });
@@ -67,6 +83,7 @@ export const {
   removeSelection,
   addSelectedAll,
   removeSelectedAll,
-  updateList
+  updateList,
+  deleteDocuments
 } = collectionSlice.actions;
 export default collectionSlice.reducer;

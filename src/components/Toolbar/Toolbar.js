@@ -8,8 +8,13 @@ import {
   addShortcut,
   removeShortcut
 } from "../../store/modules/ui";
-import { selectSelectAll } from "../../store/modules/collection";
-import { selectDocumentId } from "../../store/modules/document";
+import {
+  selectSelectAll,
+  selectSelectedPages
+} from "../../store/modules/collection";
+import { database } from "../../server/firebase";
+import { selectUser } from "../../store/modules/login";
+import { deleteDocuments } from "../../store/modules/collection";
 
 import LeftArrowIcon from "../../shared/icons/LeftArrow";
 import IconButton from "./components/IconButton";
@@ -32,12 +37,40 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
   const { id } = useParams();
   const shortcutsList = useSelector(selectShorcuts);
   const selectedAll = useSelector(selectSelectAll);
-  const collection = useSelector(selectDocumentId);
+  const selectedPages = useSelector(selectSelectedPages);
+  const user = useSelector(selectUser);
   // Show different controls when there's no id
-  // const isDocument = id !== undefined && collection === id;
   const isDocument = id !== undefined;
-  console.log(id);
-  const shortcuted = isDocument ? shortcutsList.includes(id) : false;
+  const shortcuted = isDocument
+    ? shortcutsList.some(page => page.id === id)
+    : false;
+
+  const deleteItemsHandler = () => {
+    // To delete multiple documents we use single batch
+    // and the limit is 500 documents per 1 batch
+    let batch = database.batch();
+
+    selectedPages.forEach(id => {
+      const documentRef = database
+        .collection("users")
+        .doc(user.uid)
+        .collection("meta")
+        .doc(id);
+
+      batch.delete(documentRef);
+    });
+
+    // Commit the batch
+    batch
+      .commit()
+      .then(function() {
+        console.log("DELETE SUCCESS");
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    dispatch(deleteDocuments());
+  };
 
   return (
     <Wrapper isLocked={isLocked}>
@@ -69,6 +102,7 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
                 hoverTextColor="#dcddde"
                 padding="0 6px"
                 icon={<Delete fill="currentColor" size={20} />}
+                clicked={deleteItemsHandler}
               >
                 Delete
               </Button>
@@ -99,8 +133,8 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
                     : dispatch(
                         addShortcut({
                           id: id,
-                          url: `page/${id}`,
-                          title: "No Title"
+                          url: `/page/${id}`,
+                          title: "No Title" // CHANGE LATER
                         })
                       )
                 }

@@ -42,8 +42,8 @@ const renderData = (
     }
   };
 
-  return data.map(page => {
-    const { id, title, wordCount, updatedAt, createdAt } = page;
+  return Object.keys(data).map(id => {
+    const { title, wordCount, updatedAt, createdAt } = data[id];
     const isChecked = selected.includes(id);
 
     return {
@@ -76,7 +76,7 @@ function Collection() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const collectionData = [];
+      const collectionData = {};
 
       await database
         .collection("users")
@@ -86,7 +86,7 @@ function Collection() {
         .then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {
             // doc.data() is never undefined for query doc snapshots
-            collectionData.push({ id: doc.id, ...doc.data() });
+            collectionData[doc.id] = { ...doc.data() };
           });
         });
 

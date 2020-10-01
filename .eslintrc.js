@@ -28,7 +28,8 @@ module.exports ={
     "prettier/prettier": [
       "error",
       {
-        "printWidth": 80
+        "printWidth": 80,
+        "endOfLine": "auto"
       }
     ]
   },

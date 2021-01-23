@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectShorcuts,
-  selectShorcutsById,
+  // selectShorcutsById,
   updateShortcuts
 } from "../../store/modules/ui";
 
@@ -19,7 +19,7 @@ import Skeleton from "./components/Skeleton";
 const Shortcuts = () => {
   const dispatch = useDispatch();
   const shortcuts = useSelector(selectShorcuts);
-  const shortcutsById = useSelector(selectShorcutsById);
+  // const shortcutsById = useSelector(selectShorcutsById);
   const user = useSelector(selectUser);
 
   const [loading, setLoading] = useState(true);
@@ -32,8 +32,8 @@ const Shortcuts = () => {
         .collection("users")
         .doc(user.uid)
         .onSnapshot(function(doc) {
-          var source = doc.metadata.hasPendingWrites ? "Local" : "Server";
-          console.log(source, " data: ", doc.data());
+          // var source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+          // console.log(source, " data: ", doc.data());
 
           if (doc.data().shortcuts) {
             dispatch(

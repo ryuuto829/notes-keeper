@@ -9,7 +9,6 @@ import {
   changeParent,
   removeFromCollection
 } from "../../utils/document";
-import { DOCUMENT_DATA } from "./_test_database"; // initial state, DELETE LATER
 import type { DocumentStore } from "../../types/DocumentStore";
 
 type State = {

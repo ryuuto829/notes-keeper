@@ -18,13 +18,13 @@ database.enablePersistence().catch(function(err) {
 });
 
 // DISABLE FIRESTORE
-firebase
-  .firestore()
-  .disableNetwork()
-  .then(function() {
-    // Do offline actions
-    // ...
-  });
+// firebase
+//   .firestore()
+//   .disableNetwork()
+//   .then(function() {
+//     // Do offline actions
+//     // ...
+//   });
 
 // Social Sign In Method Provider
 

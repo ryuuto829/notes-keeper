@@ -5,11 +5,14 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectDocumentCollection,
-  selectDocumentId,
-  selectDocumentTitle,
+  // selectDocumentId,
+  // selectDocumentTitle,
   initiateDocument
 } from "../../store/modules/document";
-import { initializingSuccess, selectDocument } from "../../store/modules/ui";
+import {
+  initializingSuccess
+  // selectDocument
+} from "../../store/modules/ui";
 import { database } from "../../server/firebase";
 import { selectUser } from "../../store/modules/login";
 
@@ -31,7 +34,7 @@ const Document = () => {
   const title = null;
   const collection = useSelector(selectDocumentCollection);
   // const collection = null;
-  const document = useSelector(selectDocument);
+  // const document = useSelector(selectDocument);
   const user = useSelector(selectUser);
 
   const [loading, setLoading] = useState(true);
@@ -48,8 +51,6 @@ const Document = () => {
         .doc(id)
         .onSnapshot(function(doc) {
           const userData = doc.data();
-
-          console.log("Current data: ", userData);
 
           setCurrentDocument(userData);
 

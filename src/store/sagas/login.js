@@ -32,7 +32,7 @@ function* loginSaga(action) {
 
   try {
     yield call([auth, auth.signInWithEmailAndPassword], email, password);
-    yield console.log("[loginSaga] login success");
+    // [loginSaga] login success"
     // Successful login will trigger the loginStatusWatcher
   } catch (error) {
     yield console.log(error);
@@ -47,7 +47,7 @@ function* registerSaga(action) {
     yield call(createUser, email, password);
     yield call(updateUsername, username);
     yield put(updateUserProfile());
-    yield console.log("[registerSaga] register success");
+    // "[registerSaga] register success"
     // Successful login will trigger the loginStatusWatcher
   } catch (error) {
     yield console.log(error);
@@ -58,7 +58,7 @@ function* registerSaga(action) {
 function* logoutSaga() {
   try {
     yield logout();
-    yield console.log("[logoutSaga] logout success");
+    // [logoutSaga] logout success"
     // Successful logout will trigger the loginStatusWatcher
   } catch (error) {
     yield console.log(error);
@@ -67,7 +67,7 @@ function* logoutSaga() {
 }
 
 function* loginStatusWatcher() {
-  yield console.log("[loginStatusWatcher] wathcer added");
+  // [loginStatusWatcher] wathcer added
   const channel = yield call(getAuthChannel);
 
   while (true) {
@@ -75,10 +75,10 @@ function* loginStatusWatcher() {
 
     if (user) {
       yield put(loginSuccess({ user: user }));
-      yield console.log("[loginStatusWatcher] login success");
+      // [loginStatusWatcher] login success
     } else {
       yield put(logoutSuccess());
-      yield console.log("[loginStatusWatcher] logout success");
+      // [loginStatusWatcher] logout success
     }
   }
 }

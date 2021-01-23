@@ -20,7 +20,7 @@ export const settingsSlice = createSlice({
   },
   reducers: {
     deleteUserRequest: (state: State, action) => {
-      console.log("[deleteUser] request");
+      // [deleteUser] request
       return {
         ...state,
         loading: true,
@@ -30,7 +30,7 @@ export const settingsSlice = createSlice({
     },
     deleteUserFailure: (state: State, action) => {
       const { error } = action.payload;
-      console.log("[deleteUser] failure");
+      // [deleteUser] failure
       return {
         ...state,
         loading: false,
@@ -38,14 +38,14 @@ export const settingsSlice = createSlice({
       };
     },
     deleteUserSuccess: (state: State, action) => {
-      console.log("[deleteUser] success");
+      // [deleteUser] success
       return {
         ...state,
         loading: false
       };
     },
     updateUserRequest: (state: State, action) => {
-      console.log("[updateUser] request");
+      // [updateUser] request
       return {
         ...state,
         loading: true,
@@ -55,7 +55,7 @@ export const settingsSlice = createSlice({
     },
     updateUserFailure: (state: State, action) => {
       const { error } = action.payload;
-      console.log("[updateUser] failure");
+      // [updateUser] failure
       return {
         ...state,
         loading: false,
@@ -64,7 +64,7 @@ export const settingsSlice = createSlice({
     },
     updateUserSuccess: (state: State, action) => {
       const { text } = action.payload;
-      console.log("[updateUser] success");
+      // [updateUser] success"
       return {
         ...state,
         loading: false,
@@ -72,7 +72,7 @@ export const settingsSlice = createSlice({
       };
     },
     clearSnackbarMessage: (state: State, action) => {
-      console.log("[clearSnackbarMessage] ");
+      // [clearSnackbarMessage]
       return {
         ...state,
         error: null,

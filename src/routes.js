@@ -9,9 +9,7 @@ import Document from "./scenes/Document";
 import Settings from "./scenes/Settings";
 import Collection from "./scenes/Collection";
 import Error404 from "./scenes/Error404";
-import DocumentNew from "./scenes/DocumentNew"; // DELETE LATER
-
-// const Empty = () => <div>Empty</div>; // DELETE LATER
+import DocumentNew from "./scenes/DocumentNew";
 
 const Routes = () => (
   <Switch>

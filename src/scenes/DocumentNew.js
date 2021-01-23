@@ -1,9 +1,11 @@
 // @flow
 import React, { useState } from "react";
+import styled from "styled-components";
 import { Redirect } from "react-router-dom";
 import { database } from "../server/firebase";
 import { useSelector } from "react-redux";
 import { selectUser } from "../store/modules/login";
+import Button from "../components/Button";
 
 const DocumentNew = () => {
   const user = useSelector(selectUser);
@@ -32,7 +34,7 @@ const DocumentNew = () => {
     collectionRef
       .set(DOCUMENT_DATA)
       .then(function(docRef) {
-        console.log("Document written with ID: ", docRef);
+        // console.log("Document written with ID: ", docRef);
       })
       .catch(function(error) {
         console.error("Error adding document: ", error);
@@ -45,7 +47,15 @@ const DocumentNew = () => {
     return <Redirect to={`/page/${documentId}`} />;
   }
 
-  return <button onClick={onAddNewDocumentHandler}>Create new Document</button>;
+  return (
+    <Wrapper>
+      <Button clicked={onAddNewDocumentHandler}>Create new Document</Button>
+    </Wrapper>
+  );
 };
+
+const Wrapper = styled.div`
+  padding: 20px;
+`;
 
 export default DocumentNew;

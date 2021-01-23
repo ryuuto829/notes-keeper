@@ -17,10 +17,11 @@ import { selectUser } from "../../store/modules/login";
 import { deleteDocuments } from "../../store/modules/collection";
 
 import LeftArrowIcon from "../../shared/icons/LeftArrow";
+import SyncIcon from "../../shared/icons/Sync";
 import IconButton from "./components/IconButton";
 import Flex from "../../components/Flex";
 import Button from "../../components/Button";
-import OpenMenu from "../../shared/icons/OpenMenu";
+// import OpenMenu from "../../shared/icons/OpenMenu";
 import Done from "../../shared/icons/Done";
 import Delete from "../../shared/icons/Delete";
 import Tooltip from "../../components/Tooltip";
@@ -64,12 +65,38 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
     batch
       .commit()
       .then(function() {
-        console.log("DELETE SUCCESS");
+        // console.log("DELETE SUCCESS");
       })
       .catch(error => {
         console.log(error);
       });
     dispatch(deleteDocuments());
+  };
+
+  const deleteCurrentPage = () => {
+    let batch = database.batch();
+
+    const documentRef = database
+      .collection("users")
+      .doc(user.uid)
+      .collection("meta")
+      .doc(id);
+
+    batch.delete(documentRef);
+
+    // Commit the batch
+    batch
+      .commit()
+      .then(function() {
+        // console.log("DELETE SUCCESS");
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+  const syncData = () => {
+    // console.log("sync start");
   };
 
   return (
@@ -92,6 +119,23 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
           </Tooltip>
         )}
         <ButtonGroup>
+          {/* Controls for synchronization*/}
+          {isDocument && (
+            <Tooltip content="Sync with FirebaseDB" placement="bottom">
+              <Button
+                bgColor="transparent"
+                hoverColor="rgb(79 84 92 / 72%)"
+                color="#8e9297"
+                hoverTextColor="#dcddde"
+                padding="0 6px"
+                icon={<SyncIcon fill="currentColor" size={20} />}
+                clicked={syncData}
+              >
+                Sync
+              </Button>
+            </Tooltip>
+          )}
+
           {/* Controls for Collection */}
           {selectedAll ? (
             <Tooltip content="Delete selected pages" placement="bottom">
@@ -108,6 +152,7 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
               </Button>
             </Tooltip>
           ) : null}
+
           {/* Controls for Document */}
           {isDocument ? (
             <Tooltip
@@ -143,16 +188,22 @@ const Toolbar = ({ isLocked, showSidebar, hideSidebar, toggleLock }: Props) => {
               </Button>
             </Tooltip>
           ) : null}
-          <Tooltip content="Style and more .." placement="bottom">
-            <Button
-              bgColor="transparent"
-              hoverColor="rgb(79 84 92 / 72%)"
-              color="#8e9297"
-              hoverTextColor="#dcddde"
-              padding="0 6px"
-              icon={<OpenMenu fill="currentColor" />}
-            />
-          </Tooltip>
+
+          {isDocument && (
+            <Tooltip content="Delete current page" placement="bottom">
+              <Button
+                bgColor="transparent"
+                hoverColor="rgb(79 84 92 / 72%)"
+                color="#8e9297"
+                hoverTextColor="#dcddde"
+                padding="0 6px"
+                icon={<Delete fill="currentColor" size={20} />}
+                clicked={deleteCurrentPage}
+              >
+                Delete
+              </Button>
+            </Tooltip>
+          )}
         </ButtonGroup>
       </ToolbarWrapper>
     </Wrapper>
